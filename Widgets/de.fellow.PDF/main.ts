@@ -55,13 +55,17 @@ interface ListItem {
                 </div>
 
                 <!-- PDF Preview     -->
-                <div style="grid-column: 2; grid-row: 1/-1; padding:10px;">
+                <div style="grid-column: 2; grid-row: 1/-1; padding:10px 10px 20px 10px;">
                     <iframe src="http://www.muhammadbinyusrat.com/devguide.pdf" width="100%" height="100%"
                             style="box-shadow: 0 10px 6px -6px #777;"></iframe>
                 </div>
 
                 <!-- Form  -->
-                <div>third</div>
+                <div class="form-box">
+                    <div class="form-container">
+                        
+                    </div>
+                </div>
             </div>
         </div>
     `,
@@ -118,6 +122,7 @@ interface ListItem {
             grid-template-columns: auto repeat(6, 1fr);
             gap: 1rem;
         }
+
         .list-item > div {
             place-self: center;
         }
@@ -131,6 +136,18 @@ interface ListItem {
             0 41.8px 33.4px rgba(0, 0, 0, 0.086),
             0 100px 80px rgba(0, 0, 0, 0.12)
         }
+        
+        .form-box {
+            padding-left: 20px;
+            padding-bottom: 20px;
+        }
+        
+        .form-container {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            background-color: white;
+            height: 100%;
+            box-shadow: 0 10px 6px -6px #777;        }
     `]
     // changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -243,5 +260,5 @@ export class PDFComponent implements OnInit, IWidgetComponent {
     declarations: [PDFComponent],
     entryComponents: [PDFComponent]
 })
-export class PDFModule {
+export class PdfModule {
 }

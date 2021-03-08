@@ -1,10 +1,10 @@
 import { IWidgetContext, IWidgetInstance } from "lime";
-import {PDFComponent, PDFModule} from './mian';
+import {PDFComponent, PdfModule} from './main';
 
 export const widgetFactory = (context: IWidgetContext): IWidgetInstance => {
 	return {
 		angularConfig: {
-			moduleType: PDFModule,
+			moduleType: PdfModule,
 			componentType:PDFComponent
 		}
 	};
