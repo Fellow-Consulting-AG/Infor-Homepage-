@@ -63,7 +63,64 @@ interface ListItem {
                 <!-- Form  -->
                 <div class="form-box">
                     <div class="form-container">
-                        
+                        <div class="form-fields-container">
+                            <div class="field">
+                                <label>User</label>
+                                <input type="text" class="smaller-text-field search-icon" value="4401ac15">
+                            </div>
+                            <div class="field">
+                                <label></label>
+                                <span style="font-size:14px">Obermeier, Klaus</span>
+                            </div>
+
+                            <div class="field">
+                                <label>Kassenzeichen</label>
+                                <input type="text" class="smaller-text-field" value="3202039423042">
+                            </div>
+                            <div>&nbsp;</div>
+
+
+                            <div class="field">
+                                <label>Nachname</label>
+                                <input type="text" class="smaller-text-field" value="Panse">
+                            </div>
+                            <div class="field">
+                                <label>Vorname</label>
+                                <input type="text" class="smaller-text-field" value="Jim">
+                            </div>
+
+
+                            <div class="field" style="grid-row:4; grid-column: 1 / -1">
+                                <label>Eingang</label>
+                                <input type="text" class="smaller-text-field" value="Posteinganj -- Ruckleuf EMA"
+                                       style="width:90%">
+                            </div>
+
+
+                            <div class="field" style="grid-row:5; grid-column: 1 / -1">
+                                <label>Dokumentenbezeichnung</label>
+                                <input type="text" class="smaller-text-field search-icon" value="Ruckleuf EMA"
+                                       style="width:90%">
+                            </div>
+                        </div>
+                        <div class="push-to-bottom">
+                            <div></div>
+                            <div>
+                                <button class="outlined-button">schließen</button>
+                            </div>
+                        </div>
+                        <div class="push-to-bottom">
+                            <div></div>
+                            <div>
+                                <button class="filled-button">eAkte</button>
+                            </div>
+                            <div>
+                                <button class="filled-button">Dokument</button>
+                            </div>
+                            <div>
+                                <button class="filled-button">Speichern</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -136,18 +193,69 @@ interface ListItem {
             0 41.8px 33.4px rgba(0, 0, 0, 0.086),
             0 100px 80px rgba(0, 0, 0, 0.12)
         }
-        
+
         .form-box {
             padding-left: 20px;
             padding-bottom: 20px;
         }
-        
+
         .form-container {
+            padding: 10px;
             display: grid;
             grid-template-columns: 1fr auto auto;
+            gap: 1rem;
             background-color: white;
             height: 100%;
-            box-shadow: 0 10px 6px -6px #777;        }
+            box-shadow: 0 10px 6px -6px #777;
+        }
+
+        .form-fields-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .smaller-text-field {
+            font-size: 13px;
+            height: 20px;
+            width: 80%;
+        }
+
+        .push-to-bottom {
+            display: grid;
+            grid-template-rows: 1fr auto;
+            gap: 1rem;
+        }
+
+        .outlined-button {
+            width: 100%;
+            border: 2px solid #2678a9;
+            padding: 3px 6px;
+            color: #2678a9;
+            border-radius: 5px;
+        }
+
+        .outlined-button:hover {
+            background-color: #2678a9;
+            color: white;
+        }
+
+        .filled-button {
+            width: 100%;
+            border: 2px solid #2678a9;
+            padding: 3px 6px;
+            color: white;
+            border-radius: 5px;
+            background-color: #2678a9;
+        }
+
+        .filled-button:hover {
+            background-color: white;
+            color: cornflowerblue;
+        }
+
+        .search-icon {
+            background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iYmxhY2siIHdpZHRoPSIxOHB4IiBoZWlnaHQ9IjE4cHgiPjxwYXRoIGQ9Ik0wIDBoMjR2MjRIMHoiIGZpbGw9Im5vbmUiLz48cGF0aCBkPSJNMTUuNSAxNGgtLjc5bC0uMjgtLjI3QzE1LjQxIDEyLjU5IDE2IDExLjExIDE2IDkuNSAxNiA1LjkxIDEzLjA5IDMgOS41IDNTMyA1LjkxIDMgOS41IDUuOTEgMTYgOS41IDE2YzEuNjEgMCAzLjA5LS41OSA0LjIzLTEuNTdsLjI3LjI4di43OWw1IDQuOTlMMjAuNDkgMTlsLTQuOTktNXptLTYgMEM3LjAxIDE0IDUgMTEuOTkgNSA5LjVTNy4wMSA1IDkuNSA1IDE0IDcuMDEgMTQgOS41IDExLjk5IDE0IDkuNSAxNHoiLz48L3N2Zz4=") no-repeat right;
+        }
     `]
     // changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -240,6 +348,14 @@ export class PDFComponent implements OnInit, IWidgetComponent {
 
         try {
             $('body').initialize('en-US');
+            $('#searchfield').searchfield({
+                clearable: true,
+            }).on('selected', function (e, a) {
+                console.log('Selected event was fired');
+                if (a.hasClass('more-results')) {
+                    console.log('More results was clicked');
+                }
+            });
         } catch (err) {
             console.warn(err);
         }
