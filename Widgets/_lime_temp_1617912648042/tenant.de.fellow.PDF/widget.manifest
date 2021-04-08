@@ -1,0 +1,23 @@
+{
+	"widgetId": "tenant.de.fellow.PDF",
+	"type": "inline",
+	"framework": "angular",
+	"aotVersion": "",
+	"name": "Infor IDM - Tenant",
+	"version": "1.0.1",
+	"defaultSize": "3,2",
+	"category": "application",
+	"enablePublish": true,
+	"applicationLogicalId": "lid://infor.homepages",
+	"moduleName": "widget",
+	"author": "Fellow Consulting",
+	"localization": {
+		"en-US": {
+			"widgetTitle": "PDF",
+			"widgetDescription": "PDF widget for Infor Homepages",
+			"order": "Order",
+			"ascending": "Ascending",
+			"descending": "Descending"
+		}
+	}
+}
