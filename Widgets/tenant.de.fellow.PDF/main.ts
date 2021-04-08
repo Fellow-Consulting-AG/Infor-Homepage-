@@ -1,7 +1,7 @@
-import {ChangeDetectorRef, Component, Input, NgModule, OnInit, ViewChild} from "@angular/core";
+import {ChangeDetectorRef, Component, Input, NgModule, OnInit} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {SohoListViewModule} from "@infor/sohoxi-angular";
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {FormBuilder, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {IWidgetComponent, IWidgetContext, IWidgetInstance, IWidgetSettingMetadata, WidgetSettingsType} from "lime";
 import {assets} from "./assets";
 import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
@@ -44,49 +44,44 @@ interface VerticalListItem {
             </div>
 
             <!-- First Tab -->
-            <ng-container *ngIf="currentTab == 0 || currentTab == 1">
-                <div class="body-grid" [ngClass]="currentTab == 1 ? 'two-by-two' : 'two-by-one'">
-                    <!-- List    -->
-                    <div class="list-container">
-                        <div class="list-header">
-                            <div>Vetr.<img [src]="sortIcon" class="sort"/></div>
-                            <div>Datum<img [src]="sortIcon" class="sort"/></div>
-                            <div>Absender<img [src]="sortIcon" class="sort"/></div>
-                            <div>Kassenzeichen<img [src]="sortIcon" class="sort"/></div>
-                            <div>Nachname<img [src]="sortIcon" class="sort"/></div>
-                            <div>Vorname<img [src]="sortIcon" class="sort"/></div>
-                            <div>Eingang<img [src]="sortIcon" class="sort"/></div>
+            <ng-container *ngIf="currentTab == 0">
+                <div style="width: 100%; display: flex; padding: 10px; overflow: auto; background-color: #f0f0f0;">
+                    <div style="width: 50%; overflow: auto; display: grid; padding-top: 27px">
+                        <div class="grid-header">
+                            <div style="width: 10%; text-align: center">Vetr.<img [src]="sortIcon" class="sort"/></div>
+                            <div style="width: 12%">Datum<img [src]="sortIcon" class="sort"/></div>
+                            <div style="width: 13%">Absender<img [src]="sortIcon" class="sort"/></div>
+                            <div style="width: 20%">Kassenzeichen<img [src]="sortIcon" class="sort"/></div>
+                            <div style="width: 15%">Nachname<img [src]="sortIcon" class="sort"/></div>
+                            <div style="width: 15%">Vorname<img [src]="sortIcon" class="sort"/></div>
+                            <div style="width: 15%">Eingang<img [src]="sortIcon" class="sort"/></div>
                         </div>
-                        <div *ngFor="let item of sampleListItems;" class="list-item">
-                            <div style="padding-left: 10px;">
-                                <img [src]="checkMark" width="20" *ngIf="item.checked">
-                                <div style="width:20px" *ngIf="!item.checked"></div>
+                        <div style="overflow: auto">
+                            <div *ngFor="let item of sampleListItems;"
+                                 style="display: flex; background: white; height: 30px; cursor: pointer; margin-top: 7px;"
+                                 class="list-item"
+                                 (click)="rowSelected(item)">
+                                <div style="width: 10%; margin: auto 0">
+                                    <img style="margin: auto auto; display: block" [src]="checkMark" width="20"
+                                         *ngIf="item.checked">
+                                </div>
+                                <div style="width: 12%; margin: auto 0">{{item.date}}</div>
+                                <div style="width: 13%; margin: auto 0">{{item.sender}}</div>
+                                <div style="width: 20%; margin: auto 0">{{item.cashRegister}}</div>
+                                <div style="width: 15%; margin: auto 0">{{item.firstName}}</div>
+                                <div style="width: 15%; margin: auto 0">{{item.lastName}}</div>
+                                <div style="width: 15%; margin: auto 0">{{item.entrance}}</div>
                             </div>
-                            <div>{{item.date}}</div>
-                            <div>{{item.sender}}</div>
-                            <div>{{item.cashRegister}}</div>
-                            <div>{{item.firstName}}</div>
-                            <div>{{item.lastName}}</div>
-                            <div>{{item.entrance}}</div>
                         </div>
-
-                    </div>
-
-                    <!-- PDF Preview     -->
-                    <div style="grid-column: 2; grid-row: 1/-1; padding:10px 10px 20px 10px;">
-                        <iframe src="https://idm.eu1.inforcloudsuite.com/ca/api/resources/EMA_Returns-1-3-LATEST?$token=Ac414kLBx8%2B3XhaqSrDU%2BrviwMjIIc75%2BPEZV%2FzaFJD3Ra4hftBfyAZZ9LT37Akov%2Fk37RsL568EiQC2OjRJos%2FXXORP%2FpZ0%2FCcV%2FYUxzb%2FCFt5hfPWSndG%2FKayn8OvupnfKltkP09C7Gi2BarJrKuKrpmFDdJ5g43sF5m21P%2BAGEwoarOuMXQ%2Feg1o8G%2BcWOTDxduujyzmOF7O64vFWcDkF%2BisApExRuEBTK7K5QPXB2KtkQovwMzBjmAWfn8oUwtpE4uvFX7y3vW2yG3UZe%2FRuDtRmjR7ek4G422wav39V4dIts7bh75o6Il5FgS%2BBOI%2F1wFLYFpO9pnQlP8Z2CAtKOnOyE0tFi2UQU564XBmtvbAtoiOKpaCqgMXu&$tenant=FELLOWCONSULTING_DEV" width="100%" height="100%"
-                                class="pdf-container-style"></iframe>
-                    </div>
-
-                    <!-- Form  -->
-                    <div *ngIf="currentTab == 1">
-                        <div class="form-box">
+                        <div *ngIf="selectedRow" style="padding-top: 10px">
                             <div class="form-container">
                                 <div class="form-fields-container">
                                     <div class="field">
                                         <label>User</label>
-                                        <input type="text" class="smaller-text-field search-icon" value="4401ac15">
+                                        <input type="text" class="smaller-text-field search-icon"
+                                               value="{{selectedRow.sender}}">
                                     </div>
+
                                     <div class="field">
                                         <label></label>
                                         <span style="font-size:14px">Obermeier, Klaus</span>
@@ -94,32 +89,32 @@ interface VerticalListItem {
 
                                     <div class="field">
                                         <label>Kassenzeichen</label>
-                                        <input type="text" class="smaller-text-field" value="3202039423042">
+                                        <input type="text" class="smaller-text-field"
+                                               value="{{selectedRow.cashRegister}}">
                                     </div>
                                     <div>&nbsp;</div>
 
-
                                     <div class="field">
                                         <label>Nachname</label>
-                                        <input type="text" class="smaller-text-field" value="Panse">
-                                    </div>
-                                    <div class="field">
-                                        <label>Vorname</label>
-                                        <input type="text" class="smaller-text-field" value="Jim">
+                                        <input type="text" class="smaller-text-field" value="{{selectedRow.firstName}}">
                                     </div>
 
+                                    <div class="field">
+                                        <label>Vorname</label>
+                                        <input type="text" class="smaller-text-field" value="{{selectedRow.lastName}}">
+                                    </div>
 
                                     <div class="field" style="grid-row:4; grid-column: 1 / -1">
                                         <label>Eingang</label>
                                         <input type="text" class="smaller-text-field"
-                                               value="Posteinganj -- Ruckleuf EMA"
+                                               value="{{selectedRow.entrance}}"
                                                style="width:90%">
                                     </div>
 
-
                                     <div class="field" style="grid-row:5; grid-column: 1 / -1">
                                         <label>Dokumentenbezeichnung</label>
-                                        <input type="text" class="smaller-text-field search-icon" value="Ruckleuf EMA"
+                                        <input type="text" class="smaller-text-field search-icon"
+                                               value="Ruckleuf EMA"
                                                style="width:90%">
                                     </div>
                                 </div>
@@ -144,49 +139,12 @@ interface VerticalListItem {
                             </div>
                         </div>
                     </div>
-                </div>
-            </ng-container>
-
-            <!--<ng-container *ngIf="currentTab == 2">
-                <div class="body-grid two-by-one">
-                    <div class="vertical-items-container">
-                        <div class="vertical-items">
-
-                            <div *ngFor="let verticalItem of verticalItems;" class="vertical-item"
-                                 [ngClass]="{'hover-shadow':verticalItem.rollover}"
-                                 (mouseover)="verticalItem.rollover = true" (mouseout)="verticalItem.rollover= false">
-                                <div>
-                                    12.12.2020
-                                </div>
-                                <div></div>
-                                <div class="vertical-item-details">
-                                    <div style="grid-row: 1/-1;margin-left: 10px; margin-top: 5px">
-                                        <img [src]="checkMark" width="30">
-                                    </div>
-                                    <div style="margin-top: 10px; grid-column: 2/4">Poststelle</div>
-                                    <div style="margin-top: 10px;">3206002</div>
-                                    <div style="grid-column: 5; grid-row: 1/span 2;margin-top: 5px;"><img
-                                            [src]="pdfIcon"></div>
-
-                                    <div>Reich</div>
-                                    <div>Frank</div>
-                                    <div>Unbekannt</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="vertical-line">
-                            <div></div>
-                            <div style="background-color: #6a98b4;"></div>
-                        </div>
-
-                    </div>
-                    <div style="padding:10px 10px 20px 10px;">
-                        <iframe src="https://idm.eu1.inforcloudsuite.com/ca/api/resources/EMA_Returns-1-3-LATEST?$token=Ac414kLBx8%2B3XhaqSrDU%2BrviwMjIIc75%2BPEZV%2FzaFJD3Ra4hftBfyAZZ9LT37Akov%2Fk37RsL568EiQC2OjRJos%2FXXORP%2FpZ0%2FCcV%2FYUxzb%2FCFt5hfPWSndG%2FKayn8OvupnfKltkP09C7Gi2BarJrKuKrpmFDdJ5g43sF5m21P%2BAGEwoarOuMXQ%2Feg1o8G%2BcWOTDxduujyzmOF7O64vFWcDkF%2BisApExRuEBTK7K5QPXB2KtkQovwMzBjmAWfn8oUwtpE4uvFX7y3vW2yG3UZe%2FRuDtRmjR7ek4G422wav39V4dIts7bh75o6Il5FgS%2BBOI%2F1wFLYFpO9pnQlP8Z2CAtKOnOyE0tFi2UQU564XBmtvbAtoiOKpaCqgMXu&$tenant=FELLOWCONSULTING_DEV" width="100%" height="100%"
+                    <div style="width: 50%; height: 100%; padding: 45px 20px 0 30px;">
+                        <iframe src="https://www.muhammadbinyusrat.com/devguide.pdf" width="100%" height="100%"
                                 class="pdf-container-style"></iframe>
                     </div>
                 </div>
-            </ng-container>-->
+            </ng-container>
         </div>
     `,
     styles: [`
@@ -213,6 +171,13 @@ interface VerticalListItem {
             -moz-transform: scale(1, 1.5); /* opera */
         }
 
+        .grid-header {
+            width: calc(100% - 8px); /*excluding scroller width*/
+            display: flex;
+            color: #909090;
+            cursor: pointer;
+        }
+
         .main-menu-icon {
             cursor: pointer;
         }
@@ -226,80 +191,19 @@ interface VerticalListItem {
             width: 50px;
         }
 
-        .body-grid {
-            background-color: #f0f0f0;
-            display: grid;
-            gap: 1rem;
-        }
-
-        .two-by-two {
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: 1fr 1fr;
-        }
-
-        .two-by-one {
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: 1fr;
-        }
-
         .pdf-container-style {
             box-shadow: 0 10px 6px -6px #777;
         }
 
-        .list-container {
-            display: grid;
-            grid-template-rows: repeat(auto-fill, 40px);
-            padding-left: 20px;
-            padding-top: 10px;
-            gap: 1rem;
-        }
-
-        .list-header {
-            display: grid;
-            grid-template-columns: 32px 1fr 1fr 1.1fr 1fr 1fr 1fr;
-            grid-column-gap: 0.5rem;
-            grid-row-gap: 0;
-            color: #909090;
-            cursor: pointer;
+        .list-item:hover {
+            box-shadow: 0 0 11px rgba(33, 33, 33, .2);
         }
 
         .sort {
             width: 12px;
             margin-bottom: -3px;
+            margin-left: 2px;
             opacity: 0.5;
-        }
-
-        .list-header > div {
-            margin: auto 0 0 0;
-        }
-
-        .list-item {
-            cursor: pointer;
-            background-color: white;
-            box-shadow: #1a1a1a;
-            display: grid;
-            grid-template-columns: 32px 1fr 1fr 1.1fr 1fr 1fr 1fr;
-            gap: 0.5rem;
-        }
-
-        .list-item > div {
-        / / place-self: center;
-            margin: auto 0;
-        }
-
-        .list-item:hover {
-            background-color: white;
-            box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034),
-            0 6.7px 5.3px rgba(0, 0, 0, 0.048),
-            0 12.5px 10px rgba(0, 0, 0, 0.06),
-            0 22.3px 17.9px rgba(0, 0, 0, 0.072),
-            0 41.8px 33.4px rgba(0, 0, 0, 0.086),
-            0 100px 80px rgba(0, 0, 0, 0.12)
-        }
-
-        .form-box {
-            padding-left: 20px;
-            padding-bottom: 20px;
         }
 
         .form-container {
@@ -359,83 +263,6 @@ interface VerticalListItem {
         .search-icon {
             background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iYmxhY2siIHdpZHRoPSIxOHB4IiBoZWlnaHQ9IjE4cHgiPjxwYXRoIGQ9Ik0wIDBoMjR2MjRIMHoiIGZpbGw9Im5vbmUiLz48cGF0aCBkPSJNMTUuNSAxNGgtLjc5bC0uMjgtLjI3QzE1LjQxIDEyLjU5IDE2IDExLjExIDE2IDkuNSAxNiA1LjkxIDEzLjA5IDMgOS41IDNTMyA1LjkxIDMgOS41IDUuOTEgMTYgOS41IDE2YzEuNjEgMCAzLjA5LS41OSA0LjIzLTEuNTdsLjI3LjI4di43OWw1IDQuOTlMMjAuNDkgMTlsLTQuOTktNXptLTYgMEM3LjAxIDE0IDUgMTEuOTkgNSA5LjVTNy4wMSA1IDkuNSA1IDE0IDcuMDEgMTQgOS41IDExLjk5IDE0IDkuNSAxNHoiLz48L3N2Zz4=") no-repeat right;
         }
-
-
-        /* **************************** */
-        /* Second Page (Vertical Items) */
-        /* **************************** */
-
-        .vertical-items-container {
-            position: relative;
-            width: 100%;
-            margin: 20px 0px;
-        }
-
-        .vertical-line {
-            display: grid;
-            grid-template-columns: 1fr 10px;
-            grid-template-rows: 1fr;
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 100%;
-            width: 200px;
-        }
-
-        .vertical-items {
-            position: absolute;
-            top: 0;
-            left: 0;
-            display: grid;
-            gap: 3rem;
-            grid-template-rows: repeat(auto-fill, 1fr);
-            width: 100%;
-            padding-top: 25px;
-        }
-
-        .vertical-item {
-            cursor: pointer;
-            display: grid;
-            grid-template-columns: 150px 50px 1fr;
-            gap: 2rem;
-            z-index: 5;
-        }
-
-        .hover-shadow > * {
-            box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034),
-            0 6.7px 5.3px rgba(0, 0, 0, 0.048),
-            0 12.5px 10px rgba(0, 0, 0, 0.06),
-            0 22.3px 17.9px rgba(0, 0, 0, 0.072),
-            0 41.8px 33.4px rgba(0, 0, 0, 0.086),
-            0 100px 80px rgba(0, 0, 0, 0.12)
-        }
-
-        .vertical-item > div:nth-child(1) {
-            background-color: white;
-            height: 10px;
-            place-self: center;
-            padding: 10px 15px 25px 15px;
-            font-size: 14px;
-        }
-
-        .vertical-item > div:nth-child(2) { /* Middle Circle */
-            background-color: #2678a9;
-            height: 50px;
-            border-radius: 50%;
-        }
-
-        .vertical-item > div:nth-child(3) {
-            background-color: white;
-            place-self: center;
-        }
-
-        .vertical-item-details {
-            font-size: 14px;
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-            grid-template-rows: 1fr 1fr;
-            gap: 3rem;
-        }
     `]
     // changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -446,7 +273,6 @@ export class PDFComponent implements OnInit, IWidgetComponent {
     jQueryElement?: JQuery; //Reference to JQuery
     $ = $;
     checkMark: SafeHtml;
-    pdfIcon: SafeHtml;
 
     topMenuItems: MainMenuItem[] = [];
     sampleListItems: ListItem[];
@@ -455,25 +281,30 @@ export class PDFComponent implements OnInit, IWidgetComponent {
 
     sortIcon: SafeHtml;
 
+    selectedRow: ListItem;
+
     constructor(private readonly changeDetectionRef: ChangeDetectorRef, private fb: FormBuilder, private ds: DomSanitizer) {
     }
 
+    rowSelected(item: ListItem) {
+        this.selectedRow = item;
+    }
+
     ngOnInit() {
-        this.sortIcon = this.ds.bypassSecurityTrustUrl(assets.sortIcon);
         this.changeDetectionRef.markForCheck();
         this.topMenuItems = [
-            {icon: this.ds.bypassSecurityTrustUrl(assets.eithernet), label: 'AKTUALISIEREN '},
-            {icon: this.ds.bypassSecurityTrustUrl(assets.language), label: 'WEITERLEITEN '},
-            {icon: this.ds.bypassSecurityTrustUrl(assets.mediation), label: 'TRENNEN'},
+            {icon: this.ds.bypassSecurityTrustUrl(assets.aktualisieren), label: 'AKTUALISIEREN '},
+            {icon: this.ds.bypassSecurityTrustUrl(assets.weiterleiten), label: 'WEITERLEITEN '},
+            {icon: this.ds.bypassSecurityTrustUrl(assets.trennen), label: 'TRENNEN'},
             // {icon: this.ds.bypassSecurityTrustUrl(assets.print), label: 'SORTIEREN'},
-            {icon: this.ds.bypassSecurityTrustUrl(assets.refresh), label: 'BEARBEITEN'},
+            {icon: this.ds.bypassSecurityTrustUrl(assets.bearbeiten), label: 'BEARBEITEN'},
             // {icon: this.ds.bypassSecurityTrustUrl(assets.rounded_corner), label: 'FUNKTIONEN'},
-            {icon: this.ds.bypassSecurityTrustUrl(assets.sort), label: 'EAKTE'},
-            {icon: this.ds.bypassSecurityTrustUrl(assets.table_view), label: 'HWS/CXS'},
+            {icon: this.ds.bypassSecurityTrustUrl(assets.eakte), label: 'EAKTE'},
+            {icon: this.ds.bypassSecurityTrustUrl(assets.hwscxs), label: 'HWS/CXS'},
         ];
 
-        this.checkMark = this.ds.bypassSecurityTrustUrl(assets.check);
-        this.pdfIcon = this.ds.bypassSecurityTrustUrl(assets.pdfIcon);
+        this.checkMark = this.ds.bypassSecurityTrustUrl(assets.tick);
+        this.sortIcon = this.ds.bypassSecurityTrustUrl(assets.sort);
 
         this.sampleListItems = [
             {
@@ -529,17 +360,239 @@ export class PDFComponent implements OnInit, IWidgetComponent {
                 lastName: 'Reich',
                 firstName: 'Frank',
                 entrance: 'Unbekannt'
+            },
+            {
+                checked: false,
+                date: "01.02.2020",
+                sender: 'Poststelle',
+                cashRegister: 3206002784872,
+                lastName: 'Reich',
+                firstName: 'Frank',
+                entrance: 'Unbekannt'
+            },
+            {
+                checked: false,
+                date: "01.02.2020",
+                sender: 'Poststelle',
+                cashRegister: 3206002784872,
+                lastName: 'Reich',
+                firstName: 'Frank',
+                entrance: 'Unbekannt'
+            },
+            {
+                checked: false,
+                date: "01.02.2020",
+                sender: 'Poststelle',
+                cashRegister: 3206002784872,
+                lastName: 'Reich',
+                firstName: 'Frank',
+                entrance: 'Unbekannt'
+            },
+            {
+                checked: false,
+                date: "01.02.2020",
+                sender: 'Poststelle',
+                cashRegister: 3206002784872,
+                lastName: 'Reich',
+                firstName: 'Frank',
+                entrance: 'Unbekannt'
+            },
+            {
+                checked: false,
+                date: "01.02.2020",
+                sender: 'Poststelle',
+                cashRegister: 3206002784872,
+                lastName: 'Reich',
+                firstName: 'Frank',
+                entrance: 'Unbekannt'
+            },
+            {
+                checked: false,
+                date: "01.02.2020",
+                sender: 'Poststelle',
+                cashRegister: 3206002784872,
+                lastName: 'Reich',
+                firstName: 'Frank',
+                entrance: 'Unbekannt'
+            },
+            {
+                checked: false,
+                date: "01.02.2020",
+                sender: 'Poststelle',
+                cashRegister: 3206002784872,
+                lastName: 'Reich',
+                firstName: 'Frank',
+                entrance: 'Unbekannt'
+            },
+            {
+                checked: false,
+                date: "01.02.2020",
+                sender: 'Poststelle',
+                cashRegister: 3206002784872,
+                lastName: 'Reich',
+                firstName: 'Frank',
+                entrance: 'Unbekannt'
+            },
+            {
+                checked: false,
+                date: "01.02.2020",
+                sender: 'Poststelle',
+                cashRegister: 3206002784872,
+                lastName: 'Reich',
+                firstName: 'Frank',
+                entrance: 'Unbekannt'
+            },
+            {
+                checked: false,
+                date: "01.02.2020",
+                sender: 'Poststelle',
+                cashRegister: 3206002784872,
+                lastName: 'Reich',
+                firstName: 'Frank',
+                entrance: 'Unbekannt'
+            },
+            {
+                checked: false,
+                date: "01.02.2020",
+                sender: 'Poststelle',
+                cashRegister: 3206002784872,
+                lastName: 'Reich',
+                firstName: 'Frank',
+                entrance: 'Unbekannt'
+            },
+            {
+                checked: false,
+                date: "01.02.2020",
+                sender: 'Poststelle',
+                cashRegister: 3206002784872,
+                lastName: 'Reich',
+                firstName: 'Frank',
+                entrance: 'Unbekannt'
+            },
+            {
+                checked: false,
+                date: "01.02.2020",
+                sender: 'Poststelle',
+                cashRegister: 3206002784872,
+                lastName: 'Reich',
+                firstName: 'Frank',
+                entrance: 'Unbekannt'
+            },
+            {
+                checked: false,
+                date: "01.02.2020",
+                sender: 'Poststelle',
+                cashRegister: 3206002784872,
+                lastName: 'Reich',
+                firstName: 'Frank',
+                entrance: 'Unbekannt'
+            },
+            {
+                checked: false,
+                date: "01.02.2020",
+                sender: 'Poststelle',
+                cashRegister: 3206002784872,
+                lastName: 'Reich',
+                firstName: 'Frank',
+                entrance: 'Unbekannt'
+            },
+            {
+                checked: false,
+                date: "01.02.2020",
+                sender: 'Poststelle',
+                cashRegister: 3206002784872,
+                lastName: 'Reich',
+                firstName: 'Frank',
+                entrance: 'Unbekannt'
+            },
+            {
+                checked: false,
+                date: "01.02.2020",
+                sender: 'Poststelle',
+                cashRegister: 3206002784872,
+                lastName: 'Reich',
+                firstName: 'Frank',
+                entrance: 'Unbekannt'
+            },
+            {
+                checked: false,
+                date: "01.02.2020",
+                sender: 'Poststelle',
+                cashRegister: 3206002784872,
+                lastName: 'Reich',
+                firstName: 'Frank',
+                entrance: 'Unbekannt'
+            },
+            {
+                checked: false,
+                date: "01.02.2020",
+                sender: 'Poststelle',
+                cashRegister: 3206002784872,
+                lastName: 'Reich',
+                firstName: 'Frank',
+                entrance: 'Unbekannt'
+            },
+            {
+                checked: false,
+                date: "01.02.2020",
+                sender: 'Poststelle',
+                cashRegister: 3206002784872,
+                lastName: 'Reich',
+                firstName: 'Frank',
+                entrance: 'Unbekannt'
+            },
+            {
+                checked: false,
+                date: "01.02.2020",
+                sender: 'Poststelle',
+                cashRegister: 3206002784872,
+                lastName: 'Reich',
+                firstName: 'Frank',
+                entrance: 'Unbekannt'
+            },
+            {
+                checked: false,
+                date: "01.02.2020",
+                sender: 'Poststelle',
+                cashRegister: 3206002784872,
+                lastName: 'Reich',
+                firstName: 'Frank',
+                entrance: 'Unbekannt'
+            },
+            {
+                checked: false,
+                date: "01.02.2020",
+                sender: 'Poststelle',
+                cashRegister: 3206002784872,
+                lastName: 'Reich',
+                firstName: 'Frank',
+                entrance: 'Unbekannt'
+            },
+            {
+                checked: false,
+                date: "01.02.2020",
+                sender: 'Poststelle',
+                cashRegister: 3206002784872,
+                lastName: 'Reich',
+                firstName: 'Frank',
+                entrance: 'Unbekannt'
+            },
+            {
+                checked: false,
+                date: "01.02.2020",
+                sender: 'Poststelle',
+                cashRegister: 3206002784872,
+                lastName: 'Reich',
+                firstName: 'Frank',
+                entrance: 'Taltech'
             }
-
         ];
-
 
         this.verticalItems = [
             {date: '12.12.2020', rollover: false},
             {date: '26.10.2020', rollover: false},
             {date: '12.12.2020', rollover: false}
         ];
-
 
         try {
             $('body').initialize('en-US');
@@ -554,7 +607,6 @@ export class PDFComponent implements OnInit, IWidgetComponent {
         } catch (err) {
             console.warn(err);
         }
-
     }
 
     private getMetadata(): IWidgetSettingMetadata[] {
@@ -577,3 +629,127 @@ export class PDFComponent implements OnInit, IWidgetComponent {
 })
 export class PdfModule {
 }
+
+/* **************************** */
+/* Second Page (Vertical Items) - HTML */
+/* **************************** */
+
+/*
+<ng-container *ngIf="currentTab == 2">
+<div class="body-grid two-by-one">
+<div class="vertical-items-container">
+<div class="vertical-items">
+
+<div *ngFor="let verticalItem of verticalItems;" class="vertical-item"
+    [ngClass]="{'hover-shadow':verticalItem.rollover}"
+(mouseover)="verticalItem.rollover = true" (mouseout)="verticalItem.rollover= false">
+    <div>
+        12.12.2020
+</div>
+<div></div>
+<div class="vertical-item-details">
+<div style="grid-row: 1/-1;margin-left: 10px; margin-top: 5px">
+<img [src]="checkMark" width="30">
+    </div>
+    <div style="margin-top: 10px; grid-column: 2/4">Poststelle</div>
+    <div style="margin-top: 10px;">3206002</div>
+    <div style="grid-column: 5; grid-row: 1/span 2;margin-top: 5px;"><img
+    [src]="pdfIcon"></div>
+
+    <div>Reich</div>
+    <div>Frank</div>
+    <div>Unbekannt</div>
+    </div>
+    </div>
+    </div>
+
+    <div class="vertical-line">
+    <div></div>
+    <div style="background-color: #6a98b4;"></div>
+    </div>
+
+    </div>
+    <div style="padding:10px 10px 20px 10px;">
+<iframe src="https://idm.eu1.inforcloudsuite.com/ca/api/resources/EMA_Returns-1-3-LATEST?$token=Ac414kLBx8%2B3XhaqSrDU%2BrviwMjIIc75%2BPEZV%2FzaFJD3Ra4hftBfyAZZ9LT37Akov%2Fk37RsL568EiQC2OjRJos%2FXXORP%2FpZ0%2FCcV%2FYUxzb%2FCFt5hfPWSndG%2FKayn8OvupnfKltkP09C7Gi2BarJrKuKrpmFDdJ5g43sF5m21P%2BAGEwoarOuMXQ%2Feg1o8G%2BcWOTDxduujyzmOF7O64vFWcDkF%2BisApExRuEBTK7K5QPXB2KtkQovwMzBjmAWfn8oUwtpE4uvFX7y3vW2yG3UZe%2FRuDtRmjR7ek4G422wav39V4dIts7bh75o6Il5FgS%2BBOI%2F1wFLYFpO9pnQlP8Z2CAtKOnOyE0tFi2UQU564XBmtvbAtoiOKpaCqgMXu&$tenant=FELLOWCONSULTING_DEV"
+width="100%" height="100%"
+class="pdf-container-style"></iframe>
+    </div>
+    </div>
+    </ng-container>*/
+
+/* **************************** */
+/* Second Page (Vertical Items) - CSS */
+/* **************************** */
+
+/*
+.vertical-items-container {
+    position: relative;
+    width: 100%;
+    margin: 20px 0px;
+}
+
+.vertical-line {
+    display: grid;
+    grid-template-columns: 1fr 10px;
+    grid-template-rows: 1fr;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 200px;
+}
+
+.vertical-items {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: grid;
+    gap: 3rem;
+    grid-template-rows: repeat(auto-fill, 1fr);
+    width: 100%;
+    padding-top: 25px;
+}
+
+.vertical-item {
+    cursor: pointer;
+    display: grid;
+    grid-template-columns: 150px 50px 1fr;
+    gap: 2rem;
+    z-index: 5;
+}
+
+.hover-shadow > * {
+    box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034),
+    0 6.7px 5.3px rgba(0, 0, 0, 0.048),
+    0 12.5px 10px rgba(0, 0, 0, 0.06),
+    0 22.3px 17.9px rgba(0, 0, 0, 0.072),
+    0 41.8px 33.4px rgba(0, 0, 0, 0.086),
+    0 100px 80px rgba(0, 0, 0, 0.12)
+}
+
+.vertical-item > div:nth-child(1) {
+    background-color: white;
+    height: 10px;
+    place-self: center;
+    padding: 10px 15px 25px 15px;
+    font-size: 14px;
+}
+
+.vertical-item > div:nth-child(2) { /!* Middle Circle *!/
+    background-color: #2678a9;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.vertical-item > div:nth-child(3) {
+    background-color: white;
+    place-self: center;
+}
+
+.vertical-item-details {
+    font-size: 14px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 3rem;
+}*/
