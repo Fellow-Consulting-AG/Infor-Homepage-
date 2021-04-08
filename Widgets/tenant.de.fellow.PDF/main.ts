@@ -37,17 +37,26 @@ interface VerticalListItem {
                              (click)="currentTab = i;">
                             <div style="text-align: center"><img [src]="menuItem.icon" class="main-menu-icon-image"/>
                             </div>
-                            <div style="text-align: center">{{menuItem.label}}</div>
+                            <div class="header-label">{{menuItem.label}}</div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- First Tab -->
-            <ng-container *ngIf="currentTab == 0">
-                <div class="body-grid two-by-two">
+            <ng-container *ngIf="currentTab == 0 || currentTab == 1">
+                <div class="body-grid" [ngClass]="currentTab == 1 ? 'two-by-two' : 'two-by-one'">
                     <!-- List    -->
                     <div class="list-container">
+                        <div class="list-header">
+                            <div>Vetr.<img [src]="sortIcon" class="sort"/></div>
+                            <div>Datum<img [src]="sortIcon" class="sort"/></div>
+                            <div>Absender<img [src]="sortIcon" class="sort"/></div>
+                            <div>Kassenzeichen<img [src]="sortIcon" class="sort"/></div>
+                            <div>Nachname<img [src]="sortIcon" class="sort"/></div>
+                            <div>Vorname<img [src]="sortIcon" class="sort"/></div>
+                            <div>Eingang<img [src]="sortIcon" class="sort"/></div>
+                        </div>
                         <div *ngFor="let item of sampleListItems;" class="list-item">
                             <div style="padding-left: 10px;">
                                 <img [src]="checkMark" width="20" *ngIf="item.checked">
@@ -60,73 +69,77 @@ interface VerticalListItem {
                             <div>{{item.lastName}}</div>
                             <div>{{item.entrance}}</div>
                         </div>
+
                     </div>
 
                     <!-- PDF Preview     -->
                     <div style="grid-column: 2; grid-row: 1/-1; padding:10px 10px 20px 10px;">
-                        <iframe src="http://www.muhammadbinyusrat.com/devguide.pdf" width="100%" height="100%"
+                        <iframe src="https://idm.eu1.inforcloudsuite.com/ca/api/resources/EMA_Returns-1-3-LATEST?$token=Ac414kLBx8%2B3XhaqSrDU%2BrviwMjIIc75%2BPEZV%2FzaFJD3Ra4hftBfyAZZ9LT37Akov%2Fk37RsL568EiQC2OjRJos%2FXXORP%2FpZ0%2FCcV%2FYUxzb%2FCFt5hfPWSndG%2FKayn8OvupnfKltkP09C7Gi2BarJrKuKrpmFDdJ5g43sF5m21P%2BAGEwoarOuMXQ%2Feg1o8G%2BcWOTDxduujyzmOF7O64vFWcDkF%2BisApExRuEBTK7K5QPXB2KtkQovwMzBjmAWfn8oUwtpE4uvFX7y3vW2yG3UZe%2FRuDtRmjR7ek4G422wav39V4dIts7bh75o6Il5FgS%2BBOI%2F1wFLYFpO9pnQlP8Z2CAtKOnOyE0tFi2UQU564XBmtvbAtoiOKpaCqgMXu&$tenant=FELLOWCONSULTING_DEV" width="100%" height="100%"
                                 class="pdf-container-style"></iframe>
                     </div>
 
                     <!-- Form  -->
-                    <div class="form-box">
-                        <div class="form-container">
-                            <div class="form-fields-container">
-                                <div class="field">
-                                    <label>User</label>
-                                    <input type="text" class="smaller-text-field search-icon" value="4401ac15">
-                                </div>
-                                <div class="field">
-                                    <label></label>
-                                    <span style="font-size:14px">Obermeier, Klaus</span>
-                                </div>
+                    <div *ngIf="currentTab == 1">
+                        <div class="form-box">
+                            <div class="form-container">
+                                <div class="form-fields-container">
+                                    <div class="field">
+                                        <label>User</label>
+                                        <input type="text" class="smaller-text-field search-icon" value="4401ac15">
+                                    </div>
+                                    <div class="field">
+                                        <label></label>
+                                        <span style="font-size:14px">Obermeier, Klaus</span>
+                                    </div>
 
-                                <div class="field">
-                                    <label>Kassenzeichen</label>
-                                    <input type="text" class="smaller-text-field" value="3202039423042">
-                                </div>
-                                <div>&nbsp;</div>
-
-
-                                <div class="field">
-                                    <label>Nachname</label>
-                                    <input type="text" class="smaller-text-field" value="Panse">
-                                </div>
-                                <div class="field">
-                                    <label>Vorname</label>
-                                    <input type="text" class="smaller-text-field" value="Jim">
-                                </div>
+                                    <div class="field">
+                                        <label>Kassenzeichen</label>
+                                        <input type="text" class="smaller-text-field" value="3202039423042">
+                                    </div>
+                                    <div>&nbsp;</div>
 
 
-                                <div class="field" style="grid-row:4; grid-column: 1 / -1">
-                                    <label>Eingang</label>
-                                    <input type="text" class="smaller-text-field" value="Posteinganj -- Ruckleuf EMA"
-                                           style="width:90%">
-                                </div>
+                                    <div class="field">
+                                        <label>Nachname</label>
+                                        <input type="text" class="smaller-text-field" value="Panse">
+                                    </div>
+                                    <div class="field">
+                                        <label>Vorname</label>
+                                        <input type="text" class="smaller-text-field" value="Jim">
+                                    </div>
 
 
-                                <div class="field" style="grid-row:5; grid-column: 1 / -1">
-                                    <label>Dokumentenbezeichnung</label>
-                                    <input type="text" class="smaller-text-field search-icon" value="Ruckleuf EMA"
-                                           style="width:90%">
+                                    <div class="field" style="grid-row:4; grid-column: 1 / -1">
+                                        <label>Eingang</label>
+                                        <input type="text" class="smaller-text-field"
+                                               value="Posteinganj -- Ruckleuf EMA"
+                                               style="width:90%">
+                                    </div>
+
+
+                                    <div class="field" style="grid-row:5; grid-column: 1 / -1">
+                                        <label>Dokumentenbezeichnung</label>
+                                        <input type="text" class="smaller-text-field search-icon" value="Ruckleuf EMA"
+                                               style="width:90%">
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="push-to-bottom">
-                                <div></div>
-                                <div>
-                                    <button class="outlined-button">schließen</button>
+                                <div class="push-to-bottom">
+                                    <div></div>
+                                    <div>
+                                        <button class="outlined-button">schließen</button>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="push-to-bottom">
-                                <div></div>
-                                <div>
-                                    <button class="filled-button">eAkte</button>
-                                </div>
-                                <div>
-                                    <button class="filled-button">Dokument</button>
-                                </div>
-                                <div>
-                                    <button class="filled-button">Speichern</button>
+                                <div class="push-to-bottom">
+                                    <div></div>
+                                    <div>
+                                        <button class="filled-button">eAkte</button>
+                                    </div>
+                                    <div>
+                                        <button class="filled-button">Dokument</button>
+                                    </div>
+                                    <div>
+                                        <button class="filled-button">Speichern</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -134,7 +147,7 @@ interface VerticalListItem {
                 </div>
             </ng-container>
 
-            <ng-container *ngIf="currentTab == 1">
+            <!--<ng-container *ngIf="currentTab == 2">
                 <div class="body-grid two-by-one">
                     <div class="vertical-items-container">
                         <div class="vertical-items">
@@ -152,7 +165,8 @@ interface VerticalListItem {
                                     </div>
                                     <div style="margin-top: 10px; grid-column: 2/4">Poststelle</div>
                                     <div style="margin-top: 10px;">3206002</div>
-                                    <div style="grid-column: 5; grid-row: 1/span 2;margin-top: 5px;"><img [src]="pdfIcon"></div>
+                                    <div style="grid-column: 5; grid-row: 1/span 2;margin-top: 5px;"><img
+                                            [src]="pdfIcon"></div>
 
                                     <div>Reich</div>
                                     <div>Frank</div>
@@ -167,13 +181,12 @@ interface VerticalListItem {
                         </div>
 
                     </div>
-                    <!-- PDF Preview     -->
                     <div style="padding:10px 10px 20px 10px;">
-                        <iframe src="http://www.muhammadbinyusrat.com/devguide.pdf" width="100%" height="100%"
+                        <iframe src="https://idm.eu1.inforcloudsuite.com/ca/api/resources/EMA_Returns-1-3-LATEST?$token=Ac414kLBx8%2B3XhaqSrDU%2BrviwMjIIc75%2BPEZV%2FzaFJD3Ra4hftBfyAZZ9LT37Akov%2Fk37RsL568EiQC2OjRJos%2FXXORP%2FpZ0%2FCcV%2FYUxzb%2FCFt5hfPWSndG%2FKayn8OvupnfKltkP09C7Gi2BarJrKuKrpmFDdJ5g43sF5m21P%2BAGEwoarOuMXQ%2Feg1o8G%2BcWOTDxduujyzmOF7O64vFWcDkF%2BisApExRuEBTK7K5QPXB2KtkQovwMzBjmAWfn8oUwtpE4uvFX7y3vW2yG3UZe%2FRuDtRmjR7ek4G422wav39V4dIts7bh75o6Il5FgS%2BBOI%2F1wFLYFpO9pnQlP8Z2CAtKOnOyE0tFi2UQU564XBmtvbAtoiOKpaCqgMXu&$tenant=FELLOWCONSULTING_DEV" width="100%" height="100%"
                                 class="pdf-container-style"></iframe>
                     </div>
                 </div>
-            </ng-container>
+            </ng-container>-->
         </div>
     `,
     styles: [`
@@ -186,10 +199,18 @@ interface VerticalListItem {
         .icon-row {
             padding-top: 10px;
             padding-bottom: -10px;
-            background-color: #2778a9;
+            background-image: linear-gradient(0deg, #2b79a7 0%, #4ebbfb 50%, #2b79a7 100%);
             color: white;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+        }
+
+        .header-label {
+            text-align: center;
+            margin-top: 5px;
+            letter-spacing: 1px;
+            -webkit-transform: scale(1, 1.5); /* chrome and safari */
+            -moz-transform: scale(1, 1.5); /* opera */
         }
 
         .main-menu-icon {
@@ -208,7 +229,7 @@ interface VerticalListItem {
         .body-grid {
             background-color: #f0f0f0;
             display: grid;
-            gap: 2rem;
+            gap: 1rem;
         }
 
         .two-by-two {
@@ -233,17 +254,37 @@ interface VerticalListItem {
             gap: 1rem;
         }
 
+        .list-header {
+            display: grid;
+            grid-template-columns: 32px 1fr 1fr 1.1fr 1fr 1fr 1fr;
+            grid-column-gap: 0.5rem;
+            grid-row-gap: 0;
+            color: #909090;
+            cursor: pointer;
+        }
+
+        .sort {
+            width: 12px;
+            margin-bottom: -3px;
+            opacity: 0.5;
+        }
+
+        .list-header > div {
+            margin: auto 0 0 0;
+        }
+
         .list-item {
             cursor: pointer;
             background-color: white;
             box-shadow: #1a1a1a;
             display: grid;
-            grid-template-columns: auto repeat(6, 1fr);
-            gap: 1rem;
+            grid-template-columns: 32px 1fr 1fr 1.1fr 1fr 1fr 1fr;
+            gap: 0.5rem;
         }
 
         .list-item > div {
-            place-self: center;
+        / / place-self: center;
+            margin: auto 0;
         }
 
         .list-item:hover {
@@ -409,23 +450,26 @@ export class PDFComponent implements OnInit, IWidgetComponent {
 
     topMenuItems: MainMenuItem[] = [];
     sampleListItems: ListItem[];
-    currentTab: 0 | 1 | 2 | 3 = 1;
+    currentTab: 0 | 1 | 2 | 3 = 0;
     verticalItems: VerticalListItem[];
+
+    sortIcon: SafeHtml;
 
     constructor(private readonly changeDetectionRef: ChangeDetectorRef, private fb: FormBuilder, private ds: DomSanitizer) {
     }
 
     ngOnInit() {
+        this.sortIcon = this.ds.bypassSecurityTrustUrl(assets.sortIcon);
         this.changeDetectionRef.markForCheck();
         this.topMenuItems = [
-            {icon: this.ds.bypassSecurityTrustUrl(assets.eithernet), label: 'Eithernet'},
-            {icon: this.ds.bypassSecurityTrustUrl(assets.language), label: 'Language'},
-            {icon: this.ds.bypassSecurityTrustUrl(assets.mediation), label: 'Meditation'},
-            {icon: this.ds.bypassSecurityTrustUrl(assets.print), label: 'Print'},
-            {icon: this.ds.bypassSecurityTrustUrl(assets.refresh), label: 'Refresh'},
-            {icon: this.ds.bypassSecurityTrustUrl(assets.rounded_corner), label: 'Rounded Corner'},
-            {icon: this.ds.bypassSecurityTrustUrl(assets.sort), label: 'Sort'},
-            {icon: this.ds.bypassSecurityTrustUrl(assets.table_view), label: 'Table View'},
+            {icon: this.ds.bypassSecurityTrustUrl(assets.eithernet), label: 'AKTUALISIEREN '},
+            {icon: this.ds.bypassSecurityTrustUrl(assets.language), label: 'WEITERLEITEN '},
+            {icon: this.ds.bypassSecurityTrustUrl(assets.mediation), label: 'TRENNEN'},
+            // {icon: this.ds.bypassSecurityTrustUrl(assets.print), label: 'SORTIEREN'},
+            {icon: this.ds.bypassSecurityTrustUrl(assets.refresh), label: 'BEARBEITEN'},
+            // {icon: this.ds.bypassSecurityTrustUrl(assets.rounded_corner), label: 'FUNKTIONEN'},
+            {icon: this.ds.bypassSecurityTrustUrl(assets.sort), label: 'EAKTE'},
+            {icon: this.ds.bypassSecurityTrustUrl(assets.table_view), label: 'HWS/CXS'},
         ];
 
         this.checkMark = this.ds.bypassSecurityTrustUrl(assets.check);
@@ -434,57 +478,57 @@ export class PDFComponent implements OnInit, IWidgetComponent {
         this.sampleListItems = [
             {
                 checked: false,
-                date: "2021/01/01",
-                sender: 'Aslam',
-                cashRegister: 203948204,
-                lastName: 'ibn',
-                firstName: 'Al-Arabi',
-                entrance: 'Islamabad'
+                date: "01.02.2020",
+                sender: 'Poststelle',
+                cashRegister: 3206002784872,
+                lastName: 'Testfall',
+                firstName: 'Hugo',
+                entrance: 'Unbekannt'
             },
             {
                 checked: false,
-                date: "2021/01/02",
-                sender: 'Kurdoghlu',
-                cashRegister: 930192354,
-                lastName: 'Bamsi',
-                firstName: 'Bayrak',
-                entrance: 'Constantinople'
+                date: "01.02.2020",
+                sender: 'Poststelle',
+                cashRegister: 2281000499079,
+                lastName: 'Gips',
+                firstName: 'Armin',
+                entrance: 'Unbekannt'
+            },
+            {
+                checked: false,
+                date: "01.02.2020",
+                sender: '4401ab15',
+                cashRegister: 5011300270843,
+                lastName: 'Reich',
+                firstName: 'Frank',
+                entrance: 'Rucklauf ZS'
             },
             {
                 checked: true,
-                date: "2021/01/03",
-                sender: 'Gundokdu',
-                cashRegister: 2241934324,
-                lastName: 'Dogan',
-                firstName: 'Bayrak',
-                entrance: 'Aleppo'
-            },
-            {
-                checked: false,
-                date: "2021/01/04",
-                sender: 'Gundokdu',
-                cashRegister: 2241934324,
-                lastName: 'Dogan',
-                firstName: 'Bayrak',
-                entrance: 'Aleppo'
+                date: "01.02.2020",
+                sender: '4401ab15',
+                cashRegister: 1222800396519,
+                lastName: 'Nette',
+                firstName: 'Marion',
+                entrance: 'Unbekannt'
             },
             {
                 checked: true,
-                date: "2021/01/05",
-                sender: 'Akchakoja',
-                cashRegister: 44992281232,
-                lastName: 'Turgut',
-                firstName: 'Alp',
-                entrance: 'Rawalpindi'
+                date: "01.02.2020",
+                sender: '4401ab15',
+                cashRegister: 1401900079529,
+                lastName: 'Panse',
+                firstName: 'Jim',
+                entrance: 'Rucklauf EMA'
             },
             {
                 checked: false,
-                date: "2021/01/06",
-                sender: 'Sulemah Shah',
-                cashRegister: 44992281232,
-                lastName: 'Saddatien',
-                firstName: 'Kopek',
-                entrance: 'Khartoum'
+                date: "01.02.2020",
+                sender: 'Poststelle',
+                cashRegister: 3206002784872,
+                lastName: 'Reich',
+                firstName: 'Frank',
+                entrance: 'Unbekannt'
             }
 
         ];
