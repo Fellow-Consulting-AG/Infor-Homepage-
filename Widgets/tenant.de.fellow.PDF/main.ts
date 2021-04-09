@@ -48,16 +48,17 @@ interface VerticalListItem {
                 <div style="width: 100%; display: flex; padding: 10px; overflow: auto; background-color: #f0f0f0;">
                     <div style="width: 50%; overflow: auto; display: grid; padding-top: 27px">
                         <div class="grid-header">
-                            <div style="width: 10%; text-align: center">Vetr.<img [src]="sortIcon" class="sort"/></div>
-                            <div style="width: 12%">Datum<img [src]="sortIcon" class="sort"/></div>
-                            <div style="width: 13%">Absender<img [src]="sortIcon" class="sort"/></div>
-                            <div style="width: 20%">Kassenzeichen<img [src]="sortIcon" class="sort"/></div>
-                            <div style="width: 15%">Nachname<img [src]="sortIcon" class="sort"/></div>
-                            <div style="width: 15%">Vorname<img [src]="sortIcon" class="sort"/></div>
-                            <div style="width: 15%">Eingang<img [src]="sortIcon" class="sort"/></div>
+                            <div style="width: 10%; text-align: center" (click)="sortListBy('checked')">Vetr.<img [src]="sortIcon" class="sort"/></div>
+                            <div style="width: 12%" (click)="sortListBy('date')">Datum<img [src]="sortIcon" class="sort"/></div>
+                            <div style="width: 13%" (click)="sortListBy('sender')">Absender<img [src]="sortIcon" class="sort"/></div>
+                            <div style="width: 20%" (click)="sortListBy('cashRegister')">Kassenzeichen<img [src]="sortIcon" class="sort"/></div>
+                            <div style="width: 15%" (click)="sortListBy('lastName')">Nachname<img
+                                    [src]="sortIcon" class="sort"/></div>
+                            <div style="width: 15%" (click)="sortListBy('firstName')">Vorname<img [src]="sortIcon" class="sort"/></div>
+                            <div style="width: 15%" (click)="sortListBy('entrance')">Eingang<img [src]="sortIcon" class="sort"/></div>
                         </div>
                         <div style="overflow: auto">
-                            <div *ngFor="let item of sampleListItems;"
+                            <div *ngFor="let item of sortedSampleListItems;"
                                  style="display: flex; background: white; height: 30px; cursor: pointer; margin-top: 7px;"
                                  class="list-item"
                                  (click)="rowSelected(item)">
@@ -68,8 +69,8 @@ interface VerticalListItem {
                                 <div style="width: 12%; margin: auto 0">{{item.date}}</div>
                                 <div style="width: 13%; margin: auto 0">{{item.sender}}</div>
                                 <div style="width: 20%; margin: auto 0">{{item.cashRegister}}</div>
-                                <div style="width: 15%; margin: auto 0">{{item.firstName}}</div>
                                 <div style="width: 15%; margin: auto 0">{{item.lastName}}</div>
+                                <div style="width: 15%; margin: auto 0">{{item.firstName}}</div>
                                 <div style="width: 15%; margin: auto 0">{{item.entrance}}</div>
                             </div>
                         </div>
@@ -276,8 +277,10 @@ export class PDFComponent implements OnInit, IWidgetComponent {
 
     topMenuItems: MainMenuItem[] = [];
     sampleListItems: ListItem[];
+    sortedSampleListItems: ListItem[];
     currentTab: 0 | 1 | 2 | 3 = 0;
     verticalItems: VerticalListItem[];
+    lastSortAction: { property: string, direction: 'asc' | 'desc' };
 
     sortIcon: SafeHtml;
 
@@ -588,25 +591,45 @@ export class PDFComponent implements OnInit, IWidgetComponent {
             }
         ];
 
+        this.sortedSampleListItems = this.sampleListItems.slice();
+
         this.verticalItems = [
             {date: '12.12.2020', rollover: false},
             {date: '26.10.2020', rollover: false},
             {date: '12.12.2020', rollover: false}
         ];
 
-        try {
-            $('body').initialize('en-US');
-            $('#searchfield').searchfield({
-                clearable: true,
-            }).on('selected', function (e, a) {
-                console.log('Selected event was fired');
-                if (a.hasClass('more-results')) {
-                    console.log('More results was clicked');
-                }
-            });
-        } catch (err) {
-            console.warn(err);
+        // try {
+        //     $('body').initialize('en-US');
+        //     $('#searchfield').searchfield({
+        //         clearable: true,
+        //     }).on('selected', function (e, a) {
+        //         console.log('Selected event was fired');
+        //         if (a.hasClass('more-results')) {
+        //             console.log('More results was clicked');
+        //         }
+        //     });
+        // } catch (err) {
+        //     console.warn(err);
+        // }
+    }
+
+    sortListBy(property: string) {
+        let targetOrder: 'asc' | 'desc' = 'asc';
+        if (this.lastSortAction && this.lastSortAction.property === property) {
+            targetOrder = this.lastSortAction.direction === 'asc' ? 'desc' : 'asc';
         }
+        this.lastSortAction = {
+            property: property,
+            direction: targetOrder
+        };
+        console.log(`Sorting by ${property} in ${targetOrder} order.`);
+        this.sortedSampleListItems.sort((a: any, b: any) => {
+            if (targetOrder === 'asc') {
+                return a[property] > b[property] ? 1 : -1;
+            }
+            return a[property] < b[property] ? 1 : -1;
+        });
     }
 
     private getMetadata(): IWidgetSettingMetadata[] {
