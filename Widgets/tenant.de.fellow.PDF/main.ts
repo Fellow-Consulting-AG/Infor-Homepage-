@@ -33,7 +33,9 @@ interface VerticalListItem {
                 <!--  Top Button Row   -->
                 <div class="icon-row">
                     <div *ngFor="let menuItem of topMenuItems;let i = index;">
-                        <div style="display: grid; grid-template-rows: 1fr minmax(25px, auto);" class="main-menu-icon"
+                        <div style="display: grid; grid-template-rows: 1fr minmax(25px, auto); cursor: pointer"
+                             class="main-menu-icon"
+                             [ngClass]="{'bilal' : selectedRow && menuItem.label === 'BEARBEITEN'}"
                              (click)="currentTab = i;">
                             <div style="text-align: center"><img [src]="menuItem.icon" class="main-menu-icon-image"/>
                             </div>
@@ -48,19 +50,27 @@ interface VerticalListItem {
                 <div style="width: 100%; display: flex; padding: 10px; overflow: auto; background-color: #f0f0f0;">
                     <div style="width: 50%; overflow: auto; display: grid; padding-top: 27px">
                         <div class="grid-header">
-                            <div style="width: 10%; text-align: center" (click)="sortListBy('checked')">Vetr.<img [src]="sortIcon" class="sort"/></div>
-                            <div style="width: 12%" (click)="sortListBy('date')">Datum<img [src]="sortIcon" class="sort"/></div>
-                            <div style="width: 13%" (click)="sortListBy('sender')">Absender<img [src]="sortIcon" class="sort"/></div>
-                            <div style="width: 20%" (click)="sortListBy('cashRegister')">Kassenzeichen<img [src]="sortIcon" class="sort"/></div>
+                            <div style="width: 10%; text-align: center" (click)="sortListBy('checked')">Vetr.<img
+                                    [src]="sortIcon" class="sort"/></div>
+                            <div style="width: 12%" (click)="sortListBy('date')">Datum<img [src]="sortIcon"
+                                                                                           class="sort"/></div>
+                            <div style="width: 13%" (click)="sortListBy('sender')">Absender<img [src]="sortIcon"
+                                                                                                class="sort"/></div>
+                            <div style="width: 20%" (click)="sortListBy('cashRegister')">Kassenzeichen<img
+                                    [src]="sortIcon" class="sort"/></div>
                             <div style="width: 15%" (click)="sortListBy('lastName')">Nachname<img
                                     [src]="sortIcon" class="sort"/></div>
-                            <div style="width: 15%" (click)="sortListBy('firstName')">Vorname<img [src]="sortIcon" class="sort"/></div>
-                            <div style="width: 15%" (click)="sortListBy('entrance')">Eingang<img [src]="sortIcon" class="sort"/></div>
+                            <div style="width: 15%" (click)="sortListBy('firstName')">Vorname<img [src]="sortIcon"
+                                                                                                  class="sort"/></div>
+                            <div style="width: 15%" (click)="sortListBy('entrance')">Eingang<img [src]="sortIcon"
+                                                                                                 class="sort"/></div>
                         </div>
                         <div style="overflow: auto">
                             <div *ngFor="let item of sortedSampleListItems;"
                                  style="display: flex; background: white; height: 30px; cursor: pointer; margin-top: 7px;"
                                  class="list-item"
+                                 [style.background-image]="item.cashRegister === selectedRow?.cashRegister ? 'linear-gradient(0deg, #2b79a7 0%, #4ebbfb 50%, #2b79a7 100%)' : null"
+                                 [style.color]="item.cashRegister === selectedRow?.cashRegister ? 'white' : 'black'"
                                  (click)="rowSelected(item)">
                                 <div style="width: 10%; margin: auto 0">
                                     <img style="margin: auto auto; display: block" [src]="checkMark" width="20"
@@ -140,7 +150,7 @@ interface VerticalListItem {
                             </div>
                         </div>
                     </div>
-                    <div style="width: 50%; height: 100%; padding: 45px 20px 0 30px;">
+                    <div style="width: 50%; height: 100%; padding: 43px 20px 0 30px;">
                         <iframe src="https://www.muhammadbinyusrat.com/devguide.pdf" width="100%" height="100%"
                                 class="pdf-container-style"></iframe>
                     </div>
@@ -149,6 +159,10 @@ interface VerticalListItem {
         </div>
     `,
     styles: [`
+        .bilal {
+            filter: invert(87%) sepia(98%) saturate(1%) hue-rotate(268deg) brightness(109%) contrast(97%);
+        }
+
         .parent-layout {
             display: grid;
             grid-template-rows: auto 1fr;
@@ -179,13 +193,13 @@ interface VerticalListItem {
             cursor: pointer;
         }
 
-        .main-menu-icon {
+        /*.main-menu-icon {
             cursor: pointer;
         }
 
         .main-menu-icon:hover {
             filter: invert(93%) sepia(5%) saturate(35%) hue-rotate(314deg) brightness(95%) contrast(78%);
-        }
+        }*/
 
         .main-menu-icon-image {
             filter: invert(87%) sepia(98%) saturate(1%) hue-rotate(268deg) brightness(109%) contrast(97%);
@@ -323,7 +337,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
-                cashRegister: 2281000499079,
+                cashRegister: 2281000499873,
                 lastName: 'Gips',
                 firstName: 'Armin',
                 entrance: 'Unbekannt'
@@ -332,7 +346,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
                 checked: false,
                 date: "01.02.2020",
                 sender: '4401ab15',
-                cashRegister: 5011300270843,
+                cashRegister: 5011300270874,
                 lastName: 'Reich',
                 firstName: 'Frank',
                 entrance: 'Rucklauf ZS'
@@ -341,7 +355,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
                 checked: true,
                 date: "01.02.2020",
                 sender: '4401ab15',
-                cashRegister: 1222800396519,
+                cashRegister: 1222800396875,
                 lastName: 'Nette',
                 firstName: 'Marion',
                 entrance: 'Unbekannt'
@@ -350,7 +364,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
                 checked: true,
                 date: "01.02.2020",
                 sender: '4401ab15',
-                cashRegister: 1401900079529,
+                cashRegister: 1401900079876,
                 lastName: 'Panse',
                 firstName: 'Jim',
                 entrance: 'Rucklauf EMA'
@@ -359,7 +373,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
-                cashRegister: 3206002784872,
+                cashRegister: 3206002784877,
                 lastName: 'Reich',
                 firstName: 'Frank',
                 entrance: 'Unbekannt'
@@ -368,7 +382,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
-                cashRegister: 3206002784872,
+                cashRegister: 3206002784878,
                 lastName: 'Reich',
                 firstName: 'Frank',
                 entrance: 'Unbekannt'
@@ -377,7 +391,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
-                cashRegister: 3206002784872,
+                cashRegister: 3206002784879,
                 lastName: 'Reich',
                 firstName: 'Frank',
                 entrance: 'Unbekannt'
@@ -386,7 +400,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
-                cashRegister: 3206002784872,
+                cashRegister: 3206002784880,
                 lastName: 'Reich',
                 firstName: 'Frank',
                 entrance: 'Unbekannt'
@@ -395,7 +409,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
-                cashRegister: 3206002784872,
+                cashRegister: 3206002784881,
                 lastName: 'Reich',
                 firstName: 'Frank',
                 entrance: 'Unbekannt'
@@ -404,7 +418,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
-                cashRegister: 3206002784872,
+                cashRegister: 3206002784882,
                 lastName: 'Reich',
                 firstName: 'Frank',
                 entrance: 'Unbekannt'
@@ -413,7 +427,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
-                cashRegister: 3206002784872,
+                cashRegister: 3206002784883,
                 lastName: 'Reich',
                 firstName: 'Frank',
                 entrance: 'Unbekannt'
@@ -422,7 +436,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
-                cashRegister: 3206002784872,
+                cashRegister: 3206002784884,
                 lastName: 'Reich',
                 firstName: 'Frank',
                 entrance: 'Unbekannt'
@@ -431,7 +445,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
-                cashRegister: 3206002784872,
+                cashRegister: 3206002784885,
                 lastName: 'Reich',
                 firstName: 'Frank',
                 entrance: 'Unbekannt'
@@ -440,7 +454,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
-                cashRegister: 3206002784872,
+                cashRegister: 3206002784886,
                 lastName: 'Reich',
                 firstName: 'Frank',
                 entrance: 'Unbekannt'
@@ -449,7 +463,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
-                cashRegister: 3206002784872,
+                cashRegister: 3206002784887,
                 lastName: 'Reich',
                 firstName: 'Frank',
                 entrance: 'Unbekannt'
@@ -458,7 +472,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
-                cashRegister: 3206002784872,
+                cashRegister: 3206002784888,
                 lastName: 'Reich',
                 firstName: 'Frank',
                 entrance: 'Unbekannt'
@@ -467,7 +481,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
-                cashRegister: 3206002784872,
+                cashRegister: 3206002784889,
                 lastName: 'Reich',
                 firstName: 'Frank',
                 entrance: 'Unbekannt'
@@ -476,7 +490,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
-                cashRegister: 3206002784872,
+                cashRegister: 3206002784890,
                 lastName: 'Reich',
                 firstName: 'Frank',
                 entrance: 'Unbekannt'
@@ -485,7 +499,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
-                cashRegister: 3206002784872,
+                cashRegister: 3206002784891,
                 lastName: 'Reich',
                 firstName: 'Frank',
                 entrance: 'Unbekannt'
@@ -494,7 +508,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
-                cashRegister: 3206002784872,
+                cashRegister: 3206002784892,
                 lastName: 'Reich',
                 firstName: 'Frank',
                 entrance: 'Unbekannt'
@@ -503,7 +517,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
-                cashRegister: 3206002784872,
+                cashRegister: 3206002784893,
                 lastName: 'Reich',
                 firstName: 'Frank',
                 entrance: 'Unbekannt'
@@ -512,7 +526,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
-                cashRegister: 3206002784872,
+                cashRegister: 3206002784894,
                 lastName: 'Reich',
                 firstName: 'Frank',
                 entrance: 'Unbekannt'
@@ -521,7 +535,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
-                cashRegister: 3206002784872,
+                cashRegister: 3206002784895,
                 lastName: 'Reich',
                 firstName: 'Frank',
                 entrance: 'Unbekannt'
@@ -530,7 +544,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
-                cashRegister: 3206002784872,
+                cashRegister: 3206002784896,
                 lastName: 'Reich',
                 firstName: 'Frank',
                 entrance: 'Unbekannt'
@@ -539,7 +553,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
-                cashRegister: 3206002784872,
+                cashRegister: 3206002784897,
                 lastName: 'Reich',
                 firstName: 'Frank',
                 entrance: 'Unbekannt'
@@ -548,7 +562,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
-                cashRegister: 3206002784872,
+                cashRegister: 3206002784898,
                 lastName: 'Reich',
                 firstName: 'Frank',
                 entrance: 'Unbekannt'
@@ -557,7 +571,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
-                cashRegister: 3206002784872,
+                cashRegister: 3206002784899,
                 lastName: 'Reich',
                 firstName: 'Frank',
                 entrance: 'Unbekannt'
@@ -566,7 +580,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
-                cashRegister: 3206002784872,
+                cashRegister: 3206002784100,
                 lastName: 'Reich',
                 firstName: 'Frank',
                 entrance: 'Unbekannt'
@@ -575,7 +589,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
-                cashRegister: 3206002784872,
+                cashRegister: 3206002784101,
                 lastName: 'Reich',
                 firstName: 'Frank',
                 entrance: 'Unbekannt'
@@ -584,7 +598,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
-                cashRegister: 3206002784872,
+                cashRegister: 3206002784102,
                 lastName: 'Reich',
                 firstName: 'Frank',
                 entrance: 'Taltech'
