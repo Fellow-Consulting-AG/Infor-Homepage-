@@ -52,7 +52,11 @@
 		"lint:strict": "tslint -c Widgets/tslint-strict.json -p Widgets",
 		"publish": "node homepages pack --widget ./Widgets/tenant.de.fellow.PDF"		
 	},
-	"prepush": "publish",
+	"prepush": [
+		"publish",
+		"git add .",
+		"git commit -m 'Latest widget build at $(date)'"
+	],
 	"config": {
 		"server_port": "8080",
 		"server_path": "./Widgets",
