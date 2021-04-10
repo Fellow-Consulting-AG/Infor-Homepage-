@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, Input, NgModule, OnInit} from "@angular/core";
+import {ChangeDetectorRef, Component, HostListener, Input, NgModule, OnInit} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {SohoListViewModule} from "@infor/sohoxi-angular";
 import {FormBuilder, FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -7,18 +7,24 @@ import {assets} from "./assets";
 import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
 
 interface MainMenuItem {
-    icon: SafeHtml;
-    label: string;
+    AKTUALISIEREN: { icon: SafeHtml, label: string },
+    WEITERLEITEN: { icon: SafeHtml, label: string },
+    TRENNEN: { icon: SafeHtml, label: string },
+    BEARBEITEN: { icon: SafeHtml, label: string },
+    EAKTE: { icon: SafeHtml, label: string },
+    HWSCXS: { icon: SafeHtml, label: string }
 }
 
 interface ListItem {
+    index: number;
     checked: boolean;
     date: string;
     sender: string;
     cashRegister: number,
     lastName: string,
     firstName: string,
-    entrance: string
+    entrance: string,
+    selected: boolean
 }
 
 interface VerticalListItem {
@@ -29,24 +35,37 @@ interface VerticalListItem {
 @Component({
     template: `
         <div class="parent-layout">
-            <div>
-                <!--  Top Button Row   -->
-                <div class="icon-row">
-                    <div *ngFor="let menuItem of topMenuItems;let i = index;">
-                        <div style="display: grid; grid-template-rows: 1fr minmax(25px, auto); cursor: pointer"
-                             class="main-menu-icon"
-                             [ngClass]="{'bilal' : selectedRow && menuItem.label === 'BEARBEITEN'}"
-                             (click)="currentTab = i;">
-                            <div style="text-align: center"><img [src]="menuItem.icon" class="main-menu-icon-image"/>
-                            </div>
-                            <div class="header-label">{{menuItem.label}}</div>
-                        </div>
-                    </div>
+            <!--  Top Button Row   -->
+            <div class="icon-row">
+                <div>
+                    <div><img [src]="topMenuItems.AKTUALISIEREN.icon" class="main-menu-icon-image"/></div>
+                    <div class="header-label">{{topMenuItems.AKTUALISIEREN.label}}</div>
+                </div>
+                <div>
+                    <div><img [src]="topMenuItems.WEITERLEITEN.icon" class="main-menu-icon-image"/></div>
+                    <div class="header-label">{{topMenuItems.WEITERLEITEN.label}}</div>
+                </div>
+                <div>
+                    <div><img [src]="topMenuItems.TRENNEN.icon" class="main-menu-icon-image"/></div>
+                    <div class="header-label">{{topMenuItems.TRENNEN.label}}</div>
+                </div>
+                <div [ngClass]="{'setFocus' : showForm}" (click)="editForm()">
+                    <div><img [src]="topMenuItems.BEARBEITEN.icon"
+                              class="main-menu-icon-image"/></div>
+                    <div class="header-label">{{topMenuItems.BEARBEITEN.label}}</div>
+                </div>
+                <div>
+                    <div><img [src]="topMenuItems.EAKTE.icon" class="main-menu-icon-image"/></div>
+                    <div class="header-label">{{topMenuItems.EAKTE.label}}</div>
+                </div>
+                <div>
+                    <div><img [src]="topMenuItems.HWSCXS.icon" class="main-menu-icon-image"/></div>
+                    <div class="header-label">{{topMenuItems.HWSCXS.label}}</div>
                 </div>
             </div>
 
             <!-- First Tab -->
-            <ng-container *ngIf="currentTab == 0">
+            <ng-container>
                 <div style="width: 100%; display: flex; padding: 10px; overflow: auto; background-color: #f0f0f0;">
                     <div style="width: 50%; overflow: auto; display: grid; padding-top: 27px">
                         <div class="grid-header">
@@ -66,12 +85,12 @@ interface VerticalListItem {
                                                                                                  class="sort"/></div>
                         </div>
                         <div style="overflow: auto">
-                            <div *ngFor="let item of sortedSampleListItems;"
+                            <div *ngFor="let item of sampleListItems;"
                                  style="display: flex; background: white; height: 30px; cursor: pointer; margin-top: 7px;"
                                  class="list-item"
-                                 [style.background-image]="item.cashRegister === selectedRow?.cashRegister ? 'linear-gradient(0deg, #2b79a7 0%, #4ebbfb 50%, #2b79a7 100%)' : null"
-                                 [style.color]="item.cashRegister === selectedRow?.cashRegister ? 'white' : 'black'"
-                                 (click)="rowSelected(item)">
+                                 [style.background-image]="item.selected ? 'linear-gradient(0deg, #2b79a7 0%, #4ebbfb 50%, #2b79a7 100%)' : null"
+                                 [style.color]="item.selected ? 'white' : 'black'"
+                                 (click)="selectRow(item)">
                                 <div style="width: 10%; margin: auto 0">
                                     <img style="margin: auto auto; display: block" [src]="checkMark" width="20"
                                          *ngIf="item.checked">
@@ -84,13 +103,13 @@ interface VerticalListItem {
                                 <div style="width: 15%; margin: auto 0">{{item.entrance}}</div>
                             </div>
                         </div>
-                        <div *ngIf="selectedRow" style="padding-top: 10px">
+                        <div *ngIf="showForm" style="padding-top: 10px">
                             <div class="form-container">
                                 <div class="form-fields-container">
                                     <div class="field">
                                         <label>User</label>
                                         <input type="text" class="smaller-text-field search-icon"
-                                               value="{{selectedRow.sender}}">
+                                               [(ngModel)]="selectedRow.sender">
                                     </div>
 
                                     <div class="field">
@@ -101,24 +120,26 @@ interface VerticalListItem {
                                     <div class="field">
                                         <label>Kassenzeichen</label>
                                         <input type="text" class="smaller-text-field"
-                                               value="{{selectedRow.cashRegister}}">
+                                               [(ngModel)]="selectedRow.cashRegister">
                                     </div>
                                     <div>&nbsp;</div>
 
                                     <div class="field">
                                         <label>Nachname</label>
-                                        <input type="text" class="smaller-text-field" value="{{selectedRow.firstName}}">
+                                        <input type="text" class="smaller-text-field"
+                                               [(ngModel)]="selectedRow.firstName">
                                     </div>
 
                                     <div class="field">
                                         <label>Vorname</label>
-                                        <input type="text" class="smaller-text-field" value="{{selectedRow.lastName}}">
+                                        <input type="text" class="smaller-text-field"
+                                               [(ngModel)]="selectedRow.lastName">
                                     </div>
 
                                     <div class="field" style="grid-row:4; grid-column: 1 / -1">
                                         <label>Eingang</label>
                                         <input type="text" class="smaller-text-field"
-                                               value="{{selectedRow.entrance}}"
+                                               [(ngModel)]="selectedRow.entrance"
                                                style="width:90%">
                                     </div>
 
@@ -132,7 +153,7 @@ interface VerticalListItem {
                                 <div class="push-to-bottom">
                                     <div></div>
                                     <div>
-                                        <button class="outlined-button">schließen</button>
+                                        <button class="outlined-button" (click)="showForm = false">schließen</button>
                                     </div>
                                 </div>
                                 <div class="push-to-bottom">
@@ -141,17 +162,18 @@ interface VerticalListItem {
                                         <button class="filled-button">eAkte</button>
                                     </div>
                                     <div>
-                                        <button class="filled-button">Dokument</button>
-                                    </div>
-                                    <div>
-                                        <button class="filled-button">Speichern</button>
+                                        <button [ngClass]="isFormValid() ? 'filled-button' : 'disabled-button'"
+                                                (click)="saveForm()"
+                                                [disabled]="!isFormValid()">
+                                            Speichern
+                                        </button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div style="width: 50%; height: 100%; padding: 43px 20px 0 30px;">
-                        <iframe src="https://www.muhammadbinyusrat.com/devguide.pdf" width="100%" height="100%"
+                        <iframe src="https://idm.eu1.inforcloudsuite.com/ca/api/resources/EMA_Returns-1-3-LATEST?$token=Ac414kLBx8%2B3XhaqSrDU%2BrviwMjIIc75%2BPEZV%2FzaFJD3Ra4hftBfyAZZ9LT37Akov%2Fk37RsL568EiQC2OjRJos%2FXXORP%2FpZ0%2FCcV%2FYUxzb%2FCFt5hfPWSndG%2FKayn8OvupnfKltkP09C7Gi2BarJrKuKrpmFDdJ5g43sF5m21P%2BAGEwoarOuMXQ%2Feg1o8G%2BcWOTDxduujyzmOF7O64vFWcDkF%2BisApExRuEBTK7K5QPXB2KtkQovwMzBjmAWfn8oUwtpE4uvFX7y3vW2yG3UZe%2FRuDtRmjR7ek4G422wav39V4dIts7bh75o6Il5FgS%2BBOI%2F1wFLYFpO9pnQlP8Z2CAtKOnOyE0tFi2UQU564XBmtvbAtoiOKpaCqgMXu&$tenant=FELLOWCONSULTING_DEV" width="100%" height="100%"
                                 class="pdf-container-style"></iframe>
                     </div>
                 </div>
@@ -159,10 +181,6 @@ interface VerticalListItem {
         </div>
     `,
     styles: [`
-        .bilal {
-            filter: invert(87%) sepia(98%) saturate(1%) hue-rotate(268deg) brightness(109%) contrast(97%);
-        }
-
         .parent-layout {
             display: grid;
             grid-template-rows: auto 1fr;
@@ -171,11 +189,13 @@ interface VerticalListItem {
 
         .icon-row {
             padding-top: 10px;
-            padding-bottom: -10px;
+            padding-bottom: 10px;
             background-image: linear-gradient(0deg, #2b79a7 0%, #4ebbfb 50%, #2b79a7 100%);
             color: white;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+            cursor: pointer;
+            text-align: center;
         }
 
         .header-label {
@@ -193,14 +213,6 @@ interface VerticalListItem {
             cursor: pointer;
         }
 
-        /*.main-menu-icon {
-            cursor: pointer;
-        }
-
-        .main-menu-icon:hover {
-            filter: invert(93%) sepia(5%) saturate(35%) hue-rotate(314deg) brightness(95%) contrast(78%);
-        }*/
-
         .main-menu-icon-image {
             filter: invert(87%) sepia(98%) saturate(1%) hue-rotate(268deg) brightness(109%) contrast(97%);
             width: 50px;
@@ -212,6 +224,10 @@ interface VerticalListItem {
 
         .list-item:hover {
             box-shadow: 0 0 11px rgba(33, 33, 33, .2);
+        }
+
+        .setFocus {
+            filter: invert(87%) sepia(98%) saturate(1%) hue-rotate(268deg) brightness(109%) contrast(97%);
         }
 
         .sort {
@@ -261,6 +277,16 @@ interface VerticalListItem {
             color: white;
         }
 
+        .disabled-button {
+            width: 100%;
+            border: 2px solid #eeeeee;
+            padding: 3px 6px;
+            color: #ababab;
+            border-radius: 5px;
+            background-color: #eeeeee;
+            cursor: auto;
+        }
+
         .filled-button {
             width: 100%;
             border: 2px solid #2678a9;
@@ -284,348 +310,373 @@ interface VerticalListItem {
 export class PDFComponent implements OnInit, IWidgetComponent {
     @Input() widgetContext: IWidgetContext;
     @Input() widgetInstance: IWidgetInstance;
+
+    @HostListener('document:keydown', ['$event'])
+    keypress(e: KeyboardEvent) {
+        this.onKeyPress(e);
+    }
+
     assets = assets;
     jQueryElement?: JQuery; //Reference to JQuery
     $ = $;
     checkMark: SafeHtml;
 
-    topMenuItems: MainMenuItem[] = [];
+    topMenuItems: MainMenuItem;
     sampleListItems: ListItem[];
-    sortedSampleListItems: ListItem[];
-    currentTab: 0 | 1 | 2 | 3 = 0;
     verticalItems: VerticalListItem[];
     lastSortAction: { property: string, direction: 'asc' | 'desc' };
 
     sortIcon: SafeHtml;
 
     selectedRow: ListItem;
+    showForm = false;
 
     constructor(private readonly changeDetectionRef: ChangeDetectorRef, private fb: FormBuilder, private ds: DomSanitizer) {
     }
 
-    rowSelected(item: ListItem) {
-        this.selectedRow = item;
-    }
-
     ngOnInit() {
         this.changeDetectionRef.markForCheck();
-        this.topMenuItems = [
-            {icon: this.ds.bypassSecurityTrustUrl(assets.aktualisieren), label: 'AKTUALISIEREN '},
-            {icon: this.ds.bypassSecurityTrustUrl(assets.weiterleiten), label: 'WEITERLEITEN '},
-            {icon: this.ds.bypassSecurityTrustUrl(assets.trennen), label: 'TRENNEN'},
+        this.topMenuItems = {
+            AKTUALISIEREN: {icon: this.ds.bypassSecurityTrustUrl(assets.aktualisieren), label: 'AKTUALISIEREN '},
+            WEITERLEITEN: {icon: this.ds.bypassSecurityTrustUrl(assets.weiterleiten), label: 'WEITERLEITEN'},
+            TRENNEN: {icon: this.ds.bypassSecurityTrustUrl(assets.trennen), label: 'TRENNEN'},
             // {icon: this.ds.bypassSecurityTrustUrl(assets.print), label: 'SORTIEREN'},
-            {icon: this.ds.bypassSecurityTrustUrl(assets.bearbeiten), label: 'BEARBEITEN'},
+            BEARBEITEN: {icon: this.ds.bypassSecurityTrustUrl(assets.bearbeiten), label: 'BEARBEITEN'},
             // {icon: this.ds.bypassSecurityTrustUrl(assets.rounded_corner), label: 'FUNKTIONEN'},
-            {icon: this.ds.bypassSecurityTrustUrl(assets.eakte), label: 'EAKTE'},
-            {icon: this.ds.bypassSecurityTrustUrl(assets.hwscxs), label: 'HWS/CXS'},
-        ];
+            EAKTE: {icon: this.ds.bypassSecurityTrustUrl(assets.eakte), label: 'EAKTE'},
+            HWSCXS: {icon: this.ds.bypassSecurityTrustUrl(assets.hwscxs), label: 'HWS/CXS'},
+        };
 
         this.checkMark = this.ds.bypassSecurityTrustUrl(assets.tick);
         this.sortIcon = this.ds.bypassSecurityTrustUrl(assets.sort);
 
         this.sampleListItems = [
             {
+                index: 0,
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
                 cashRegister: 3206002784872,
                 lastName: 'Testfall',
                 firstName: 'Hugo',
-                entrance: 'Unbekannt'
+                entrance: 'Unbekannt',
+                selected: true
             },
             {
+                index: 1,
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
                 cashRegister: 2281000499873,
                 lastName: 'Gips',
                 firstName: 'Armin',
-                entrance: 'Unbekannt'
+                entrance: 'Unbekannt',
+                selected: false
             },
             {
+                index: 2,
                 checked: false,
                 date: "01.02.2020",
                 sender: '4401ab15',
                 cashRegister: 5011300270874,
                 lastName: 'Reich',
                 firstName: 'Frank',
-                entrance: 'Rucklauf ZS'
+                entrance: 'Rucklauf ZS',
+                selected: false
             },
             {
+                index: 3,
                 checked: true,
                 date: "01.02.2020",
                 sender: '4401ab15',
                 cashRegister: 1222800396875,
                 lastName: 'Nette',
                 firstName: 'Marion',
-                entrance: 'Unbekannt'
+                entrance: 'Unbekannt',
+                selected: false
             },
             {
+                index: 4,
                 checked: true,
                 date: "01.02.2020",
                 sender: '4401ab15',
                 cashRegister: 1401900079876,
                 lastName: 'Panse',
                 firstName: 'Jim',
-                entrance: 'Rucklauf EMA'
+                entrance: 'Rucklauf EMA',
+                selected: false
             },
             {
+                index: 5,
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
                 cashRegister: 3206002784877,
                 lastName: 'Reich',
                 firstName: 'Frank',
-                entrance: 'Unbekannt'
+                entrance: 'Unbekannt',
+                selected: false
             },
             {
+                index: 6,
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
                 cashRegister: 3206002784878,
                 lastName: 'Reich',
                 firstName: 'Frank',
-                entrance: 'Unbekannt'
+                entrance: 'Unbekannt',
+                selected: false
             },
             {
+                index: 7,
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
                 cashRegister: 3206002784879,
                 lastName: 'Reich',
                 firstName: 'Frank',
-                entrance: 'Unbekannt'
+                entrance: 'Unbekannt',
+                selected: false
             },
             {
+                index: 8,
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
                 cashRegister: 3206002784880,
                 lastName: 'Reich',
                 firstName: 'Frank',
-                entrance: 'Unbekannt'
+                entrance: 'Unbekannt',
+                selected: false
             },
             {
+                index: 9,
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
                 cashRegister: 3206002784881,
                 lastName: 'Reich',
                 firstName: 'Frank',
-                entrance: 'Unbekannt'
+                entrance: 'Unbekannt',
+                selected: false
             },
             {
+                index: 10,
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
                 cashRegister: 3206002784882,
                 lastName: 'Reich',
                 firstName: 'Frank',
-                entrance: 'Unbekannt'
+                entrance: 'Unbekannt',
+                selected: false
             },
             {
+                index: 11,
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
                 cashRegister: 3206002784883,
                 lastName: 'Reich',
                 firstName: 'Frank',
-                entrance: 'Unbekannt'
+                entrance: 'Unbekannt',
+                selected: false
             },
             {
+                index: 12,
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
                 cashRegister: 3206002784884,
                 lastName: 'Reich',
                 firstName: 'Frank',
-                entrance: 'Unbekannt'
+                entrance: 'Unbekannt',
+                selected: false
             },
             {
+                index: 13,
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
                 cashRegister: 3206002784885,
                 lastName: 'Reich',
                 firstName: 'Frank',
-                entrance: 'Unbekannt'
+                entrance: 'Unbekannt',
+                selected: false
             },
             {
+                index: 14,
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
                 cashRegister: 3206002784886,
                 lastName: 'Reich',
                 firstName: 'Frank',
-                entrance: 'Unbekannt'
+                entrance: 'Unbekannt',
+                selected: false
             },
             {
+                index: 15,
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
                 cashRegister: 3206002784887,
                 lastName: 'Reich',
                 firstName: 'Frank',
-                entrance: 'Unbekannt'
+                entrance: 'Unbekannt',
+                selected: false
             },
             {
+                index: 16,
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
                 cashRegister: 3206002784888,
                 lastName: 'Reich',
                 firstName: 'Frank',
-                entrance: 'Unbekannt'
+                entrance: 'Unbekannt',
+                selected: false
             },
             {
+                index: 17,
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
                 cashRegister: 3206002784889,
                 lastName: 'Reich',
                 firstName: 'Frank',
-                entrance: 'Unbekannt'
+                entrance: 'Unbekannt',
+                selected: false
             },
             {
+                index: 18,
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
                 cashRegister: 3206002784890,
                 lastName: 'Reich',
                 firstName: 'Frank',
-                entrance: 'Unbekannt'
+                entrance: 'Unbekannt',
+                selected: false
             },
             {
+                index: 19,
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
                 cashRegister: 3206002784891,
                 lastName: 'Reich',
                 firstName: 'Frank',
-                entrance: 'Unbekannt'
+                entrance: 'Unbekannt',
+                selected: false
             },
             {
+                index: 20,
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
                 cashRegister: 3206002784892,
                 lastName: 'Reich',
                 firstName: 'Frank',
-                entrance: 'Unbekannt'
+                entrance: 'Unbekannt',
+                selected: false
             },
             {
+                index: 21,
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
                 cashRegister: 3206002784893,
                 lastName: 'Reich',
                 firstName: 'Frank',
-                entrance: 'Unbekannt'
+                entrance: 'Unbekannt',
+                selected: false
             },
             {
+                index: 22,
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
                 cashRegister: 3206002784894,
                 lastName: 'Reich',
                 firstName: 'Frank',
-                entrance: 'Unbekannt'
+                entrance: 'Unbekannt',
+                selected: false
             },
             {
+                index: 23,
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
                 cashRegister: 3206002784895,
                 lastName: 'Reich',
                 firstName: 'Frank',
-                entrance: 'Unbekannt'
+                entrance: 'Unbekannt',
+                selected: false
             },
             {
+                index: 24,
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
                 cashRegister: 3206002784896,
                 lastName: 'Reich',
                 firstName: 'Frank',
-                entrance: 'Unbekannt'
+                entrance: 'Unbekannt',
+                selected: false
             },
             {
+                index: 25,
                 checked: false,
                 date: "01.02.2020",
                 sender: 'Poststelle',
                 cashRegister: 3206002784897,
                 lastName: 'Reich',
                 firstName: 'Frank',
-                entrance: 'Unbekannt'
-            },
-            {
-                checked: false,
-                date: "01.02.2020",
-                sender: 'Poststelle',
-                cashRegister: 3206002784898,
-                lastName: 'Reich',
-                firstName: 'Frank',
-                entrance: 'Unbekannt'
-            },
-            {
-                checked: false,
-                date: "01.02.2020",
-                sender: 'Poststelle',
-                cashRegister: 3206002784899,
-                lastName: 'Reich',
-                firstName: 'Frank',
-                entrance: 'Unbekannt'
-            },
-            {
-                checked: false,
-                date: "01.02.2020",
-                sender: 'Poststelle',
-                cashRegister: 3206002784100,
-                lastName: 'Reich',
-                firstName: 'Frank',
-                entrance: 'Unbekannt'
-            },
-            {
-                checked: false,
-                date: "01.02.2020",
-                sender: 'Poststelle',
-                cashRegister: 3206002784101,
-                lastName: 'Reich',
-                firstName: 'Frank',
-                entrance: 'Unbekannt'
-            },
-            {
-                checked: false,
-                date: "01.02.2020",
-                sender: 'Poststelle',
-                cashRegister: 3206002784102,
-                lastName: 'Reich',
-                firstName: 'Frank',
-                entrance: 'Taltech'
+                entrance: 'Unbekannt',
+                selected: false
             }
         ];
-
-        this.sortedSampleListItems = this.sampleListItems.slice();
+        this.selectedRow = JSON.parse(JSON.stringify(this.sampleListItems[0]));
 
         this.verticalItems = [
             {date: '12.12.2020', rollover: false},
             {date: '26.10.2020', rollover: false},
             {date: '12.12.2020', rollover: false}
         ];
+    }
 
-        // try {
-        //     $('body').initialize('en-US');
-        //     $('#searchfield').searchfield({
-        //         clearable: true,
-        //     }).on('selected', function (e, a) {
-        //         console.log('Selected event was fired');
-        //         if (a.hasClass('more-results')) {
-        //             console.log('More results was clicked');
-        //         }
-        //     });
-        // } catch (err) {
-        //     console.warn(err);
-        // }
+    selectRow(item: ListItem) {
+        this.selectedRow = JSON.parse(JSON.stringify(item));
+        this.sampleListItems.forEach(val => {
+            val.selected = false;
+            if (val.index === item.index) {
+                val.selected = true;
+            }
+        });
+    }
+
+    editForm() {
+        if (this.selectedRow) {
+            this.showForm = true;
+        }
+    }
+
+    isFormValid() {
+        return (!!this.selectedRow.sender.trim() &&
+            !!this.selectedRow.cashRegister &&
+            !!this.selectedRow.firstName.trim() &&
+            !!this.selectedRow.lastName.trim() &&
+            !!this.selectedRow.entrance.trim())
+    }
+
+    saveForm() {
+        this.sampleListItems.forEach((row, index) => {
+            if (row.index === this.selectedRow.index) {
+                this.sampleListItems[index] = this.selectedRow;
+            }
+        })
     }
 
     sortListBy(property: string) {
@@ -638,12 +689,83 @@ export class PDFComponent implements OnInit, IWidgetComponent {
             direction: targetOrder
         };
         console.log(`Sorting by ${property} in ${targetOrder} order.`);
-        this.sortedSampleListItems.sort((a: any, b: any) => {
+        this.sampleListItems.sort((a: any, b: any) => {
             if (targetOrder === 'asc') {
                 return a[property] > b[property] ? 1 : -1;
             }
             return a[property] < b[property] ? 1 : -1;
         });
+    }
+
+    private onKeyPress(event: KeyboardEvent) {
+        // On Down Arrow Press
+        if (event.key === 'ArrowDown') {
+            if (!this.selectedRow) {
+                this.sampleListItems[0].selected = true;
+                this.selectedRow = JSON.parse(JSON.stringify(this.sampleListItems[0]));
+                return;
+            }
+            const indexOfSelectedRow = this.sampleListItems.findIndex((item: ListItem) => item.index === this.selectedRow.index);
+            // scroll only if selected row index is greater than five
+            if (this.sampleListItems[indexOfSelectedRow + 1]) {
+                this.sampleListItems[indexOfSelectedRow].selected = false
+                this.sampleListItems[indexOfSelectedRow + 1].selected = true
+                this.selectedRow = JSON.parse(JSON.stringify(this.sampleListItems[indexOfSelectedRow + 1]));
+            }
+            if (indexOfSelectedRow < 5) {
+                event.preventDefault();
+            }
+            return;
+        }
+        if (event.key === 'ArrowUp') {
+            if (!this.selectedRow) {
+                return;
+            }
+            const indexOfSelectedRow = this.sampleListItems.findIndex((item: ListItem) => item.index === this.selectedRow.index);
+            if (this.sampleListItems[indexOfSelectedRow - 1]) {
+                this.sampleListItems[indexOfSelectedRow].selected = false;
+                this.sampleListItems[indexOfSelectedRow - 1].selected = true;
+                this.selectedRow = JSON.parse(JSON.stringify(this.sampleListItems[indexOfSelectedRow - 1]));
+            }
+            if (indexOfSelectedRow > this.sampleListItems.length - 5) {
+                event.preventDefault();
+            }
+            return;
+        }
+        if (event.ctrlKey && event.keyCode == 69) {
+            if (this.selectedRow) {
+                this.showForm = true;
+                event.preventDefault(); // preventing default browser behavior on ctrl + E
+            }
+            return;
+        }
+        if (event.ctrlKey && event.keyCode == 65) {
+            if (this.selectedRow) {
+                this.sampleListItems.forEach(row => {
+                    if (row.index === this.selectedRow.index) {
+                        row.checked = true;
+                    }
+                })
+                event.preventDefault(); // preventing default browser behavior on ctrl + A
+            }
+            return;
+        }
+        if (event.ctrlKey && event.keyCode == 88) {
+            if (this.selectedRow) {
+                this.sampleListItems.forEach(row => {
+                    if (row.index === this.selectedRow.index) {
+                        row.checked = false;
+                    }
+                })
+                event.preventDefault(); // preventing default browser behavior on ctrl + X
+            }
+            return;
+        }
+        console.log(event.keyCode);
+        /*if (event.key === 'Escape') {
+            console.log('esc key press');
+            this.selectedRow = null;
+        }*/
     }
 
     private getMetadata(): IWidgetSettingMetadata[] {

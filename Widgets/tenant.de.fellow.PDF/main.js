@@ -18,326 +18,348 @@ define(["require", "exports", "@angular/core", "@angular/common", "@infor/sohoxi
             this.ds = ds;
             this.assets = assets_1.assets;
             this.$ = $;
-            this.topMenuItems = [];
-            this.currentTab = 0;
+            this.showForm = false;
         }
-        PDFComponent.prototype.rowSelected = function (item) {
-            this.selectedRow = item;
+        PDFComponent.prototype.keypress = function (e) {
+            this.onKeyPress(e);
         };
         PDFComponent.prototype.ngOnInit = function () {
             this.changeDetectionRef.markForCheck();
-            this.topMenuItems = [
-                { icon: this.ds.bypassSecurityTrustUrl(assets_1.assets.aktualisieren), label: 'AKTUALISIEREN ' },
-                { icon: this.ds.bypassSecurityTrustUrl(assets_1.assets.weiterleiten), label: 'WEITERLEITEN ' },
-                { icon: this.ds.bypassSecurityTrustUrl(assets_1.assets.trennen), label: 'TRENNEN' },
+            this.topMenuItems = {
+                AKTUALISIEREN: { icon: this.ds.bypassSecurityTrustUrl(assets_1.assets.aktualisieren), label: 'AKTUALISIEREN ' },
+                WEITERLEITEN: { icon: this.ds.bypassSecurityTrustUrl(assets_1.assets.weiterleiten), label: 'WEITERLEITEN' },
+                TRENNEN: { icon: this.ds.bypassSecurityTrustUrl(assets_1.assets.trennen), label: 'TRENNEN' },
                 // {icon: this.ds.bypassSecurityTrustUrl(assets.print), label: 'SORTIEREN'},
-                { icon: this.ds.bypassSecurityTrustUrl(assets_1.assets.bearbeiten), label: 'BEARBEITEN' },
+                BEARBEITEN: { icon: this.ds.bypassSecurityTrustUrl(assets_1.assets.bearbeiten), label: 'BEARBEITEN' },
                 // {icon: this.ds.bypassSecurityTrustUrl(assets.rounded_corner), label: 'FUNKTIONEN'},
-                { icon: this.ds.bypassSecurityTrustUrl(assets_1.assets.eakte), label: 'EAKTE' },
-                { icon: this.ds.bypassSecurityTrustUrl(assets_1.assets.hwscxs), label: 'HWS/CXS' },
-            ];
+                EAKTE: { icon: this.ds.bypassSecurityTrustUrl(assets_1.assets.eakte), label: 'EAKTE' },
+                HWSCXS: { icon: this.ds.bypassSecurityTrustUrl(assets_1.assets.hwscxs), label: 'HWS/CXS' },
+            };
             this.checkMark = this.ds.bypassSecurityTrustUrl(assets_1.assets.tick);
             this.sortIcon = this.ds.bypassSecurityTrustUrl(assets_1.assets.sort);
             this.sampleListItems = [
                 {
+                    index: 0,
                     checked: false,
                     date: "01.02.2020",
                     sender: 'Poststelle',
                     cashRegister: 3206002784872,
                     lastName: 'Testfall',
                     firstName: 'Hugo',
-                    entrance: 'Unbekannt'
+                    entrance: 'Unbekannt',
+                    selected: true
                 },
                 {
+                    index: 1,
                     checked: false,
                     date: "01.02.2020",
                     sender: 'Poststelle',
                     cashRegister: 2281000499873,
                     lastName: 'Gips',
                     firstName: 'Armin',
-                    entrance: 'Unbekannt'
+                    entrance: 'Unbekannt',
+                    selected: false
                 },
                 {
+                    index: 2,
                     checked: false,
                     date: "01.02.2020",
                     sender: '4401ab15',
                     cashRegister: 5011300270874,
                     lastName: 'Reich',
                     firstName: 'Frank',
-                    entrance: 'Rucklauf ZS'
+                    entrance: 'Rucklauf ZS',
+                    selected: false
                 },
                 {
+                    index: 3,
                     checked: true,
                     date: "01.02.2020",
                     sender: '4401ab15',
                     cashRegister: 1222800396875,
                     lastName: 'Nette',
                     firstName: 'Marion',
-                    entrance: 'Unbekannt'
+                    entrance: 'Unbekannt',
+                    selected: false
                 },
                 {
+                    index: 4,
                     checked: true,
                     date: "01.02.2020",
                     sender: '4401ab15',
                     cashRegister: 1401900079876,
                     lastName: 'Panse',
                     firstName: 'Jim',
-                    entrance: 'Rucklauf EMA'
+                    entrance: 'Rucklauf EMA',
+                    selected: false
                 },
                 {
+                    index: 5,
                     checked: false,
                     date: "01.02.2020",
                     sender: 'Poststelle',
                     cashRegister: 3206002784877,
                     lastName: 'Reich',
                     firstName: 'Frank',
-                    entrance: 'Unbekannt'
+                    entrance: 'Unbekannt',
+                    selected: false
                 },
                 {
+                    index: 6,
                     checked: false,
                     date: "01.02.2020",
                     sender: 'Poststelle',
                     cashRegister: 3206002784878,
                     lastName: 'Reich',
                     firstName: 'Frank',
-                    entrance: 'Unbekannt'
+                    entrance: 'Unbekannt',
+                    selected: false
                 },
                 {
+                    index: 7,
                     checked: false,
                     date: "01.02.2020",
                     sender: 'Poststelle',
                     cashRegister: 3206002784879,
                     lastName: 'Reich',
                     firstName: 'Frank',
-                    entrance: 'Unbekannt'
+                    entrance: 'Unbekannt',
+                    selected: false
                 },
                 {
+                    index: 8,
                     checked: false,
                     date: "01.02.2020",
                     sender: 'Poststelle',
                     cashRegister: 3206002784880,
                     lastName: 'Reich',
                     firstName: 'Frank',
-                    entrance: 'Unbekannt'
+                    entrance: 'Unbekannt',
+                    selected: false
                 },
                 {
+                    index: 9,
                     checked: false,
                     date: "01.02.2020",
                     sender: 'Poststelle',
                     cashRegister: 3206002784881,
                     lastName: 'Reich',
                     firstName: 'Frank',
-                    entrance: 'Unbekannt'
+                    entrance: 'Unbekannt',
+                    selected: false
                 },
                 {
+                    index: 10,
                     checked: false,
                     date: "01.02.2020",
                     sender: 'Poststelle',
                     cashRegister: 3206002784882,
                     lastName: 'Reich',
                     firstName: 'Frank',
-                    entrance: 'Unbekannt'
+                    entrance: 'Unbekannt',
+                    selected: false
                 },
                 {
+                    index: 11,
                     checked: false,
                     date: "01.02.2020",
                     sender: 'Poststelle',
                     cashRegister: 3206002784883,
                     lastName: 'Reich',
                     firstName: 'Frank',
-                    entrance: 'Unbekannt'
+                    entrance: 'Unbekannt',
+                    selected: false
                 },
                 {
+                    index: 12,
                     checked: false,
                     date: "01.02.2020",
                     sender: 'Poststelle',
                     cashRegister: 3206002784884,
                     lastName: 'Reich',
                     firstName: 'Frank',
-                    entrance: 'Unbekannt'
+                    entrance: 'Unbekannt',
+                    selected: false
                 },
                 {
+                    index: 13,
                     checked: false,
                     date: "01.02.2020",
                     sender: 'Poststelle',
                     cashRegister: 3206002784885,
                     lastName: 'Reich',
                     firstName: 'Frank',
-                    entrance: 'Unbekannt'
+                    entrance: 'Unbekannt',
+                    selected: false
                 },
                 {
+                    index: 14,
                     checked: false,
                     date: "01.02.2020",
                     sender: 'Poststelle',
                     cashRegister: 3206002784886,
                     lastName: 'Reich',
                     firstName: 'Frank',
-                    entrance: 'Unbekannt'
+                    entrance: 'Unbekannt',
+                    selected: false
                 },
                 {
+                    index: 15,
                     checked: false,
                     date: "01.02.2020",
                     sender: 'Poststelle',
                     cashRegister: 3206002784887,
                     lastName: 'Reich',
                     firstName: 'Frank',
-                    entrance: 'Unbekannt'
+                    entrance: 'Unbekannt',
+                    selected: false
                 },
                 {
+                    index: 16,
                     checked: false,
                     date: "01.02.2020",
                     sender: 'Poststelle',
                     cashRegister: 3206002784888,
                     lastName: 'Reich',
                     firstName: 'Frank',
-                    entrance: 'Unbekannt'
+                    entrance: 'Unbekannt',
+                    selected: false
                 },
                 {
+                    index: 17,
                     checked: false,
                     date: "01.02.2020",
                     sender: 'Poststelle',
                     cashRegister: 3206002784889,
                     lastName: 'Reich',
                     firstName: 'Frank',
-                    entrance: 'Unbekannt'
+                    entrance: 'Unbekannt',
+                    selected: false
                 },
                 {
+                    index: 18,
                     checked: false,
                     date: "01.02.2020",
                     sender: 'Poststelle',
                     cashRegister: 3206002784890,
                     lastName: 'Reich',
                     firstName: 'Frank',
-                    entrance: 'Unbekannt'
+                    entrance: 'Unbekannt',
+                    selected: false
                 },
                 {
+                    index: 19,
                     checked: false,
                     date: "01.02.2020",
                     sender: 'Poststelle',
                     cashRegister: 3206002784891,
                     lastName: 'Reich',
                     firstName: 'Frank',
-                    entrance: 'Unbekannt'
+                    entrance: 'Unbekannt',
+                    selected: false
                 },
                 {
+                    index: 20,
                     checked: false,
                     date: "01.02.2020",
                     sender: 'Poststelle',
                     cashRegister: 3206002784892,
                     lastName: 'Reich',
                     firstName: 'Frank',
-                    entrance: 'Unbekannt'
+                    entrance: 'Unbekannt',
+                    selected: false
                 },
                 {
+                    index: 21,
                     checked: false,
                     date: "01.02.2020",
                     sender: 'Poststelle',
                     cashRegister: 3206002784893,
                     lastName: 'Reich',
                     firstName: 'Frank',
-                    entrance: 'Unbekannt'
+                    entrance: 'Unbekannt',
+                    selected: false
                 },
                 {
+                    index: 22,
                     checked: false,
                     date: "01.02.2020",
                     sender: 'Poststelle',
                     cashRegister: 3206002784894,
                     lastName: 'Reich',
                     firstName: 'Frank',
-                    entrance: 'Unbekannt'
+                    entrance: 'Unbekannt',
+                    selected: false
                 },
                 {
+                    index: 23,
                     checked: false,
                     date: "01.02.2020",
                     sender: 'Poststelle',
                     cashRegister: 3206002784895,
                     lastName: 'Reich',
                     firstName: 'Frank',
-                    entrance: 'Unbekannt'
+                    entrance: 'Unbekannt',
+                    selected: false
                 },
                 {
+                    index: 24,
                     checked: false,
                     date: "01.02.2020",
                     sender: 'Poststelle',
                     cashRegister: 3206002784896,
                     lastName: 'Reich',
                     firstName: 'Frank',
-                    entrance: 'Unbekannt'
+                    entrance: 'Unbekannt',
+                    selected: false
                 },
                 {
+                    index: 25,
                     checked: false,
                     date: "01.02.2020",
                     sender: 'Poststelle',
                     cashRegister: 3206002784897,
                     lastName: 'Reich',
                     firstName: 'Frank',
-                    entrance: 'Unbekannt'
-                },
-                {
-                    checked: false,
-                    date: "01.02.2020",
-                    sender: 'Poststelle',
-                    cashRegister: 3206002784898,
-                    lastName: 'Reich',
-                    firstName: 'Frank',
-                    entrance: 'Unbekannt'
-                },
-                {
-                    checked: false,
-                    date: "01.02.2020",
-                    sender: 'Poststelle',
-                    cashRegister: 3206002784899,
-                    lastName: 'Reich',
-                    firstName: 'Frank',
-                    entrance: 'Unbekannt'
-                },
-                {
-                    checked: false,
-                    date: "01.02.2020",
-                    sender: 'Poststelle',
-                    cashRegister: 3206002784100,
-                    lastName: 'Reich',
-                    firstName: 'Frank',
-                    entrance: 'Unbekannt'
-                },
-                {
-                    checked: false,
-                    date: "01.02.2020",
-                    sender: 'Poststelle',
-                    cashRegister: 3206002784101,
-                    lastName: 'Reich',
-                    firstName: 'Frank',
-                    entrance: 'Unbekannt'
-                },
-                {
-                    checked: false,
-                    date: "01.02.2020",
-                    sender: 'Poststelle',
-                    cashRegister: 3206002784102,
-                    lastName: 'Reich',
-                    firstName: 'Frank',
-                    entrance: 'Taltech'
+                    entrance: 'Unbekannt',
+                    selected: false
                 }
             ];
-            this.sortedSampleListItems = this.sampleListItems.slice();
+            this.selectedRow = JSON.parse(JSON.stringify(this.sampleListItems[0]));
             this.verticalItems = [
                 { date: '12.12.2020', rollover: false },
                 { date: '26.10.2020', rollover: false },
                 { date: '12.12.2020', rollover: false }
             ];
-            // try {
-            //     $('body').initialize('en-US');
-            //     $('#searchfield').searchfield({
-            //         clearable: true,
-            //     }).on('selected', function (e, a) {
-            //         console.log('Selected event was fired');
-            //         if (a.hasClass('more-results')) {
-            //             console.log('More results was clicked');
-            //         }
-            //     });
-            // } catch (err) {
-            //     console.warn(err);
-            // }
+        };
+        PDFComponent.prototype.selectRow = function (item) {
+            this.selectedRow = JSON.parse(JSON.stringify(item));
+            this.sampleListItems.forEach(function (val) {
+                val.selected = false;
+                if (val.index === item.index) {
+                    val.selected = true;
+                }
+            });
+        };
+        PDFComponent.prototype.editForm = function () {
+            if (this.selectedRow) {
+                this.showForm = true;
+            }
+        };
+        PDFComponent.prototype.isFormValid = function () {
+            return (!!this.selectedRow.sender.trim() &&
+                !!this.selectedRow.cashRegister &&
+                !!this.selectedRow.firstName.trim() &&
+                !!this.selectedRow.lastName.trim() &&
+                !!this.selectedRow.entrance.trim());
+        };
+        PDFComponent.prototype.saveForm = function () {
+            var _this = this;
+            this.sampleListItems.forEach(function (row, index) {
+                if (row.index === _this.selectedRow.index) {
+                    _this.sampleListItems[index] = _this.selectedRow;
+                }
+            });
         };
         PDFComponent.prototype.sortListBy = function (property) {
             var targetOrder = 'asc';
@@ -349,12 +371,83 @@ define(["require", "exports", "@angular/core", "@angular/common", "@infor/sohoxi
                 direction: targetOrder
             };
             console.log("Sorting by " + property + " in " + targetOrder + " order.");
-            this.sortedSampleListItems.sort(function (a, b) {
+            this.sampleListItems.sort(function (a, b) {
                 if (targetOrder === 'asc') {
                     return a[property] > b[property] ? 1 : -1;
                 }
                 return a[property] < b[property] ? 1 : -1;
             });
+        };
+        PDFComponent.prototype.onKeyPress = function (event) {
+            var _this = this;
+            // On Down Arrow Press
+            if (event.key === 'ArrowDown') {
+                if (!this.selectedRow) {
+                    this.sampleListItems[0].selected = true;
+                    this.selectedRow = JSON.parse(JSON.stringify(this.sampleListItems[0]));
+                    return;
+                }
+                var indexOfSelectedRow = this.sampleListItems.findIndex(function (item) { return item.index === _this.selectedRow.index; });
+                // scroll only if selected row index is greater than five
+                if (this.sampleListItems[indexOfSelectedRow + 1]) {
+                    this.sampleListItems[indexOfSelectedRow].selected = false;
+                    this.sampleListItems[indexOfSelectedRow + 1].selected = true;
+                    this.selectedRow = JSON.parse(JSON.stringify(this.sampleListItems[indexOfSelectedRow + 1]));
+                }
+                if (indexOfSelectedRow < 5) {
+                    event.preventDefault();
+                }
+                return;
+            }
+            if (event.key === 'ArrowUp') {
+                if (!this.selectedRow) {
+                    return;
+                }
+                var indexOfSelectedRow = this.sampleListItems.findIndex(function (item) { return item.index === _this.selectedRow.index; });
+                if (this.sampleListItems[indexOfSelectedRow - 1]) {
+                    this.sampleListItems[indexOfSelectedRow].selected = false;
+                    this.sampleListItems[indexOfSelectedRow - 1].selected = true;
+                    this.selectedRow = JSON.parse(JSON.stringify(this.sampleListItems[indexOfSelectedRow - 1]));
+                }
+                if (indexOfSelectedRow > this.sampleListItems.length - 5) {
+                    event.preventDefault();
+                }
+                return;
+            }
+            if (event.ctrlKey && event.keyCode == 69) {
+                if (this.selectedRow) {
+                    this.showForm = true;
+                    event.preventDefault(); // preventing default browser behavior on ctrl + E
+                }
+                return;
+            }
+            if (event.ctrlKey && event.keyCode == 65) {
+                if (this.selectedRow) {
+                    this.sampleListItems.forEach(function (row) {
+                        if (row.index === _this.selectedRow.index) {
+                            row.checked = true;
+                        }
+                    });
+                    event.preventDefault(); // preventing default browser behavior on ctrl + A
+                }
+                return;
+            }
+            if (event.ctrlKey && event.keyCode == 88) {
+                if (this.selectedRow) {
+                    this.sampleListItems.forEach(function (row) {
+                        if (row.index === _this.selectedRow.index) {
+                            row.checked = false;
+                        }
+                    });
+                    event.preventDefault(); // preventing default browser behavior on ctrl + X
+                }
+                return;
+            }
+            console.log(event.keyCode);
+            /*if (event.key === 'Escape') {
+                console.log('esc key press');
+                this.selectedRow = null;
+            }*/
         };
         PDFComponent.prototype.getMetadata = function () {
             // For known/hardcoded values, place the metadata in the manifest instead.
@@ -374,10 +467,16 @@ define(["require", "exports", "@angular/core", "@angular/common", "@infor/sohoxi
             core_1.Input(),
             __metadata("design:type", lime_1.IWidgetInstance)
         ], PDFComponent.prototype, "widgetInstance", void 0);
+        __decorate([
+            core_1.HostListener('document:keydown', ['$event']),
+            __metadata("design:type", Function),
+            __metadata("design:paramtypes", [KeyboardEvent]),
+            __metadata("design:returntype", void 0)
+        ], PDFComponent.prototype, "keypress", null);
         PDFComponent = __decorate([
             core_1.Component({
-                template: "\n        <div class=\"parent-layout\">\n            <div>\n                <!--  Top Button Row   -->\n                <div class=\"icon-row\">\n                    <div *ngFor=\"let menuItem of topMenuItems;let i = index;\">\n                        <div style=\"display: grid; grid-template-rows: 1fr minmax(25px, auto); cursor: pointer\"\n                             class=\"main-menu-icon\"\n                             [ngClass]=\"{'bilal' : selectedRow && menuItem.label === 'BEARBEITEN'}\"\n                             (click)=\"currentTab = i;\">\n                            <div style=\"text-align: center\"><img [src]=\"menuItem.icon\" class=\"main-menu-icon-image\"/>\n                            </div>\n                            <div class=\"header-label\">{{menuItem.label}}</div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n\n            <!-- First Tab -->\n            <ng-container *ngIf=\"currentTab == 0\">\n                <div style=\"width: 100%; display: flex; padding: 10px; overflow: auto; background-color: #f0f0f0;\">\n                    <div style=\"width: 50%; overflow: auto; display: grid; padding-top: 27px\">\n                        <div class=\"grid-header\">\n                            <div style=\"width: 10%; text-align: center\" (click)=\"sortListBy('checked')\">Vetr.<img\n                                    [src]=\"sortIcon\" class=\"sort\"/></div>\n                            <div style=\"width: 12%\" (click)=\"sortListBy('date')\">Datum<img [src]=\"sortIcon\"\n                                                                                           class=\"sort\"/></div>\n                            <div style=\"width: 13%\" (click)=\"sortListBy('sender')\">Absender<img [src]=\"sortIcon\"\n                                                                                                class=\"sort\"/></div>\n                            <div style=\"width: 20%\" (click)=\"sortListBy('cashRegister')\">Kassenzeichen<img\n                                    [src]=\"sortIcon\" class=\"sort\"/></div>\n                            <div style=\"width: 15%\" (click)=\"sortListBy('lastName')\">Nachname<img\n                                    [src]=\"sortIcon\" class=\"sort\"/></div>\n                            <div style=\"width: 15%\" (click)=\"sortListBy('firstName')\">Vorname<img [src]=\"sortIcon\"\n                                                                                                  class=\"sort\"/></div>\n                            <div style=\"width: 15%\" (click)=\"sortListBy('entrance')\">Eingang<img [src]=\"sortIcon\"\n                                                                                                 class=\"sort\"/></div>\n                        </div>\n                        <div style=\"overflow: auto\">\n                            <div *ngFor=\"let item of sortedSampleListItems;\"\n                                 style=\"display: flex; background: white; height: 30px; cursor: pointer; margin-top: 7px;\"\n                                 class=\"list-item\"\n                                 [style.background-image]=\"item.cashRegister === selectedRow?.cashRegister ? 'linear-gradient(0deg, #2b79a7 0%, #4ebbfb 50%, #2b79a7 100%)' : null\"\n                                 [style.color]=\"item.cashRegister === selectedRow?.cashRegister ? 'white' : 'black'\"\n                                 (click)=\"rowSelected(item)\">\n                                <div style=\"width: 10%; margin: auto 0\">\n                                    <img style=\"margin: auto auto; display: block\" [src]=\"checkMark\" width=\"20\"\n                                         *ngIf=\"item.checked\">\n                                </div>\n                                <div style=\"width: 12%; margin: auto 0\">{{item.date}}</div>\n                                <div style=\"width: 13%; margin: auto 0\">{{item.sender}}</div>\n                                <div style=\"width: 20%; margin: auto 0\">{{item.cashRegister}}</div>\n                                <div style=\"width: 15%; margin: auto 0\">{{item.lastName}}</div>\n                                <div style=\"width: 15%; margin: auto 0\">{{item.firstName}}</div>\n                                <div style=\"width: 15%; margin: auto 0\">{{item.entrance}}</div>\n                            </div>\n                        </div>\n                        <div *ngIf=\"selectedRow\" style=\"padding-top: 10px\">\n                            <div class=\"form-container\">\n                                <div class=\"form-fields-container\">\n                                    <div class=\"field\">\n                                        <label>User</label>\n                                        <input type=\"text\" class=\"smaller-text-field search-icon\"\n                                               value=\"{{selectedRow.sender}}\">\n                                    </div>\n\n                                    <div class=\"field\">\n                                        <label></label>\n                                        <span style=\"font-size:14px\">Obermeier, Klaus</span>\n                                    </div>\n\n                                    <div class=\"field\">\n                                        <label>Kassenzeichen</label>\n                                        <input type=\"text\" class=\"smaller-text-field\"\n                                               value=\"{{selectedRow.cashRegister}}\">\n                                    </div>\n                                    <div>&nbsp;</div>\n\n                                    <div class=\"field\">\n                                        <label>Nachname</label>\n                                        <input type=\"text\" class=\"smaller-text-field\" value=\"{{selectedRow.firstName}}\">\n                                    </div>\n\n                                    <div class=\"field\">\n                                        <label>Vorname</label>\n                                        <input type=\"text\" class=\"smaller-text-field\" value=\"{{selectedRow.lastName}}\">\n                                    </div>\n\n                                    <div class=\"field\" style=\"grid-row:4; grid-column: 1 / -1\">\n                                        <label>Eingang</label>\n                                        <input type=\"text\" class=\"smaller-text-field\"\n                                               value=\"{{selectedRow.entrance}}\"\n                                               style=\"width:90%\">\n                                    </div>\n\n                                    <div class=\"field\" style=\"grid-row:5; grid-column: 1 / -1\">\n                                        <label>Dokumentenbezeichnung</label>\n                                        <input type=\"text\" class=\"smaller-text-field search-icon\"\n                                               value=\"Ruckleuf EMA\"\n                                               style=\"width:90%\">\n                                    </div>\n                                </div>\n                                <div class=\"push-to-bottom\">\n                                    <div></div>\n                                    <div>\n                                        <button class=\"outlined-button\">schlie\u00DFen</button>\n                                    </div>\n                                </div>\n                                <div class=\"push-to-bottom\">\n                                    <div></div>\n                                    <div>\n                                        <button class=\"filled-button\">eAkte</button>\n                                    </div>\n                                    <div>\n                                        <button class=\"filled-button\">Dokument</button>\n                                    </div>\n                                    <div>\n                                        <button class=\"filled-button\">Speichern</button>\n                                    </div>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                    <div style=\"width: 50%; height: 100%; padding: 43px 20px 0 30px;\">\n                        <iframe src=\"https://www.muhammadbinyusrat.com/devguide.pdf\" width=\"100%\" height=\"100%\"\n                                class=\"pdf-container-style\"></iframe>\n                    </div>\n                </div>\n            </ng-container>\n        </div>\n    ",
-                styles: ["\n        .bilal {\n            filter: invert(87%) sepia(98%) saturate(1%) hue-rotate(268deg) brightness(109%) contrast(97%);\n        }\n\n        .parent-layout {\n            display: grid;\n            grid-template-rows: auto 1fr;\n            height: 100%;\n        }\n\n        .icon-row {\n            padding-top: 10px;\n            padding-bottom: -10px;\n            background-image: linear-gradient(0deg, #2b79a7 0%, #4ebbfb 50%, #2b79a7 100%);\n            color: white;\n            display: grid;\n            grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));\n        }\n\n        .header-label {\n            text-align: center;\n            margin-top: 5px;\n            letter-spacing: 1px;\n            -webkit-transform: scale(1, 1.5); /* chrome and safari */\n            -moz-transform: scale(1, 1.5); /* opera */\n        }\n\n        .grid-header {\n            width: calc(100% - 8px); /*excluding scroller width*/\n            display: flex;\n            color: #909090;\n            cursor: pointer;\n        }\n\n        /*.main-menu-icon {\n            cursor: pointer;\n        }\n\n        .main-menu-icon:hover {\n            filter: invert(93%) sepia(5%) saturate(35%) hue-rotate(314deg) brightness(95%) contrast(78%);\n        }*/\n\n        .main-menu-icon-image {\n            filter: invert(87%) sepia(98%) saturate(1%) hue-rotate(268deg) brightness(109%) contrast(97%);\n            width: 50px;\n        }\n\n        .pdf-container-style {\n            box-shadow: 0 10px 6px -6px #777;\n        }\n\n        .list-item:hover {\n            box-shadow: 0 0 11px rgba(33, 33, 33, .2);\n        }\n\n        .sort {\n            width: 12px;\n            margin-bottom: -3px;\n            margin-left: 2px;\n            opacity: 0.5;\n        }\n\n        .form-container {\n            padding: 10px;\n            display: grid;\n            grid-template-columns: 1fr auto auto;\n            gap: 1rem;\n            background-color: white;\n            height: 100%;\n            box-shadow: 0 10px 6px -6px #777;\n        }\n\n        .form-fields-container {\n            display: grid;\n            grid-template-columns: 1fr 1fr;\n        }\n\n        .smaller-text-field {\n            font-size: 13px;\n            height: 20px;\n            width: 80%;\n        }\n\n        .push-to-bottom {\n            display: grid;\n            grid-template-rows: 1fr auto;\n            gap: 1rem;\n        }\n\n        .outlined-button {\n            width: 100%;\n            border: 2px solid #2678a9;\n            padding: 3px 6px;\n            color: #2678a9;\n            border-radius: 5px;\n        }\n\n        .outlined-button:hover {\n            background-color: #2678a9;\n            color: white;\n        }\n\n        .filled-button {\n            width: 100%;\n            border: 2px solid #2678a9;\n            padding: 3px 6px;\n            color: white;\n            border-radius: 5px;\n            background-color: #2678a9;\n        }\n\n        .filled-button:hover {\n            background-color: white;\n            color: cornflowerblue;\n        }\n\n        .search-icon {\n            background: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iYmxhY2siIHdpZHRoPSIxOHB4IiBoZWlnaHQ9IjE4cHgiPjxwYXRoIGQ9Ik0wIDBoMjR2MjRIMHoiIGZpbGw9Im5vbmUiLz48cGF0aCBkPSJNMTUuNSAxNGgtLjc5bC0uMjgtLjI3QzE1LjQxIDEyLjU5IDE2IDExLjExIDE2IDkuNSAxNiA1LjkxIDEzLjA5IDMgOS41IDNTMyA1LjkxIDMgOS41IDUuOTEgMTYgOS41IDE2YzEuNjEgMCAzLjA5LS41OSA0LjIzLTEuNTdsLjI3LjI4di43OWw1IDQuOTlMMjAuNDkgMTlsLTQuOTktNXptLTYgMEM3LjAxIDE0IDUgMTEuOTkgNSA5LjVTNy4wMSA1IDkuNSA1IDE0IDcuMDEgMTQgOS41IDExLjk5IDE0IDkuNSAxNHoiLz48L3N2Zz4=\") no-repeat right;\n        }\n    "]
+                template: "\n        <div class=\"parent-layout\">\n            <!--  Top Button Row   -->\n            <div class=\"icon-row\">\n                <div>\n                    <div><img [src]=\"topMenuItems.AKTUALISIEREN.icon\" class=\"main-menu-icon-image\"/></div>\n                    <div class=\"header-label\">{{topMenuItems.AKTUALISIEREN.label}}</div>\n                </div>\n                <div>\n                    <div><img [src]=\"topMenuItems.WEITERLEITEN.icon\" class=\"main-menu-icon-image\"/></div>\n                    <div class=\"header-label\">{{topMenuItems.WEITERLEITEN.label}}</div>\n                </div>\n                <div>\n                    <div><img [src]=\"topMenuItems.TRENNEN.icon\" class=\"main-menu-icon-image\"/></div>\n                    <div class=\"header-label\">{{topMenuItems.TRENNEN.label}}</div>\n                </div>\n                <div [ngClass]=\"{'setFocus' : showForm}\" (click)=\"editForm()\">\n                    <div><img [src]=\"topMenuItems.BEARBEITEN.icon\"\n                              class=\"main-menu-icon-image\"/></div>\n                    <div class=\"header-label\">{{topMenuItems.BEARBEITEN.label}}</div>\n                </div>\n                <div>\n                    <div><img [src]=\"topMenuItems.EAKTE.icon\" class=\"main-menu-icon-image\"/></div>\n                    <div class=\"header-label\">{{topMenuItems.EAKTE.label}}</div>\n                </div>\n                <div>\n                    <div><img [src]=\"topMenuItems.HWSCXS.icon\" class=\"main-menu-icon-image\"/></div>\n                    <div class=\"header-label\">{{topMenuItems.HWSCXS.label}}</div>\n                </div>\n            </div>\n\n            <!-- First Tab -->\n            <ng-container>\n                <div style=\"width: 100%; display: flex; padding: 10px; overflow: auto; background-color: #f0f0f0;\">\n                    <div style=\"width: 50%; overflow: auto; display: grid; padding-top: 27px\">\n                        <div class=\"grid-header\">\n                            <div style=\"width: 10%; text-align: center\" (click)=\"sortListBy('checked')\">Vetr.<img\n                                    [src]=\"sortIcon\" class=\"sort\"/></div>\n                            <div style=\"width: 12%\" (click)=\"sortListBy('date')\">Datum<img [src]=\"sortIcon\"\n                                                                                           class=\"sort\"/></div>\n                            <div style=\"width: 13%\" (click)=\"sortListBy('sender')\">Absender<img [src]=\"sortIcon\"\n                                                                                                class=\"sort\"/></div>\n                            <div style=\"width: 20%\" (click)=\"sortListBy('cashRegister')\">Kassenzeichen<img\n                                    [src]=\"sortIcon\" class=\"sort\"/></div>\n                            <div style=\"width: 15%\" (click)=\"sortListBy('lastName')\">Nachname<img\n                                    [src]=\"sortIcon\" class=\"sort\"/></div>\n                            <div style=\"width: 15%\" (click)=\"sortListBy('firstName')\">Vorname<img [src]=\"sortIcon\"\n                                                                                                  class=\"sort\"/></div>\n                            <div style=\"width: 15%\" (click)=\"sortListBy('entrance')\">Eingang<img [src]=\"sortIcon\"\n                                                                                                 class=\"sort\"/></div>\n                        </div>\n                        <div style=\"overflow: auto\">\n                            <div *ngFor=\"let item of sampleListItems;\"\n                                 style=\"display: flex; background: white; height: 30px; cursor: pointer; margin-top: 7px;\"\n                                 class=\"list-item\"\n                                 [style.background-image]=\"item.selected ? 'linear-gradient(0deg, #2b79a7 0%, #4ebbfb 50%, #2b79a7 100%)' : null\"\n                                 [style.color]=\"item.selected ? 'white' : 'black'\"\n                                 (click)=\"selectRow(item)\">\n                                <div style=\"width: 10%; margin: auto 0\">\n                                    <img style=\"margin: auto auto; display: block\" [src]=\"checkMark\" width=\"20\"\n                                         *ngIf=\"item.checked\">\n                                </div>\n                                <div style=\"width: 12%; margin: auto 0\">{{item.date}}</div>\n                                <div style=\"width: 13%; margin: auto 0\">{{item.sender}}</div>\n                                <div style=\"width: 20%; margin: auto 0\">{{item.cashRegister}}</div>\n                                <div style=\"width: 15%; margin: auto 0\">{{item.lastName}}</div>\n                                <div style=\"width: 15%; margin: auto 0\">{{item.firstName}}</div>\n                                <div style=\"width: 15%; margin: auto 0\">{{item.entrance}}</div>\n                            </div>\n                        </div>\n                        <div *ngIf=\"showForm\" style=\"padding-top: 10px\">\n                            <div class=\"form-container\">\n                                <div class=\"form-fields-container\">\n                                    <div class=\"field\">\n                                        <label>User</label>\n                                        <input type=\"text\" class=\"smaller-text-field search-icon\"\n                                               [(ngModel)]=\"selectedRow.sender\">\n                                    </div>\n\n                                    <div class=\"field\">\n                                        <label></label>\n                                        <span style=\"font-size:14px\">Obermeier, Klaus</span>\n                                    </div>\n\n                                    <div class=\"field\">\n                                        <label>Kassenzeichen</label>\n                                        <input type=\"text\" class=\"smaller-text-field\"\n                                               [(ngModel)]=\"selectedRow.cashRegister\">\n                                    </div>\n                                    <div>&nbsp;</div>\n\n                                    <div class=\"field\">\n                                        <label>Nachname</label>\n                                        <input type=\"text\" class=\"smaller-text-field\"\n                                               [(ngModel)]=\"selectedRow.firstName\">\n                                    </div>\n\n                                    <div class=\"field\">\n                                        <label>Vorname</label>\n                                        <input type=\"text\" class=\"smaller-text-field\"\n                                               [(ngModel)]=\"selectedRow.lastName\">\n                                    </div>\n\n                                    <div class=\"field\" style=\"grid-row:4; grid-column: 1 / -1\">\n                                        <label>Eingang</label>\n                                        <input type=\"text\" class=\"smaller-text-field\"\n                                               [(ngModel)]=\"selectedRow.entrance\"\n                                               style=\"width:90%\">\n                                    </div>\n\n                                    <div class=\"field\" style=\"grid-row:5; grid-column: 1 / -1\">\n                                        <label>Dokumentenbezeichnung</label>\n                                        <input type=\"text\" class=\"smaller-text-field search-icon\"\n                                               value=\"Ruckleuf EMA\"\n                                               style=\"width:90%\">\n                                    </div>\n                                </div>\n                                <div class=\"push-to-bottom\">\n                                    <div></div>\n                                    <div>\n                                        <button class=\"outlined-button\" (click)=\"showForm = false\">schlie\u00DFen</button>\n                                    </div>\n                                </div>\n                                <div class=\"push-to-bottom\">\n                                    <div></div>\n                                    <div>\n                                        <button class=\"filled-button\">eAkte</button>\n                                    </div>\n                                    <div>\n                                        <button [ngClass]=\"isFormValid() ? 'filled-button' : 'disabled-button'\"\n                                                (click)=\"saveForm()\"\n                                                [disabled]=\"!isFormValid()\">\n                                            Speichern\n                                        </button>\n                                    </div>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                    <div style=\"width: 50%; height: 100%; padding: 43px 20px 0 30px;\">\n                        <iframe src=\"https://www.muhammadbinyusrat.com/devguide.pdf\" width=\"100%\" height=\"100%\"\n                                class=\"pdf-container-style\"></iframe>\n                    </div>\n                </div>\n            </ng-container>\n        </div>\n    ",
+                styles: ["\n        .parent-layout {\n            display: grid;\n            grid-template-rows: auto 1fr;\n            height: 100%;\n        }\n\n        .icon-row {\n            padding-top: 10px;\n            padding-bottom: 10px;\n            background-image: linear-gradient(0deg, #2b79a7 0%, #4ebbfb 50%, #2b79a7 100%);\n            color: white;\n            display: grid;\n            grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));\n            cursor: pointer;\n            text-align: center;\n        }\n\n        .header-label {\n            text-align: center;\n            margin-top: 5px;\n            letter-spacing: 1px;\n            -webkit-transform: scale(1, 1.5); /* chrome and safari */\n            -moz-transform: scale(1, 1.5); /* opera */\n        }\n\n        .grid-header {\n            width: calc(100% - 8px); /*excluding scroller width*/\n            display: flex;\n            color: #909090;\n            cursor: pointer;\n        }\n\n        .main-menu-icon-image {\n            filter: invert(87%) sepia(98%) saturate(1%) hue-rotate(268deg) brightness(109%) contrast(97%);\n            width: 50px;\n        }\n\n        .pdf-container-style {\n            box-shadow: 0 10px 6px -6px #777;\n        }\n\n        .list-item:hover {\n            box-shadow: 0 0 11px rgba(33, 33, 33, .2);\n        }\n\n        .setFocus {\n            filter: invert(87%) sepia(98%) saturate(1%) hue-rotate(268deg) brightness(109%) contrast(97%);\n        }\n\n        .sort {\n            width: 12px;\n            margin-bottom: -3px;\n            margin-left: 2px;\n            opacity: 0.5;\n        }\n\n        .form-container {\n            padding: 10px;\n            display: grid;\n            grid-template-columns: 1fr auto auto;\n            gap: 1rem;\n            background-color: white;\n            height: 100%;\n            box-shadow: 0 10px 6px -6px #777;\n        }\n\n        .form-fields-container {\n            display: grid;\n            grid-template-columns: 1fr 1fr;\n        }\n\n        .smaller-text-field {\n            font-size: 13px;\n            height: 20px;\n            width: 80%;\n        }\n\n        .push-to-bottom {\n            display: grid;\n            grid-template-rows: 1fr auto;\n            gap: 1rem;\n        }\n\n        .outlined-button {\n            width: 100%;\n            border: 2px solid #2678a9;\n            padding: 3px 6px;\n            color: #2678a9;\n            border-radius: 5px;\n        }\n\n        .outlined-button:hover {\n            background-color: #2678a9;\n            color: white;\n        }\n\n        .disabled-button {\n            width: 100%;\n            border: 2px solid #eeeeee;\n            padding: 3px 6px;\n            color: #ababab;\n            border-radius: 5px;\n            background-color: #eeeeee;\n            cursor: auto;\n        }\n\n        .filled-button {\n            width: 100%;\n            border: 2px solid #2678a9;\n            padding: 3px 6px;\n            color: white;\n            border-radius: 5px;\n            background-color: #2678a9;\n        }\n\n        .filled-button:hover {\n            background-color: white;\n            color: cornflowerblue;\n        }\n\n        .search-icon {\n            background: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iYmxhY2siIHdpZHRoPSIxOHB4IiBoZWlnaHQ9IjE4cHgiPjxwYXRoIGQ9Ik0wIDBoMjR2MjRIMHoiIGZpbGw9Im5vbmUiLz48cGF0aCBkPSJNMTUuNSAxNGgtLjc5bC0uMjgtLjI3QzE1LjQxIDEyLjU5IDE2IDExLjExIDE2IDkuNSAxNiA1LjkxIDEzLjA5IDMgOS41IDNTMyA1LjkxIDMgOS41IDUuOTEgMTYgOS41IDE2YzEuNjEgMCAzLjA5LS41OSA0LjIzLTEuNTdsLjI3LjI4di43OWw1IDQuOTlMMjAuNDkgMTlsLTQuOTktNXptLTYgMEM3LjAxIDE0IDUgMTEuOTkgNSA5LjVTNy4wMSA1IDkuNSA1IDE0IDcuMDEgMTQgOS41IDExLjk5IDE0IDkuNSAxNHoiLz48L3N2Zz4=\") no-repeat right;\n        }\n    "]
                 // changeDetection: ChangeDetectionStrategy.OnPush
             }),
             __metadata("design:paramtypes", [core_1.ChangeDetectorRef, forms_1.FormBuilder, platform_browser_1.DomSanitizer])
