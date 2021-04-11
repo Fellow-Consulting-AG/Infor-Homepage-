@@ -4,7 +4,7 @@ import {SohoListViewModule} from "@infor/sohoxi-angular";
 import {FormBuilder, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {IWidgetComponent, IWidgetContext, IWidgetInstance, IWidgetSettingMetadata, WidgetSettingsType} from "lime";
 import {assets} from "./assets";
-import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
+import {DomSanitizer, SafeHtml, SafeUrl} from "@angular/platform-browser";
 
 interface MainMenuItem {
     AKTUALISIEREN: { icon: SafeHtml, label: string },
@@ -27,6 +27,18 @@ interface ListItem {
     selected: boolean
 }
 
+interface EakteListItem {
+    index: number;
+    date: string;
+    document: string;
+    am: string;
+    hinweis: string;
+    vordruck: string;
+    user: string;
+    pdfLink: string;
+    selected: boolean;
+}
+
 interface VerticalListItem {
     date: string;
     rollover: boolean;
@@ -37,35 +49,36 @@ interface VerticalListItem {
         <div class="parent-layout">
             <!--  Top Button Row   -->
             <div class="icon-row">
-                <div>
+                <div style="cursor: pointer" (click)="showEakte = false">
                     <div><img [src]="topMenuItems.AKTUALISIEREN.icon" class="main-menu-icon-image"/></div>
                     <div class="header-label">{{topMenuItems.AKTUALISIEREN.label}}</div>
                 </div>
-                <div>
+                <div style="cursor: pointer">
                     <div><img [src]="topMenuItems.WEITERLEITEN.icon" class="main-menu-icon-image"/></div>
                     <div class="header-label">{{topMenuItems.WEITERLEITEN.label}}</div>
                 </div>
-                <div>
+                <div style="cursor: pointer">
                     <div><img [src]="topMenuItems.TRENNEN.icon" class="main-menu-icon-image"/></div>
                     <div class="header-label">{{topMenuItems.TRENNEN.label}}</div>
                 </div>
-                <div [ngClass]="{'setFocus' : showForm}" (click)="editForm()">
+                <div style="cursor: pointer" [ngClass]="{'setFocus' : showForm}" (click)="editForm()">
                     <div><img [src]="topMenuItems.BEARBEITEN.icon"
                               class="main-menu-icon-image"/></div>
                     <div class="header-label">{{topMenuItems.BEARBEITEN.label}}</div>
                 </div>
-                <div>
+                <div style="cursor: pointer" [ngClass]="{'setFocus' : showEakte}"
+                     (click)="showEakte = true; showForm = false">
                     <div><img [src]="topMenuItems.EAKTE.icon" class="main-menu-icon-image"/></div>
                     <div class="header-label">{{topMenuItems.EAKTE.label}}</div>
                 </div>
-                <div>
+                <div style="cursor: auto">
                     <div><img [src]="topMenuItems.HWSCXS.icon" class="main-menu-icon-image"/></div>
                     <div class="header-label">{{topMenuItems.HWSCXS.label}}</div>
                 </div>
             </div>
 
             <!-- First Tab -->
-            <ng-container>
+            <ng-container *ngIf="!showEakte">
                 <div style="width: 100%; display: flex; padding: 10px; overflow: auto; background-color: #f0f0f0;">
                     <div style="width: 50%; overflow: auto; display: grid; padding-top: 27px">
                         <div class="grid-header">
@@ -173,7 +186,49 @@ interface VerticalListItem {
                         </div>
                     </div>
                     <div style="width: 50%; height: 100%; padding: 43px 20px 0 30px;">
-                        <iframe src="https://idm.eu1.inforcloudsuite.com/ca/api/resources/EMA_Returns-1-3-LATEST?$token=Ac414kLBx8%2B3XhaqSrDU%2BrviwMjIIc75%2BPEZV%2FzaFJD3Ra4hftBfyAZZ9LT37Akov%2Fk37RsL568EiQC2OjRJos%2FXXORP%2FpZ0%2FCcV%2FYUxzb%2FCFt5hfPWSndG%2FKayn8OvupnfKltkP09C7Gi2BarJrKuKrpmFDdJ5g43sF5m21P%2BAGEwoarOuMXQ%2Feg1o8G%2BcWOTDxduujyzmOF7O64vFWcDkF%2BisApExRuEBTK7K5QPXB2KtkQovwMzBjmAWfn8oUwtpE4uvFX7y3vW2yG3UZe%2FRuDtRmjR7ek4G422wav39V4dIts7bh75o6Il5FgS%2BBOI%2F1wFLYFpO9pnQlP8Z2CAtKOnOyE0tFi2UQU564XBmtvbAtoiOKpaCqgMXu&$tenant=FELLOWCONSULTING_DEV" width="100%" height="100%"
+                        <iframe src="https://idm.eu1.inforcloudsuite.com/ca/api/resources/EMA_Returns-1-3-LATEST?$token=AZvINRzd0J7mkCbWzUXHe%2FMLW1%2F5I%2B6f1EfLNMZ0Akw1%2FIhM8P6Hu0TDKRw2EUF7n8nsoKTJe6CWAGGqqg3PV8mS%2B6YDkspbz2rW%2B1DtT9UEe%2FCL8tiUJQrg2vVu9YP%2FzQODyEXza6CZilj9KGk2OcrDi%2FkG3Ehfkq5uyrk8lQUfHnRhGvUaqaFz8FDTaR2CwAlqnG0HR%2BOG7ZjbptRN6zb91kPk3vVlmlWsLLBZMnIWu3NPeRN1ZW89YNzS3adYrcR3GqzAk6cNnL6ccTsYTT3Jdc%2BgNPrNCdA%2BTCwayMzFpnPxng3xH%2F%2Bq8kqZ2mWRrYvQFVj0P1dmyA1L4tS%2B7mYnEt6oI3Bbq12h%2Bo73KCFdXPJc2Jl00k%2FZI%2F41&$tenant=FELLOWCONSULTING_DEV" width="100%" height="100%"
+                                class="pdf-container-style"></iframe>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="showEakte">
+                <div style="background-color: #f0f0f0; padding: 10px; font-size: 13px; font-weight: bold">
+                    <div>Inhaltsverzeichnis von: Testfall Hugo, 01/10/1752, Kajutenweg 5, 31134 HILLDESHEIM</div>
+                    <div style="margin-top: 10px">Kassenzeichen: {{selectedRow.cashRegister}}</div>
+                    <div style="width: 200px; margin-top: 10px">
+                        <button class="filled-button">
+                            Inhaltsverzeichnis drücken
+                        </button>
+                    </div>
+                </div>
+                <div style="width: 100%; display: flex; padding: 10px; overflow: auto; background-color: #f0f0f0;">
+                    <div style="width: 50%; overflow: auto; display: grid">
+                        <div class="grid-header">
+                            <div style="width: 20%;text-align: center">Datum/Uhrzeit</div>
+                            <div style="width: 38%">Dokument</div>
+                            <div style="width: 10%">am</div>
+                            <div style="width: 10%">Hinweis</div>
+                            <div style="width: 11%">Vordruck</div>
+                            <div style="width: 11%">User</div>
+                        </div>
+                        <div style="overflow: auto">
+                            <div *ngFor="let item of sampleEakteItems;"
+                                 style="display: flex; background: white; height: 30px; cursor: pointer; margin-top: 7px;"
+                                 class="list-item"
+                                 [style.background-image]="item.selected ? 'linear-gradient(0deg, #2b79a7 0%, #4ebbfb 50%, #2b79a7 100%)' : null"
+                                 [style.color]="item.selected ? 'white' : 'black'"
+                                 (click)="selectEakteRow(item)">
+                                <div style="width: 20%; text-align: center; margin: auto 0">{{item.date}}</div>
+                                <div style="width: 38%; margin: auto 0">{{item.document}}</div>
+                                <div style="width: 10%; margin: auto 0">{{item.am}}</div>
+                                <div style="width: 10%; margin: auto 0">{{item.hinweis}}</div>
+                                <div style="width: 11%; margin: auto 0">{{item.vordruck}}</div>
+                                <div style="width: 11%; margin: auto 0">{{item.user}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="width: 50%; height: 100%; padding: 15px 20px 0 30px;">
+                        <iframe [src]="selectedEakteRowPDF" width="100%" height="100%"
                                 class="pdf-container-style"></iframe>
                     </div>
                 </div>
@@ -194,7 +249,6 @@ interface VerticalListItem {
             color: white;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
-            cursor: pointer;
             text-align: center;
         }
 
@@ -331,11 +385,165 @@ export class PDFComponent implements OnInit, IWidgetComponent {
     selectedRow: ListItem;
     showForm = false;
 
+    showEakte = false;
+    sampleEakteItems: EakteListItem[]
+    selectedEakteRow: EakteListItem;
+    selectedEakteRowPDF: SafeUrl;
+
     constructor(private readonly changeDetectionRef: ChangeDetectorRef, private fb: FormBuilder, private ds: DomSanitizer) {
     }
 
     ngOnInit() {
         this.changeDetectionRef.markForCheck();
+        this.checkMark = this.ds.bypassSecurityTrustUrl(assets.tick);
+        this.sortIcon = this.ds.bypassSecurityTrustUrl(assets.sort);
+
+        this.setData();
+        this.selectRow(this.sampleListItems[0]);
+        this.selectEakteRow(this.sampleEakteItems[0]);
+    }
+
+    selectRow(item: ListItem) {
+        this.selectedRow = JSON.parse(JSON.stringify(item));
+        this.sampleListItems.forEach(val => {
+            val.selected = false;
+            if (val.index === item.index) {
+                val.selected = true;
+            }
+        });
+    }
+
+    selectEakteRow(item: EakteListItem) {
+        this.selectedEakteRow = JSON.parse(JSON.stringify(item));
+        this.selectedEakteRowPDF = this.ds.bypassSecurityTrustResourceUrl(this.selectedEakteRow.pdfLink)
+        this.sampleEakteItems.forEach(val => {
+            val.selected = false;
+            if (val.index === item.index) {
+                val.selected = true;
+            }
+        });
+    }
+
+    editForm() {
+        if (this.selectedRow && !this.showEakte) {
+            this.showForm = true;
+        }
+    }
+
+    isFormValid() {
+        return (!!this.selectedRow.sender.trim() &&
+            !!this.selectedRow.cashRegister &&
+            !!this.selectedRow.firstName.trim() &&
+            !!this.selectedRow.lastName.trim() &&
+            !!this.selectedRow.entrance.trim())
+    }
+
+    saveForm() {
+        this.sampleListItems.forEach((row, index) => {
+            if (row.index === this.selectedRow.index) {
+                this.sampleListItems[index] = this.selectedRow;
+            }
+        })
+    }
+
+    sortListBy(property: string) {
+        let targetOrder: 'asc' | 'desc' = 'asc';
+        if (this.lastSortAction && this.lastSortAction.property === property) {
+            targetOrder = this.lastSortAction.direction === 'asc' ? 'desc' : 'asc';
+        }
+        this.lastSortAction = {
+            property: property,
+            direction: targetOrder
+        };
+        console.log(`Sorting by ${property} in ${targetOrder} order.`);
+        this.sampleListItems.sort((a: any, b: any) => {
+            if (targetOrder === 'asc') {
+                return a[property] > b[property] ? 1 : -1;
+            }
+            return a[property] < b[property] ? 1 : -1;
+        });
+    }
+
+    private onKeyPress(event: KeyboardEvent) {
+        // On Down Arrow Press
+        if (event.key === 'ArrowDown') {
+            if (!this.selectedRow) {
+                this.sampleListItems[0].selected = true;
+                this.selectedRow = JSON.parse(JSON.stringify(this.sampleListItems[0]));
+                return;
+            }
+            const indexOfSelectedRow = this.sampleListItems.findIndex((item: ListItem) => item.index === this.selectedRow.index);
+            // scroll only if selected row index is greater than five
+            if (this.sampleListItems[indexOfSelectedRow + 1]) {
+                this.sampleListItems[indexOfSelectedRow].selected = false
+                this.sampleListItems[indexOfSelectedRow + 1].selected = true
+                this.selectedRow = JSON.parse(JSON.stringify(this.sampleListItems[indexOfSelectedRow + 1]));
+            }
+            if (indexOfSelectedRow < 5) {
+                event.preventDefault();
+            }
+            return;
+        }
+        if (event.key === 'ArrowUp') {
+            if (!this.selectedRow) {
+                return;
+            }
+            const indexOfSelectedRow = this.sampleListItems.findIndex((item: ListItem) => item.index === this.selectedRow.index);
+            if (this.sampleListItems[indexOfSelectedRow - 1]) {
+                this.sampleListItems[indexOfSelectedRow].selected = false;
+                this.sampleListItems[indexOfSelectedRow - 1].selected = true;
+                this.selectedRow = JSON.parse(JSON.stringify(this.sampleListItems[indexOfSelectedRow - 1]));
+            }
+            if (indexOfSelectedRow > this.sampleListItems.length - 5) {
+                event.preventDefault();
+            }
+            return;
+        }
+        if (event.ctrlKey && event.keyCode == 69) {
+            if (this.selectedRow) {
+                this.showForm = true;
+                event.preventDefault(); // preventing default browser behavior on ctrl + E
+            }
+            return;
+        }
+        if (event.ctrlKey && event.keyCode == 65) {
+            if (this.selectedRow) {
+                this.sampleListItems.forEach(row => {
+                    if (row.index === this.selectedRow.index) {
+                        row.checked = true;
+                    }
+                })
+                event.preventDefault(); // preventing default browser behavior on ctrl + A
+            }
+            return;
+        }
+        if (event.ctrlKey && event.keyCode == 88) {
+            if (this.selectedRow) {
+                this.sampleListItems.forEach(row => {
+                    if (row.index === this.selectedRow.index) {
+                        row.checked = false;
+                    }
+                })
+                event.preventDefault(); // preventing default browser behavior on ctrl + X
+            }
+            return;
+        }
+        if (event.key === 'Escape') {
+            if (this.showForm) {
+                this.showForm = false;
+            }
+        }
+    }
+
+    private getMetadata(): IWidgetSettingMetadata[] {
+        // For known/hardcoded values, place the metadata in the manifest instead.
+        return [{
+            type: WidgetSettingsType.selectorType,
+            name: "order",
+        }];
+    }
+
+    setData() {
         this.topMenuItems = {
             AKTUALISIEREN: {icon: this.ds.bypassSecurityTrustUrl(assets.aktualisieren), label: 'AKTUALISIEREN '},
             WEITERLEITEN: {icon: this.ds.bypassSecurityTrustUrl(assets.weiterleiten), label: 'WEITERLEITEN'},
@@ -346,10 +554,11 @@ export class PDFComponent implements OnInit, IWidgetComponent {
             EAKTE: {icon: this.ds.bypassSecurityTrustUrl(assets.eakte), label: 'EAKTE'},
             HWSCXS: {icon: this.ds.bypassSecurityTrustUrl(assets.hwscxs), label: 'HWS/CXS'},
         };
-
-        this.checkMark = this.ds.bypassSecurityTrustUrl(assets.tick);
-        this.sortIcon = this.ds.bypassSecurityTrustUrl(assets.sort);
-
+        this.verticalItems = [
+            {date: '12.12.2020', rollover: false},
+            {date: '26.10.2020', rollover: false},
+            {date: '12.12.2020', rollover: false}
+        ];
         this.sampleListItems = [
             {
                 index: 0,
@@ -638,146 +847,570 @@ export class PDFComponent implements OnInit, IWidgetComponent {
                 selected: false
             }
         ];
-        this.selectedRow = JSON.parse(JSON.stringify(this.sampleListItems[0]));
+        this.sampleEakteItems = [
+            {
+                index: 0,
+                date: '13.09.2017 16:21:00',
+                document: 'EAKTE mode is an option in header',
+                am: '',
+                hinweis: '',
+                vordruck: '101',
+                user: '4401mv13',
+                pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                selected: true
+            },
+            {
+                index: 1,
+                date: '13.09.2017 16:21:00',
+                document: 'Let me give context',
+                am: '',
+                hinweis: '',
+                vordruck: '102',
+                user: '4401mv13',
+                pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                selected: false
+            },
+            {
+                index: 2,
+                date: '13.09.2017 16:21:00',
+                document: 'In default mode, when a widget is loaded',
+                am: '',
+                hinweis: '',
+                vordruck: '103',
+                user: '4401mv13',
+                pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                selected: false
+            },
+            {
+                index: 3,
+                date: '13.09.2017 16:21:00',
+                document: 'the first in the list will be auto selected',
 
-        this.verticalItems = [
-            {date: '12.12.2020', rollover: false},
-            {date: '26.10.2020', rollover: false},
-            {date: '12.12.2020', rollover: false}
-        ];
-    }
-
-    selectRow(item: ListItem) {
-        this.selectedRow = JSON.parse(JSON.stringify(item));
-        this.sampleListItems.forEach(val => {
-            val.selected = false;
-            if (val.index === item.index) {
-                val.selected = true;
+                am: '',
+                hinweis: '',
+                vordruck: '104',
+                user: '4401mv13',
+                pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                selected: false
+            },
+            {
+                index: 4,
+                date: '13.09.2017 16:21:00',
+                document: 'If no row is selected then only make AKTUALISIEREN active',
+                am: '',
+                hinweis: '',
+                vordruck: '105',
+                user: '4401mv13',
+                pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                selected: false
+            },
+            {
+                index: 5,
+                date: '13.09.2017 16:21:00',
+                document: 'and rest of all icons in header should be disabled',
+                am: '',
+                hinweis: '',
+                vordruck: '106',
+                user: '4401mv13',
+                pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                selected: false
+            },
+            {
+                index: 6,
+                date: '13.09.2017 16:21:00',
+                document: 'If a row is selected then all icons will be active',
+                am: '',
+                hinweis: '',
+                vordruck: '107',
+                user: '4401mv13',
+                pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                selected: false
+            },
+            {
+                index: 7,
+                date: '13.09.2017 16:21:00',
+                document: 'along EXCEPT for the last one HWS/CXS',
+                am: '',
+                hinweis: '',
+                vordruck: '108',
+                user: '4401mv13',
+                pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                selected: false
+            },
+            {
+                index: 8,
+                date: '13.09.2017 16:21:00',
+                document: 'So, in EAKTE mode',
+                am: '',
+                hinweis: '',
+                vordruck: '109',
+                user: '4401mv13',
+                pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                selected: false
+            },
+            {
+                index: 9,
+                date: '13.09.2017 16:21:00',
+                document: 'a new view will be visible',
+                am: '',
+                hinweis: '',
+                vordruck: '110',
+                user: '4401mv13',
+                pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                selected: false
+            },
+            {
+                index: 10,
+                date: '13.09.2017 16:21:00',
+                document: 'A 1/2-column grid , 2nd column is a preview',
+                am: '',
+                hinweis: '',
+                vordruck: '111',
+                user: '4401mv13',
+                pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                selected: false
+            },
+            {
+                index: 11,
+                date: '13.09.2017 16:21:00',
+                document: 'which will be available once the row is selected',
+                am: '',
+                hinweis: '',
+                vordruck: '112',
+                user: '4401mv13',
+                pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                selected: false
+            },
+            {
+                index: 12,
+                date: '13.09.2017 16:21:00',
+                document: 'a list (of course with dummy values) [Right]',
+                am: '',
+                hinweis: '',
+                vordruck: '113',
+                user: '4401mv13',
+                pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                selected: false
+            },
+            {
+                index: 13,
+                date: '13.09.2017 16:21:00',
+                document: 'I have listed column details below for this list',
+                am: '',
+                hinweis: '',
+                vordruck: '114',
+                user: '4401mv13',
+                pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                selected: false
+            },
+            {
+                index: 14,
+                date: '13.09.2017 16:21:00',
+                document: 'an image / pdf viewer [Left]',
+                am: '',
+                hinweis: '',
+                vordruck: '115',
+                user: '4401mv13',
+                pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                selected: false
+            },
+            {
+                index: 15,
+                date: '13.09.2017 16:21:00',
+                document: 'Above the list as in image, show this text',
+                am: '',
+                hinweis: '',
+                vordruck: '116',
+                user: '4401mv13',
+                pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                selected: false
+            },
+            {
+                index: 16,
+                date: '13.09.2017 16:21:00',
+                document: 'First Line: Inhaltsverzeichnis von: Testfall Hugo',
+                am: '',
+                hinweis: '',
+                vordruck: '117',
+                user: '4401mv13',
+                pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                selected: false
+            },
+            {
+                index: 17,
+                date: '13.09.2017 16:21:00',
+                document: '01/10/1752, Kajutenweg 5, 31134 HILLDESHEIM',
+                am: '',
+                hinweis: '',
+                vordruck: '118',
+                user: '4401mv13',
+                pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                selected: false
+            },
+            {
+                index: 18,
+                date: '13.09.2017 16:21:00',
+                document: '2nd Line : Kassenzeichen: this value is available in row',
+                am: '',
+                hinweis: '',
+                vordruck: '119',
+                user: '4401mv13',
+                pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                selected: false
+            },
+            {
+                index: 19,
+                date: '13.09.2017 16:21:00',
+                document: 'display it here when switch to eAkte mode',
+                am: '',
+                hinweis: '',
+                vordruck: '120',
+                user: '4401mv13',
+                pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                selected: false
+            },
+            {
+                index: 20,
+                date: '13.09.2017 16:21:00',
+                document: '3rd Line : Button with text (',
+                am: '',
+                hinweis: '',
+                vordruck: '121',
+                user: '4401mv13',
+                pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                selected: false
+            },
+            {
+                index: 21,
+                date: '13.09.2017 16:21:00',
+                document: 'Inhaltsverzeichnis drücken) (No Action on button)',
+                am: '',
+                hinweis: '',
+                vordruck: '122',
+                user: '4401mv13',
+                pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                selected: false
+            },
+            {
+                index: 22,
+                date: '13.09.2017 16:21:00',
+                document: 'Columns',
+                am: '',
+                hinweis: '',
+                vordruck: '123',
+                user: '4401mv13',
+                pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                selected: false
+            },
+            {
+                index: 23,
+                date: '13.09.2017 16:21:00',
+                document: 'The quick brown fox jumps over the lazy dog',
+                am: '',
+                hinweis: '',
+                vordruck: '124',
+                user: '4401mv13',
+                pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                selected: false
+            },
+            {
+                index: 24,
+                date: '13.09.2017 16:21:00',
+                document: 'For now, fill it with 50 rows and show same',
+                am: '',
+                hinweis: '',
+                vordruck: '125',
+                user: '4401mv13',
+                pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                selected: false
+            },
+            {
+                index: 25,
+                date: '13.09.2017 16:21:00',
+                document: '2 documents in preview alternatively as',
+                am: '',
+                hinweis: '',
+                vordruck: '126',
+                user: '4401mv13',
+                pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                selected: false
+            },
+            {
+                index: 26,
+                date: '13.09.2017 16:21:00',
+                document: 'The quick brown fox jumps over the lazy dog',
+                am: '',
+                hinweis: '',
+                vordruck: '127',
+                user: '4401mv13',
+                pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                selected: false
+            },
+            {
+                index: 27,
+                date: '13.09.2017 16:21:00',
+                document: 'The quick brown fox jumps over the lazy dog',
+                am: '',
+                hinweis: '',
+                vordruck: '128',
+                user: '4401mv13',
+                pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                selected: false
+            },
+            {
+                index: 28,
+                date: '13.09.2017 16:21:00',
+                document: 'The quick brown fox jumps over the lazy dog',
+                am: '',
+                hinweis: '',
+                vordruck: '129',
+                user: '4401mv13',
+                pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                selected: false
+            },
+            {
+                index: 29,
+                date: '13.09.2017 16:21:00',
+                document: 'The quick brown fox jumps over the lazy dog',
+                am: '',
+                hinweis: '',
+                vordruck: '130',
+                user: '4401mv13',
+                pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                selected: false
+            },
+            {
+                index: 30,
+                date: '13.09.2017 16:21:00',
+                document: 'The quick brown fox jumps over the lazy dog',
+                am: '',
+                hinweis: '',
+                vordruck: '131',
+                user: '4401mv13',
+                pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                selected: false
+            },
+            {
+                index: 31,
+                date: '13.09.2017 16:21:00',
+                document: 'The quick brown fox jumps over the lazy dog',
+                am: '',
+                hinweis: '',
+                vordruck: '132',
+                user: '4401mv13',
+                pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                selected: false
+            },
+            {
+                index: 32,
+                date: '13.09.2017 16:21:00',
+                document: 'The quick brown fox jumps over the lazy dog',
+                am: '',
+                hinweis: '',
+                vordruck: '133',
+                user: '4401mv13',
+                pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                selected: false
+            },
+            {
+                index: 33,
+                date: '13.09.2017 16:21:00',
+                document: 'The quick brown fox jumps over the lazy dog',
+                am: '',
+                hinweis: '',
+                vordruck: '134',
+                user: '4401mv13',
+                pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                selected: false
+            },
+            {
+                index: 34,
+                date: '13.09.2017 16:21:00',
+                document: 'The quick brown fox jumps over the lazy dog',
+                am: '',
+                hinweis: '',
+                vordruck: '135',
+                user: '4401mv13',
+                pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                selected: false
+            },
+            {
+                index: 35,
+                date: '13.09.2017 16:21:00',
+                document: 'The quick brown fox jumps over the lazy dog',
+                am: '',
+                hinweis: '',
+                vordruck: '136',
+                user: '4401mv13',
+                pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                selected: false
+            },
+            {
+                index: 36,
+                date: '13.09.2017 16:21:00',
+                document: 'The quick brown fox jumps over the lazy dog',
+                am: '',
+                hinweis: '',
+                vordruck: '137',
+                user: '4401mv13',
+                pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                selected: false
+            },
+            {
+                index: 37,
+                date: '13.09.2017 16:21:00',
+                document: 'The quick brown fox jumps over the lazy dog',
+                am: '',
+                hinweis: '',
+                vordruck: '138',
+                user: '4401mv13',
+                pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                selected: false
+            },
+            {
+                index: 38,
+                date: '13.09.2017 16:21:00',
+                document: 'The quick brown fox jumps over the lazy dog',
+                am: '',
+                hinweis: '',
+                vordruck: '139',
+                user: '4401mv13',
+                pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                selected: false
+            },
+            {
+                index: 39,
+                date: '13.09.2017 16:21:00',
+                document: 'The quick brown fox jumps over the lazy dog',
+                am: '',
+                hinweis: '',
+                vordruck: '140',
+                user: '4401mv13',
+                pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                selected: false
+            },
+            {
+                index: 40,
+                date: '13.09.2017 16:21:00',
+                document: 'The quick brown fox jumps over the lazy dog',
+                am: '',
+                hinweis: '',
+                vordruck: '141',
+                user: '4401mv13',
+                pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                selected: false
+            },
+            {
+                index: 41,
+                date: '13.09.2017 16:21:00',
+                document: 'The quick brown fox jumps over the lazy dog',
+                am: '',
+                hinweis: '',
+                vordruck: '142',
+                user: '4401mv13',
+                pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                selected: false
+            },
+            {
+                index: 42,
+                date: '13.09.2017 16:21:00',
+                document: 'The quick brown fox jumps over the lazy dog',
+                am: '',
+                hinweis: '',
+                vordruck: '143',
+                user: '4401mv13',
+                pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                selected: false
+            },
+            {
+                index: 43,
+                date: '13.09.2017 16:21:00',
+                document: 'The quick brown fox jumps over the lazy dog',
+                am: '',
+                hinweis: '',
+                vordruck: '144',
+                user: '4401mv13',
+                pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                selected: false
+            },
+            {
+                index: 44,
+                date: '13.09.2017 16:21:00',
+                document: 'The quick brown fox jumps over the lazy dog',
+                am: '',
+                hinweis: '',
+                vordruck: '145',
+                user: '4401mv13',
+                pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                selected: false
+            },
+            {
+                index: 45,
+                date: '13.09.2017 16:21:00',
+                document: 'The quick brown fox jumps over the lazy dog',
+                am: '',
+                hinweis: '',
+                vordruck: '146',
+                user: '4401mv13',
+                pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                selected: false
+            },
+            {
+                index: 46,
+                date: '13.09.2017 16:21:00',
+                document: 'The quick brown fox jumps over the lazy dog',
+                am: '',
+                hinweis: '',
+                vordruck: '147',
+                user: '4401mv13',
+                pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                selected: false
+            },
+            {
+                index: 47,
+                date: '13.09.2017 16:21:00',
+                document: 'The quick brown fox jumps over the lazy dog',
+                am: '',
+                hinweis: '',
+                vordruck: '148',
+                user: '4401mv13',
+                pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                selected: false
+            },
+            {
+                index: 48,
+                date: '13.09.2017 16:21:00',
+                document: 'The quick brown fox jumps over the lazy dog',
+                am: '',
+                hinweis: '',
+                vordruck: '149',
+                user: '4401mv13',
+                pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                selected: false
+            },
+            {
+                index: 49,
+                date: '13.09.2017 16:21:00',
+                document: 'The quick brown fox jumps over the lazy dog',
+                am: '',
+                hinweis: '',
+                vordruck: '150',
+                user: '4401mv13',
+                pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                selected: false
+            },
+            {
+                index: 50,
+                date: '13.09.2017 16:21:00',
+                document: 'The quick brown fox jumps over the lazy dog',
+                am: '',
+                hinweis: '',
+                vordruck: '151',
+                user: '4401mv13',
+                pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                selected: false
             }
-        });
-    }
-
-    editForm() {
-        if (this.selectedRow) {
-            this.showForm = true;
-        }
-    }
-
-    isFormValid() {
-        return (!!this.selectedRow.sender.trim() &&
-            !!this.selectedRow.cashRegister &&
-            !!this.selectedRow.firstName.trim() &&
-            !!this.selectedRow.lastName.trim() &&
-            !!this.selectedRow.entrance.trim())
-    }
-
-    saveForm() {
-        this.sampleListItems.forEach((row, index) => {
-            if (row.index === this.selectedRow.index) {
-                this.sampleListItems[index] = this.selectedRow;
-            }
-        })
-    }
-
-    sortListBy(property: string) {
-        let targetOrder: 'asc' | 'desc' = 'asc';
-        if (this.lastSortAction && this.lastSortAction.property === property) {
-            targetOrder = this.lastSortAction.direction === 'asc' ? 'desc' : 'asc';
-        }
-        this.lastSortAction = {
-            property: property,
-            direction: targetOrder
-        };
-        console.log(`Sorting by ${property} in ${targetOrder} order.`);
-        this.sampleListItems.sort((a: any, b: any) => {
-            if (targetOrder === 'asc') {
-                return a[property] > b[property] ? 1 : -1;
-            }
-            return a[property] < b[property] ? 1 : -1;
-        });
-    }
-
-    private onKeyPress(event: KeyboardEvent) {
-        // On Down Arrow Press
-        if (event.key === 'ArrowDown') {
-            if (!this.selectedRow) {
-                this.sampleListItems[0].selected = true;
-                this.selectedRow = JSON.parse(JSON.stringify(this.sampleListItems[0]));
-                return;
-            }
-            const indexOfSelectedRow = this.sampleListItems.findIndex((item: ListItem) => item.index === this.selectedRow.index);
-            // scroll only if selected row index is greater than five
-            if (this.sampleListItems[indexOfSelectedRow + 1]) {
-                this.sampleListItems[indexOfSelectedRow].selected = false
-                this.sampleListItems[indexOfSelectedRow + 1].selected = true
-                this.selectedRow = JSON.parse(JSON.stringify(this.sampleListItems[indexOfSelectedRow + 1]));
-            }
-            if (indexOfSelectedRow < 5) {
-                event.preventDefault();
-            }
-            return;
-        }
-        if (event.key === 'ArrowUp') {
-            if (!this.selectedRow) {
-                return;
-            }
-            const indexOfSelectedRow = this.sampleListItems.findIndex((item: ListItem) => item.index === this.selectedRow.index);
-            if (this.sampleListItems[indexOfSelectedRow - 1]) {
-                this.sampleListItems[indexOfSelectedRow].selected = false;
-                this.sampleListItems[indexOfSelectedRow - 1].selected = true;
-                this.selectedRow = JSON.parse(JSON.stringify(this.sampleListItems[indexOfSelectedRow - 1]));
-            }
-            if (indexOfSelectedRow > this.sampleListItems.length - 5) {
-                event.preventDefault();
-            }
-            return;
-        }
-        if (event.ctrlKey && event.keyCode == 69) {
-            if (this.selectedRow) {
-                this.showForm = true;
-                event.preventDefault(); // preventing default browser behavior on ctrl + E
-            }
-            return;
-        }
-        if (event.ctrlKey && event.keyCode == 65) {
-            if (this.selectedRow) {
-                this.sampleListItems.forEach(row => {
-                    if (row.index === this.selectedRow.index) {
-                        row.checked = true;
-                    }
-                })
-                event.preventDefault(); // preventing default browser behavior on ctrl + A
-            }
-            return;
-        }
-        if (event.ctrlKey && event.keyCode == 88) {
-            if (this.selectedRow) {
-                this.sampleListItems.forEach(row => {
-                    if (row.index === this.selectedRow.index) {
-                        row.checked = false;
-                    }
-                })
-                event.preventDefault(); // preventing default browser behavior on ctrl + X
-            }
-            return;
-        }
-        console.log(event.keyCode);
-        /*if (event.key === 'Escape') {
-            console.log('esc key press');
-            this.selectedRow = null;
-        }*/
-    }
-
-    private getMetadata(): IWidgetSettingMetadata[] {
-        // For known/hardcoded values, place the metadata in the manifest instead.
-        return [{
-            type: WidgetSettingsType.selectorType,
-            name: "order",
-        }];
-    }
-
-    switchTab(i: number) {
-        alert(i);
+        ]
     }
 }
 

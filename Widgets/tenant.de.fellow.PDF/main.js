@@ -19,12 +19,154 @@ define(["require", "exports", "@angular/core", "@angular/common", "@infor/sohoxi
             this.assets = assets_1.assets;
             this.$ = $;
             this.showForm = false;
+            this.showEakte = false;
         }
         PDFComponent.prototype.keypress = function (e) {
             this.onKeyPress(e);
         };
         PDFComponent.prototype.ngOnInit = function () {
             this.changeDetectionRef.markForCheck();
+            this.checkMark = this.ds.bypassSecurityTrustUrl(assets_1.assets.tick);
+            this.sortIcon = this.ds.bypassSecurityTrustUrl(assets_1.assets.sort);
+            this.setData();
+            this.selectRow(this.sampleListItems[0]);
+            this.selectEakteRow(this.sampleEakteItems[0]);
+        };
+        PDFComponent.prototype.selectRow = function (item) {
+            this.selectedRow = JSON.parse(JSON.stringify(item));
+            this.sampleListItems.forEach(function (val) {
+                val.selected = false;
+                if (val.index === item.index) {
+                    val.selected = true;
+                }
+            });
+        };
+        PDFComponent.prototype.selectEakteRow = function (item) {
+            this.selectedEakteRow = JSON.parse(JSON.stringify(item));
+            this.selectedEakteRowPDF = this.ds.bypassSecurityTrustResourceUrl(this.selectedEakteRow.pdfLink);
+            this.sampleEakteItems.forEach(function (val) {
+                val.selected = false;
+                if (val.index === item.index) {
+                    val.selected = true;
+                }
+            });
+        };
+        PDFComponent.prototype.editForm = function () {
+            if (this.selectedRow && !this.showEakte) {
+                this.showForm = true;
+            }
+        };
+        PDFComponent.prototype.isFormValid = function () {
+            return (!!this.selectedRow.sender.trim() &&
+                !!this.selectedRow.cashRegister &&
+                !!this.selectedRow.firstName.trim() &&
+                !!this.selectedRow.lastName.trim() &&
+                !!this.selectedRow.entrance.trim());
+        };
+        PDFComponent.prototype.saveForm = function () {
+            var _this = this;
+            this.sampleListItems.forEach(function (row, index) {
+                if (row.index === _this.selectedRow.index) {
+                    _this.sampleListItems[index] = _this.selectedRow;
+                }
+            });
+        };
+        PDFComponent.prototype.sortListBy = function (property) {
+            var targetOrder = 'asc';
+            if (this.lastSortAction && this.lastSortAction.property === property) {
+                targetOrder = this.lastSortAction.direction === 'asc' ? 'desc' : 'asc';
+            }
+            this.lastSortAction = {
+                property: property,
+                direction: targetOrder
+            };
+            console.log("Sorting by " + property + " in " + targetOrder + " order.");
+            this.sampleListItems.sort(function (a, b) {
+                if (targetOrder === 'asc') {
+                    return a[property] > b[property] ? 1 : -1;
+                }
+                return a[property] < b[property] ? 1 : -1;
+            });
+        };
+        PDFComponent.prototype.onKeyPress = function (event) {
+            var _this = this;
+            // On Down Arrow Press
+            if (event.key === 'ArrowDown') {
+                if (!this.selectedRow) {
+                    this.sampleListItems[0].selected = true;
+                    this.selectedRow = JSON.parse(JSON.stringify(this.sampleListItems[0]));
+                    return;
+                }
+                var indexOfSelectedRow = this.sampleListItems.findIndex(function (item) { return item.index === _this.selectedRow.index; });
+                // scroll only if selected row index is greater than five
+                if (this.sampleListItems[indexOfSelectedRow + 1]) {
+                    this.sampleListItems[indexOfSelectedRow].selected = false;
+                    this.sampleListItems[indexOfSelectedRow + 1].selected = true;
+                    this.selectedRow = JSON.parse(JSON.stringify(this.sampleListItems[indexOfSelectedRow + 1]));
+                }
+                if (indexOfSelectedRow < 5) {
+                    event.preventDefault();
+                }
+                return;
+            }
+            if (event.key === 'ArrowUp') {
+                if (!this.selectedRow) {
+                    return;
+                }
+                var indexOfSelectedRow = this.sampleListItems.findIndex(function (item) { return item.index === _this.selectedRow.index; });
+                if (this.sampleListItems[indexOfSelectedRow - 1]) {
+                    this.sampleListItems[indexOfSelectedRow].selected = false;
+                    this.sampleListItems[indexOfSelectedRow - 1].selected = true;
+                    this.selectedRow = JSON.parse(JSON.stringify(this.sampleListItems[indexOfSelectedRow - 1]));
+                }
+                if (indexOfSelectedRow > this.sampleListItems.length - 5) {
+                    event.preventDefault();
+                }
+                return;
+            }
+            if (event.ctrlKey && event.keyCode == 69) {
+                if (this.selectedRow) {
+                    this.showForm = true;
+                    event.preventDefault(); // preventing default browser behavior on ctrl + E
+                }
+                return;
+            }
+            if (event.ctrlKey && event.keyCode == 65) {
+                if (this.selectedRow) {
+                    this.sampleListItems.forEach(function (row) {
+                        if (row.index === _this.selectedRow.index) {
+                            row.checked = true;
+                        }
+                    });
+                    event.preventDefault(); // preventing default browser behavior on ctrl + A
+                }
+                return;
+            }
+            if (event.ctrlKey && event.keyCode == 88) {
+                if (this.selectedRow) {
+                    this.sampleListItems.forEach(function (row) {
+                        if (row.index === _this.selectedRow.index) {
+                            row.checked = false;
+                        }
+                    });
+                    event.preventDefault(); // preventing default browser behavior on ctrl + X
+                }
+                return;
+            }
+            if (event.key === 'Escape') {
+                if (this.showForm) {
+                    this.showForm = false;
+                }
+            }
+        };
+        PDFComponent.prototype.getMetadata = function () {
+            // For known/hardcoded values, place the metadata in the manifest instead.
+            return [{
+                    type: lime_1.WidgetSettingsType.selectorType,
+                    name: "order",
+                }];
+        };
+        PDFComponent.prototype.setData = function () {
             this.topMenuItems = {
                 AKTUALISIEREN: { icon: this.ds.bypassSecurityTrustUrl(assets_1.assets.aktualisieren), label: 'AKTUALISIEREN ' },
                 WEITERLEITEN: { icon: this.ds.bypassSecurityTrustUrl(assets_1.assets.weiterleiten), label: 'WEITERLEITEN' },
@@ -35,8 +177,11 @@ define(["require", "exports", "@angular/core", "@angular/common", "@infor/sohoxi
                 EAKTE: { icon: this.ds.bypassSecurityTrustUrl(assets_1.assets.eakte), label: 'EAKTE' },
                 HWSCXS: { icon: this.ds.bypassSecurityTrustUrl(assets_1.assets.hwscxs), label: 'HWS/CXS' },
             };
-            this.checkMark = this.ds.bypassSecurityTrustUrl(assets_1.assets.tick);
-            this.sortIcon = this.ds.bypassSecurityTrustUrl(assets_1.assets.sort);
+            this.verticalItems = [
+                { date: '12.12.2020', rollover: false },
+                { date: '26.10.2020', rollover: false },
+                { date: '12.12.2020', rollover: false }
+            ];
             this.sampleListItems = [
                 {
                     index: 0,
@@ -325,139 +470,569 @@ define(["require", "exports", "@angular/core", "@angular/common", "@infor/sohoxi
                     selected: false
                 }
             ];
-            this.selectedRow = JSON.parse(JSON.stringify(this.sampleListItems[0]));
-            this.verticalItems = [
-                { date: '12.12.2020', rollover: false },
-                { date: '26.10.2020', rollover: false },
-                { date: '12.12.2020', rollover: false }
+            this.sampleEakteItems = [
+                {
+                    index: 0,
+                    date: '13.09.2017 16:21:00',
+                    document: 'EAKTE mode is an option in header',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '101',
+                    user: '4401mv13',
+                    pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                    selected: true
+                },
+                {
+                    index: 1,
+                    date: '13.09.2017 16:21:00',
+                    document: 'Let me give context',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '102',
+                    user: '4401mv13',
+                    pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                    selected: false
+                },
+                {
+                    index: 2,
+                    date: '13.09.2017 16:21:00',
+                    document: 'In default mode, when a widget is loaded',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '103',
+                    user: '4401mv13',
+                    pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                    selected: false
+                },
+                {
+                    index: 3,
+                    date: '13.09.2017 16:21:00',
+                    document: 'the first in the list will be auto selected',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '104',
+                    user: '4401mv13',
+                    pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                    selected: false
+                },
+                {
+                    index: 4,
+                    date: '13.09.2017 16:21:00',
+                    document: 'If no row is selected then only make AKTUALISIEREN active',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '105',
+                    user: '4401mv13',
+                    pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                    selected: false
+                },
+                {
+                    index: 5,
+                    date: '13.09.2017 16:21:00',
+                    document: 'and rest of all icons in header should be disabled',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '106',
+                    user: '4401mv13',
+                    pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                    selected: false
+                },
+                {
+                    index: 6,
+                    date: '13.09.2017 16:21:00',
+                    document: 'If a row is selected then all icons will be active',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '107',
+                    user: '4401mv13',
+                    pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                    selected: false
+                },
+                {
+                    index: 7,
+                    date: '13.09.2017 16:21:00',
+                    document: 'along EXCEPT for the last one HWS/CXS',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '108',
+                    user: '4401mv13',
+                    pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                    selected: false
+                },
+                {
+                    index: 8,
+                    date: '13.09.2017 16:21:00',
+                    document: 'So, in EAKTE mode',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '109',
+                    user: '4401mv13',
+                    pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                    selected: false
+                },
+                {
+                    index: 9,
+                    date: '13.09.2017 16:21:00',
+                    document: 'a new view will be visible',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '110',
+                    user: '4401mv13',
+                    pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                    selected: false
+                },
+                {
+                    index: 10,
+                    date: '13.09.2017 16:21:00',
+                    document: 'A 1/2-column grid , 2nd column is a preview',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '111',
+                    user: '4401mv13',
+                    pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                    selected: false
+                },
+                {
+                    index: 11,
+                    date: '13.09.2017 16:21:00',
+                    document: 'which will be available once the row is selected',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '112',
+                    user: '4401mv13',
+                    pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                    selected: false
+                },
+                {
+                    index: 12,
+                    date: '13.09.2017 16:21:00',
+                    document: 'a list (of course with dummy values) [Right]',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '113',
+                    user: '4401mv13',
+                    pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                    selected: false
+                },
+                {
+                    index: 13,
+                    date: '13.09.2017 16:21:00',
+                    document: 'I have listed column details below for this list',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '114',
+                    user: '4401mv13',
+                    pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                    selected: false
+                },
+                {
+                    index: 14,
+                    date: '13.09.2017 16:21:00',
+                    document: 'an image / pdf viewer [Left]',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '115',
+                    user: '4401mv13',
+                    pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                    selected: false
+                },
+                {
+                    index: 15,
+                    date: '13.09.2017 16:21:00',
+                    document: 'Above the list as in image, show this text',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '116',
+                    user: '4401mv13',
+                    pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                    selected: false
+                },
+                {
+                    index: 16,
+                    date: '13.09.2017 16:21:00',
+                    document: 'First Line: Inhaltsverzeichnis von: Testfall Hugo',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '117',
+                    user: '4401mv13',
+                    pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                    selected: false
+                },
+                {
+                    index: 17,
+                    date: '13.09.2017 16:21:00',
+                    document: '01/10/1752, Kajutenweg 5, 31134 HILLDESHEIM',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '118',
+                    user: '4401mv13',
+                    pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                    selected: false
+                },
+                {
+                    index: 18,
+                    date: '13.09.2017 16:21:00',
+                    document: '2nd Line : Kassenzeichen: this value is available in row',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '119',
+                    user: '4401mv13',
+                    pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                    selected: false
+                },
+                {
+                    index: 19,
+                    date: '13.09.2017 16:21:00',
+                    document: 'display it here when switch to eAkte mode',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '120',
+                    user: '4401mv13',
+                    pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                    selected: false
+                },
+                {
+                    index: 20,
+                    date: '13.09.2017 16:21:00',
+                    document: '3rd Line : Button with text (',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '121',
+                    user: '4401mv13',
+                    pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                    selected: false
+                },
+                {
+                    index: 21,
+                    date: '13.09.2017 16:21:00',
+                    document: 'Inhaltsverzeichnis drücken) (No Action on button)',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '122',
+                    user: '4401mv13',
+                    pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                    selected: false
+                },
+                {
+                    index: 22,
+                    date: '13.09.2017 16:21:00',
+                    document: 'Columns',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '123',
+                    user: '4401mv13',
+                    pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                    selected: false
+                },
+                {
+                    index: 23,
+                    date: '13.09.2017 16:21:00',
+                    document: 'The quick brown fox jumps over the lazy dog',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '124',
+                    user: '4401mv13',
+                    pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                    selected: false
+                },
+                {
+                    index: 24,
+                    date: '13.09.2017 16:21:00',
+                    document: 'For now, fill it with 50 rows and show same',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '125',
+                    user: '4401mv13',
+                    pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                    selected: false
+                },
+                {
+                    index: 25,
+                    date: '13.09.2017 16:21:00',
+                    document: '2 documents in preview alternatively as',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '126',
+                    user: '4401mv13',
+                    pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                    selected: false
+                },
+                {
+                    index: 26,
+                    date: '13.09.2017 16:21:00',
+                    document: 'The quick brown fox jumps over the lazy dog',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '127',
+                    user: '4401mv13',
+                    pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                    selected: false
+                },
+                {
+                    index: 27,
+                    date: '13.09.2017 16:21:00',
+                    document: 'The quick brown fox jumps over the lazy dog',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '128',
+                    user: '4401mv13',
+                    pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                    selected: false
+                },
+                {
+                    index: 28,
+                    date: '13.09.2017 16:21:00',
+                    document: 'The quick brown fox jumps over the lazy dog',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '129',
+                    user: '4401mv13',
+                    pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                    selected: false
+                },
+                {
+                    index: 29,
+                    date: '13.09.2017 16:21:00',
+                    document: 'The quick brown fox jumps over the lazy dog',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '130',
+                    user: '4401mv13',
+                    pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                    selected: false
+                },
+                {
+                    index: 30,
+                    date: '13.09.2017 16:21:00',
+                    document: 'The quick brown fox jumps over the lazy dog',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '131',
+                    user: '4401mv13',
+                    pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                    selected: false
+                },
+                {
+                    index: 31,
+                    date: '13.09.2017 16:21:00',
+                    document: 'The quick brown fox jumps over the lazy dog',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '132',
+                    user: '4401mv13',
+                    pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                    selected: false
+                },
+                {
+                    index: 32,
+                    date: '13.09.2017 16:21:00',
+                    document: 'The quick brown fox jumps over the lazy dog',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '133',
+                    user: '4401mv13',
+                    pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                    selected: false
+                },
+                {
+                    index: 33,
+                    date: '13.09.2017 16:21:00',
+                    document: 'The quick brown fox jumps over the lazy dog',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '134',
+                    user: '4401mv13',
+                    pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                    selected: false
+                },
+                {
+                    index: 34,
+                    date: '13.09.2017 16:21:00',
+                    document: 'The quick brown fox jumps over the lazy dog',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '135',
+                    user: '4401mv13',
+                    pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                    selected: false
+                },
+                {
+                    index: 35,
+                    date: '13.09.2017 16:21:00',
+                    document: 'The quick brown fox jumps over the lazy dog',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '136',
+                    user: '4401mv13',
+                    pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                    selected: false
+                },
+                {
+                    index: 36,
+                    date: '13.09.2017 16:21:00',
+                    document: 'The quick brown fox jumps over the lazy dog',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '137',
+                    user: '4401mv13',
+                    pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                    selected: false
+                },
+                {
+                    index: 37,
+                    date: '13.09.2017 16:21:00',
+                    document: 'The quick brown fox jumps over the lazy dog',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '138',
+                    user: '4401mv13',
+                    pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                    selected: false
+                },
+                {
+                    index: 38,
+                    date: '13.09.2017 16:21:00',
+                    document: 'The quick brown fox jumps over the lazy dog',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '139',
+                    user: '4401mv13',
+                    pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                    selected: false
+                },
+                {
+                    index: 39,
+                    date: '13.09.2017 16:21:00',
+                    document: 'The quick brown fox jumps over the lazy dog',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '140',
+                    user: '4401mv13',
+                    pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                    selected: false
+                },
+                {
+                    index: 40,
+                    date: '13.09.2017 16:21:00',
+                    document: 'The quick brown fox jumps over the lazy dog',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '141',
+                    user: '4401mv13',
+                    pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                    selected: false
+                },
+                {
+                    index: 41,
+                    date: '13.09.2017 16:21:00',
+                    document: 'The quick brown fox jumps over the lazy dog',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '142',
+                    user: '4401mv13',
+                    pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                    selected: false
+                },
+                {
+                    index: 42,
+                    date: '13.09.2017 16:21:00',
+                    document: 'The quick brown fox jumps over the lazy dog',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '143',
+                    user: '4401mv13',
+                    pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                    selected: false
+                },
+                {
+                    index: 43,
+                    date: '13.09.2017 16:21:00',
+                    document: 'The quick brown fox jumps over the lazy dog',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '144',
+                    user: '4401mv13',
+                    pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                    selected: false
+                },
+                {
+                    index: 44,
+                    date: '13.09.2017 16:21:00',
+                    document: 'The quick brown fox jumps over the lazy dog',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '145',
+                    user: '4401mv13',
+                    pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                    selected: false
+                },
+                {
+                    index: 45,
+                    date: '13.09.2017 16:21:00',
+                    document: 'The quick brown fox jumps over the lazy dog',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '146',
+                    user: '4401mv13',
+                    pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                    selected: false
+                },
+                {
+                    index: 46,
+                    date: '13.09.2017 16:21:00',
+                    document: 'The quick brown fox jumps over the lazy dog',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '147',
+                    user: '4401mv13',
+                    pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                    selected: false
+                },
+                {
+                    index: 47,
+                    date: '13.09.2017 16:21:00',
+                    document: 'The quick brown fox jumps over the lazy dog',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '148',
+                    user: '4401mv13',
+                    pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                    selected: false
+                },
+                {
+                    index: 48,
+                    date: '13.09.2017 16:21:00',
+                    document: 'The quick brown fox jumps over the lazy dog',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '149',
+                    user: '4401mv13',
+                    pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                    selected: false
+                },
+                {
+                    index: 49,
+                    date: '13.09.2017 16:21:00',
+                    document: 'The quick brown fox jumps over the lazy dog',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '150',
+                    user: '4401mv13',
+                    pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
+                    selected: false
+                },
+                {
+                    index: 50,
+                    date: '13.09.2017 16:21:00',
+                    document: 'The quick brown fox jumps over the lazy dog',
+                    am: '',
+                    hinweis: '',
+                    vordruck: '151',
+                    user: '4401mv13',
+                    pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
+                    selected: false
+                }
             ];
-        };
-        PDFComponent.prototype.selectRow = function (item) {
-            this.selectedRow = JSON.parse(JSON.stringify(item));
-            this.sampleListItems.forEach(function (val) {
-                val.selected = false;
-                if (val.index === item.index) {
-                    val.selected = true;
-                }
-            });
-        };
-        PDFComponent.prototype.editForm = function () {
-            if (this.selectedRow) {
-                this.showForm = true;
-            }
-        };
-        PDFComponent.prototype.isFormValid = function () {
-            return (!!this.selectedRow.sender.trim() &&
-                !!this.selectedRow.cashRegister &&
-                !!this.selectedRow.firstName.trim() &&
-                !!this.selectedRow.lastName.trim() &&
-                !!this.selectedRow.entrance.trim());
-        };
-        PDFComponent.prototype.saveForm = function () {
-            var _this = this;
-            this.sampleListItems.forEach(function (row, index) {
-                if (row.index === _this.selectedRow.index) {
-                    _this.sampleListItems[index] = _this.selectedRow;
-                }
-            });
-        };
-        PDFComponent.prototype.sortListBy = function (property) {
-            var targetOrder = 'asc';
-            if (this.lastSortAction && this.lastSortAction.property === property) {
-                targetOrder = this.lastSortAction.direction === 'asc' ? 'desc' : 'asc';
-            }
-            this.lastSortAction = {
-                property: property,
-                direction: targetOrder
-            };
-            console.log("Sorting by " + property + " in " + targetOrder + " order.");
-            this.sampleListItems.sort(function (a, b) {
-                if (targetOrder === 'asc') {
-                    return a[property] > b[property] ? 1 : -1;
-                }
-                return a[property] < b[property] ? 1 : -1;
-            });
-        };
-        PDFComponent.prototype.onKeyPress = function (event) {
-            var _this = this;
-            // On Down Arrow Press
-            if (event.key === 'ArrowDown') {
-                if (!this.selectedRow) {
-                    this.sampleListItems[0].selected = true;
-                    this.selectedRow = JSON.parse(JSON.stringify(this.sampleListItems[0]));
-                    return;
-                }
-                var indexOfSelectedRow = this.sampleListItems.findIndex(function (item) { return item.index === _this.selectedRow.index; });
-                // scroll only if selected row index is greater than five
-                if (this.sampleListItems[indexOfSelectedRow + 1]) {
-                    this.sampleListItems[indexOfSelectedRow].selected = false;
-                    this.sampleListItems[indexOfSelectedRow + 1].selected = true;
-                    this.selectedRow = JSON.parse(JSON.stringify(this.sampleListItems[indexOfSelectedRow + 1]));
-                }
-                if (indexOfSelectedRow < 5) {
-                    event.preventDefault();
-                }
-                return;
-            }
-            if (event.key === 'ArrowUp') {
-                if (!this.selectedRow) {
-                    return;
-                }
-                var indexOfSelectedRow = this.sampleListItems.findIndex(function (item) { return item.index === _this.selectedRow.index; });
-                if (this.sampleListItems[indexOfSelectedRow - 1]) {
-                    this.sampleListItems[indexOfSelectedRow].selected = false;
-                    this.sampleListItems[indexOfSelectedRow - 1].selected = true;
-                    this.selectedRow = JSON.parse(JSON.stringify(this.sampleListItems[indexOfSelectedRow - 1]));
-                }
-                if (indexOfSelectedRow > this.sampleListItems.length - 5) {
-                    event.preventDefault();
-                }
-                return;
-            }
-            if (event.ctrlKey && event.keyCode == 69) {
-                if (this.selectedRow) {
-                    this.showForm = true;
-                    event.preventDefault(); // preventing default browser behavior on ctrl + E
-                }
-                return;
-            }
-            if (event.ctrlKey && event.keyCode == 65) {
-                if (this.selectedRow) {
-                    this.sampleListItems.forEach(function (row) {
-                        if (row.index === _this.selectedRow.index) {
-                            row.checked = true;
-                        }
-                    });
-                    event.preventDefault(); // preventing default browser behavior on ctrl + A
-                }
-                return;
-            }
-            if (event.ctrlKey && event.keyCode == 88) {
-                if (this.selectedRow) {
-                    this.sampleListItems.forEach(function (row) {
-                        if (row.index === _this.selectedRow.index) {
-                            row.checked = false;
-                        }
-                    });
-                    event.preventDefault(); // preventing default browser behavior on ctrl + X
-                }
-                return;
-            }
-            console.log(event.keyCode);
-            /*if (event.key === 'Escape') {
-                console.log('esc key press');
-                this.selectedRow = null;
-            }*/
-        };
-        PDFComponent.prototype.getMetadata = function () {
-            // For known/hardcoded values, place the metadata in the manifest instead.
-            return [{
-                    type: lime_1.WidgetSettingsType.selectorType,
-                    name: "order",
-                }];
-        };
-        PDFComponent.prototype.switchTab = function (i) {
-            alert(i);
         };
         __decorate([
             core_1.Input(),
@@ -475,8 +1050,8 @@ define(["require", "exports", "@angular/core", "@angular/common", "@infor/sohoxi
         ], PDFComponent.prototype, "keypress", null);
         PDFComponent = __decorate([
             core_1.Component({
-                template: "\n        <div class=\"parent-layout\">\n            <!--  Top Button Row   -->\n            <div class=\"icon-row\">\n                <div>\n                    <div><img [src]=\"topMenuItems.AKTUALISIEREN.icon\" class=\"main-menu-icon-image\"/></div>\n                    <div class=\"header-label\">{{topMenuItems.AKTUALISIEREN.label}}</div>\n                </div>\n                <div>\n                    <div><img [src]=\"topMenuItems.WEITERLEITEN.icon\" class=\"main-menu-icon-image\"/></div>\n                    <div class=\"header-label\">{{topMenuItems.WEITERLEITEN.label}}</div>\n                </div>\n                <div>\n                    <div><img [src]=\"topMenuItems.TRENNEN.icon\" class=\"main-menu-icon-image\"/></div>\n                    <div class=\"header-label\">{{topMenuItems.TRENNEN.label}}</div>\n                </div>\n                <div [ngClass]=\"{'setFocus' : showForm}\" (click)=\"editForm()\">\n                    <div><img [src]=\"topMenuItems.BEARBEITEN.icon\"\n                              class=\"main-menu-icon-image\"/></div>\n                    <div class=\"header-label\">{{topMenuItems.BEARBEITEN.label}}</div>\n                </div>\n                <div>\n                    <div><img [src]=\"topMenuItems.EAKTE.icon\" class=\"main-menu-icon-image\"/></div>\n                    <div class=\"header-label\">{{topMenuItems.EAKTE.label}}</div>\n                </div>\n                <div>\n                    <div><img [src]=\"topMenuItems.HWSCXS.icon\" class=\"main-menu-icon-image\"/></div>\n                    <div class=\"header-label\">{{topMenuItems.HWSCXS.label}}</div>\n                </div>\n            </div>\n\n            <!-- First Tab -->\n            <ng-container>\n                <div style=\"width: 100%; display: flex; padding: 10px; overflow: auto; background-color: #f0f0f0;\">\n                    <div style=\"width: 50%; overflow: auto; display: grid; padding-top: 27px\">\n                        <div class=\"grid-header\">\n                            <div style=\"width: 10%; text-align: center\" (click)=\"sortListBy('checked')\">Vetr.<img\n                                    [src]=\"sortIcon\" class=\"sort\"/></div>\n                            <div style=\"width: 12%\" (click)=\"sortListBy('date')\">Datum<img [src]=\"sortIcon\"\n                                                                                           class=\"sort\"/></div>\n                            <div style=\"width: 13%\" (click)=\"sortListBy('sender')\">Absender<img [src]=\"sortIcon\"\n                                                                                                class=\"sort\"/></div>\n                            <div style=\"width: 20%\" (click)=\"sortListBy('cashRegister')\">Kassenzeichen<img\n                                    [src]=\"sortIcon\" class=\"sort\"/></div>\n                            <div style=\"width: 15%\" (click)=\"sortListBy('lastName')\">Nachname<img\n                                    [src]=\"sortIcon\" class=\"sort\"/></div>\n                            <div style=\"width: 15%\" (click)=\"sortListBy('firstName')\">Vorname<img [src]=\"sortIcon\"\n                                                                                                  class=\"sort\"/></div>\n                            <div style=\"width: 15%\" (click)=\"sortListBy('entrance')\">Eingang<img [src]=\"sortIcon\"\n                                                                                                 class=\"sort\"/></div>\n                        </div>\n                        <div style=\"overflow: auto\">\n                            <div *ngFor=\"let item of sampleListItems;\"\n                                 style=\"display: flex; background: white; height: 30px; cursor: pointer; margin-top: 7px;\"\n                                 class=\"list-item\"\n                                 [style.background-image]=\"item.selected ? 'linear-gradient(0deg, #2b79a7 0%, #4ebbfb 50%, #2b79a7 100%)' : null\"\n                                 [style.color]=\"item.selected ? 'white' : 'black'\"\n                                 (click)=\"selectRow(item)\">\n                                <div style=\"width: 10%; margin: auto 0\">\n                                    <img style=\"margin: auto auto; display: block\" [src]=\"checkMark\" width=\"20\"\n                                         *ngIf=\"item.checked\">\n                                </div>\n                                <div style=\"width: 12%; margin: auto 0\">{{item.date}}</div>\n                                <div style=\"width: 13%; margin: auto 0\">{{item.sender}}</div>\n                                <div style=\"width: 20%; margin: auto 0\">{{item.cashRegister}}</div>\n                                <div style=\"width: 15%; margin: auto 0\">{{item.lastName}}</div>\n                                <div style=\"width: 15%; margin: auto 0\">{{item.firstName}}</div>\n                                <div style=\"width: 15%; margin: auto 0\">{{item.entrance}}</div>\n                            </div>\n                        </div>\n                        <div *ngIf=\"showForm\" style=\"padding-top: 10px\">\n                            <div class=\"form-container\">\n                                <div class=\"form-fields-container\">\n                                    <div class=\"field\">\n                                        <label>User</label>\n                                        <input type=\"text\" class=\"smaller-text-field search-icon\"\n                                               [(ngModel)]=\"selectedRow.sender\">\n                                    </div>\n\n                                    <div class=\"field\">\n                                        <label></label>\n                                        <span style=\"font-size:14px\">Obermeier, Klaus</span>\n                                    </div>\n\n                                    <div class=\"field\">\n                                        <label>Kassenzeichen</label>\n                                        <input type=\"text\" class=\"smaller-text-field\"\n                                               [(ngModel)]=\"selectedRow.cashRegister\">\n                                    </div>\n                                    <div>&nbsp;</div>\n\n                                    <div class=\"field\">\n                                        <label>Nachname</label>\n                                        <input type=\"text\" class=\"smaller-text-field\"\n                                               [(ngModel)]=\"selectedRow.firstName\">\n                                    </div>\n\n                                    <div class=\"field\">\n                                        <label>Vorname</label>\n                                        <input type=\"text\" class=\"smaller-text-field\"\n                                               [(ngModel)]=\"selectedRow.lastName\">\n                                    </div>\n\n                                    <div class=\"field\" style=\"grid-row:4; grid-column: 1 / -1\">\n                                        <label>Eingang</label>\n                                        <input type=\"text\" class=\"smaller-text-field\"\n                                               [(ngModel)]=\"selectedRow.entrance\"\n                                               style=\"width:90%\">\n                                    </div>\n\n                                    <div class=\"field\" style=\"grid-row:5; grid-column: 1 / -1\">\n                                        <label>Dokumentenbezeichnung</label>\n                                        <input type=\"text\" class=\"smaller-text-field search-icon\"\n                                               value=\"Ruckleuf EMA\"\n                                               style=\"width:90%\">\n                                    </div>\n                                </div>\n                                <div class=\"push-to-bottom\">\n                                    <div></div>\n                                    <div>\n                                        <button class=\"outlined-button\" (click)=\"showForm = false\">schlie\u00DFen</button>\n                                    </div>\n                                </div>\n                                <div class=\"push-to-bottom\">\n                                    <div></div>\n                                    <div>\n                                        <button class=\"filled-button\">eAkte</button>\n                                    </div>\n                                    <div>\n                                        <button [ngClass]=\"isFormValid() ? 'filled-button' : 'disabled-button'\"\n                                                (click)=\"saveForm()\"\n                                                [disabled]=\"!isFormValid()\">\n                                            Speichern\n                                        </button>\n                                    </div>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                    <div style=\"width: 50%; height: 100%; padding: 43px 20px 0 30px;\">\n                        <iframe src=\"https://www.muhammadbinyusrat.com/devguide.pdf\" width=\"100%\" height=\"100%\"\n                                class=\"pdf-container-style\"></iframe>\n                    </div>\n                </div>\n            </ng-container>\n        </div>\n    ",
-                styles: ["\n        .parent-layout {\n            display: grid;\n            grid-template-rows: auto 1fr;\n            height: 100%;\n        }\n\n        .icon-row {\n            padding-top: 10px;\n            padding-bottom: 10px;\n            background-image: linear-gradient(0deg, #2b79a7 0%, #4ebbfb 50%, #2b79a7 100%);\n            color: white;\n            display: grid;\n            grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));\n            cursor: pointer;\n            text-align: center;\n        }\n\n        .header-label {\n            text-align: center;\n            margin-top: 5px;\n            letter-spacing: 1px;\n            -webkit-transform: scale(1, 1.5); /* chrome and safari */\n            -moz-transform: scale(1, 1.5); /* opera */\n        }\n\n        .grid-header {\n            width: calc(100% - 8px); /*excluding scroller width*/\n            display: flex;\n            color: #909090;\n            cursor: pointer;\n        }\n\n        .main-menu-icon-image {\n            filter: invert(87%) sepia(98%) saturate(1%) hue-rotate(268deg) brightness(109%) contrast(97%);\n            width: 50px;\n        }\n\n        .pdf-container-style {\n            box-shadow: 0 10px 6px -6px #777;\n        }\n\n        .list-item:hover {\n            box-shadow: 0 0 11px rgba(33, 33, 33, .2);\n        }\n\n        .setFocus {\n            filter: invert(87%) sepia(98%) saturate(1%) hue-rotate(268deg) brightness(109%) contrast(97%);\n        }\n\n        .sort {\n            width: 12px;\n            margin-bottom: -3px;\n            margin-left: 2px;\n            opacity: 0.5;\n        }\n\n        .form-container {\n            padding: 10px;\n            display: grid;\n            grid-template-columns: 1fr auto auto;\n            gap: 1rem;\n            background-color: white;\n            height: 100%;\n            box-shadow: 0 10px 6px -6px #777;\n        }\n\n        .form-fields-container {\n            display: grid;\n            grid-template-columns: 1fr 1fr;\n        }\n\n        .smaller-text-field {\n            font-size: 13px;\n            height: 20px;\n            width: 80%;\n        }\n\n        .push-to-bottom {\n            display: grid;\n            grid-template-rows: 1fr auto;\n            gap: 1rem;\n        }\n\n        .outlined-button {\n            width: 100%;\n            border: 2px solid #2678a9;\n            padding: 3px 6px;\n            color: #2678a9;\n            border-radius: 5px;\n        }\n\n        .outlined-button:hover {\n            background-color: #2678a9;\n            color: white;\n        }\n\n        .disabled-button {\n            width: 100%;\n            border: 2px solid #eeeeee;\n            padding: 3px 6px;\n            color: #ababab;\n            border-radius: 5px;\n            background-color: #eeeeee;\n            cursor: auto;\n        }\n\n        .filled-button {\n            width: 100%;\n            border: 2px solid #2678a9;\n            padding: 3px 6px;\n            color: white;\n            border-radius: 5px;\n            background-color: #2678a9;\n        }\n\n        .filled-button:hover {\n            background-color: white;\n            color: cornflowerblue;\n        }\n\n        .search-icon {\n            background: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iYmxhY2siIHdpZHRoPSIxOHB4IiBoZWlnaHQ9IjE4cHgiPjxwYXRoIGQ9Ik0wIDBoMjR2MjRIMHoiIGZpbGw9Im5vbmUiLz48cGF0aCBkPSJNMTUuNSAxNGgtLjc5bC0uMjgtLjI3QzE1LjQxIDEyLjU5IDE2IDExLjExIDE2IDkuNSAxNiA1LjkxIDEzLjA5IDMgOS41IDNTMyA1LjkxIDMgOS41IDUuOTEgMTYgOS41IDE2YzEuNjEgMCAzLjA5LS41OSA0LjIzLTEuNTdsLjI3LjI4di43OWw1IDQuOTlMMjAuNDkgMTlsLTQuOTktNXptLTYgMEM3LjAxIDE0IDUgMTEuOTkgNSA5LjVTNy4wMSA1IDkuNSA1IDE0IDcuMDEgMTQgOS41IDExLjk5IDE0IDkuNSAxNHoiLz48L3N2Zz4=\") no-repeat right;\n        }\n    "]
+                template: "\n        <div class=\"parent-layout\">\n            <!--  Top Button Row   -->\n            <div class=\"icon-row\">\n                <div style=\"cursor: pointer\" (click)=\"showEakte = false\">\n                    <div><img [src]=\"topMenuItems.AKTUALISIEREN.icon\" class=\"main-menu-icon-image\"/></div>\n                    <div class=\"header-label\">{{topMenuItems.AKTUALISIEREN.label}}</div>\n                </div>\n                <div style=\"cursor: pointer\">\n                    <div><img [src]=\"topMenuItems.WEITERLEITEN.icon\" class=\"main-menu-icon-image\"/></div>\n                    <div class=\"header-label\">{{topMenuItems.WEITERLEITEN.label}}</div>\n                </div>\n                <div style=\"cursor: pointer\">\n                    <div><img [src]=\"topMenuItems.TRENNEN.icon\" class=\"main-menu-icon-image\"/></div>\n                    <div class=\"header-label\">{{topMenuItems.TRENNEN.label}}</div>\n                </div>\n                <div style=\"cursor: pointer\" [ngClass]=\"{'setFocus' : showForm}\" (click)=\"editForm()\">\n                    <div><img [src]=\"topMenuItems.BEARBEITEN.icon\"\n                              class=\"main-menu-icon-image\"/></div>\n                    <div class=\"header-label\">{{topMenuItems.BEARBEITEN.label}}</div>\n                </div>\n                <div style=\"cursor: pointer\" [ngClass]=\"{'setFocus' : showEakte}\"\n                     (click)=\"showEakte = true; showForm = false\">\n                    <div><img [src]=\"topMenuItems.EAKTE.icon\" class=\"main-menu-icon-image\"/></div>\n                    <div class=\"header-label\">{{topMenuItems.EAKTE.label}}</div>\n                </div>\n                <div style=\"cursor: auto\">\n                    <div><img [src]=\"topMenuItems.HWSCXS.icon\" class=\"main-menu-icon-image\"/></div>\n                    <div class=\"header-label\">{{topMenuItems.HWSCXS.label}}</div>\n                </div>\n            </div>\n\n            <!-- First Tab -->\n            <ng-container *ngIf=\"!showEakte\">\n                <div style=\"width: 100%; display: flex; padding: 10px; overflow: auto; background-color: #f0f0f0;\">\n                    <div style=\"width: 50%; overflow: auto; display: grid; padding-top: 27px\">\n                        <div class=\"grid-header\">\n                            <div style=\"width: 10%; text-align: center\" (click)=\"sortListBy('checked')\">Vetr.<img\n                                    [src]=\"sortIcon\" class=\"sort\"/></div>\n                            <div style=\"width: 12%\" (click)=\"sortListBy('date')\">Datum<img [src]=\"sortIcon\"\n                                                                                           class=\"sort\"/></div>\n                            <div style=\"width: 13%\" (click)=\"sortListBy('sender')\">Absender<img [src]=\"sortIcon\"\n                                                                                                class=\"sort\"/></div>\n                            <div style=\"width: 20%\" (click)=\"sortListBy('cashRegister')\">Kassenzeichen<img\n                                    [src]=\"sortIcon\" class=\"sort\"/></div>\n                            <div style=\"width: 15%\" (click)=\"sortListBy('lastName')\">Nachname<img\n                                    [src]=\"sortIcon\" class=\"sort\"/></div>\n                            <div style=\"width: 15%\" (click)=\"sortListBy('firstName')\">Vorname<img [src]=\"sortIcon\"\n                                                                                                  class=\"sort\"/></div>\n                            <div style=\"width: 15%\" (click)=\"sortListBy('entrance')\">Eingang<img [src]=\"sortIcon\"\n                                                                                                 class=\"sort\"/></div>\n                        </div>\n                        <div style=\"overflow: auto\">\n                            <div *ngFor=\"let item of sampleListItems;\"\n                                 style=\"display: flex; background: white; height: 30px; cursor: pointer; margin-top: 7px;\"\n                                 class=\"list-item\"\n                                 [style.background-image]=\"item.selected ? 'linear-gradient(0deg, #2b79a7 0%, #4ebbfb 50%, #2b79a7 100%)' : null\"\n                                 [style.color]=\"item.selected ? 'white' : 'black'\"\n                                 (click)=\"selectRow(item)\">\n                                <div style=\"width: 10%; margin: auto 0\">\n                                    <img style=\"margin: auto auto; display: block\" [src]=\"checkMark\" width=\"20\"\n                                         *ngIf=\"item.checked\">\n                                </div>\n                                <div style=\"width: 12%; margin: auto 0\">{{item.date}}</div>\n                                <div style=\"width: 13%; margin: auto 0\">{{item.sender}}</div>\n                                <div style=\"width: 20%; margin: auto 0\">{{item.cashRegister}}</div>\n                                <div style=\"width: 15%; margin: auto 0\">{{item.lastName}}</div>\n                                <div style=\"width: 15%; margin: auto 0\">{{item.firstName}}</div>\n                                <div style=\"width: 15%; margin: auto 0\">{{item.entrance}}</div>\n                            </div>\n                        </div>\n                        <div *ngIf=\"showForm\" style=\"padding-top: 10px\">\n                            <div class=\"form-container\">\n                                <div class=\"form-fields-container\">\n                                    <div class=\"field\">\n                                        <label>User</label>\n                                        <input type=\"text\" class=\"smaller-text-field search-icon\"\n                                               [(ngModel)]=\"selectedRow.sender\">\n                                    </div>\n\n                                    <div class=\"field\">\n                                        <label></label>\n                                        <span style=\"font-size:14px\">Obermeier, Klaus</span>\n                                    </div>\n\n                                    <div class=\"field\">\n                                        <label>Kassenzeichen</label>\n                                        <input type=\"text\" class=\"smaller-text-field\"\n                                               [(ngModel)]=\"selectedRow.cashRegister\">\n                                    </div>\n                                    <div>&nbsp;</div>\n\n                                    <div class=\"field\">\n                                        <label>Nachname</label>\n                                        <input type=\"text\" class=\"smaller-text-field\"\n                                               [(ngModel)]=\"selectedRow.firstName\">\n                                    </div>\n\n                                    <div class=\"field\">\n                                        <label>Vorname</label>\n                                        <input type=\"text\" class=\"smaller-text-field\"\n                                               [(ngModel)]=\"selectedRow.lastName\">\n                                    </div>\n\n                                    <div class=\"field\" style=\"grid-row:4; grid-column: 1 / -1\">\n                                        <label>Eingang</label>\n                                        <input type=\"text\" class=\"smaller-text-field\"\n                                               [(ngModel)]=\"selectedRow.entrance\"\n                                               style=\"width:90%\">\n                                    </div>\n\n                                    <div class=\"field\" style=\"grid-row:5; grid-column: 1 / -1\">\n                                        <label>Dokumentenbezeichnung</label>\n                                        <input type=\"text\" class=\"smaller-text-field search-icon\"\n                                               value=\"Ruckleuf EMA\"\n                                               style=\"width:90%\">\n                                    </div>\n                                </div>\n                                <div class=\"push-to-bottom\">\n                                    <div></div>\n                                    <div>\n                                        <button class=\"outlined-button\" (click)=\"showForm = false\">schlie\u00DFen</button>\n                                    </div>\n                                </div>\n                                <div class=\"push-to-bottom\">\n                                    <div></div>\n                                    <div>\n                                        <button class=\"filled-button\">eAkte</button>\n                                    </div>\n                                    <div>\n                                        <button [ngClass]=\"isFormValid() ? 'filled-button' : 'disabled-button'\"\n                                                (click)=\"saveForm()\"\n                                                [disabled]=\"!isFormValid()\">\n                                            Speichern\n                                        </button>\n                                    </div>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                    <div style=\"width: 50%; height: 100%; padding: 43px 20px 0 30px;\">\n                        <iframe src=\"https://www.muhammadbinyusrat.com/devguide.pdf\" width=\"100%\" height=\"100%\"\n                                class=\"pdf-container-style\"></iframe>\n                    </div>\n                </div>\n            </ng-container>\n            <ng-container *ngIf=\"showEakte\">\n                <div style=\"background-color: #f0f0f0; padding: 10px; font-size: 13px; font-weight: bold\">\n                    <div>Inhaltsverzeichnis von: Testfall Hugo, 01/10/1752, Kajutenweg 5, 31134 HILLDESHEIM</div>\n                    <div style=\"margin-top: 10px\">Kassenzeichen: {{selectedRow.cashRegister}}</div>\n                    <div style=\"width: 200px; margin-top: 10px\">\n                        <button class=\"filled-button\">\n                            Inhaltsverzeichnis dr\u00FCcken\n                        </button>\n                    </div>\n                </div>\n                <div style=\"width: 100%; display: flex; padding: 10px; overflow: auto; background-color: #f0f0f0;\">\n                    <div style=\"width: 50%; overflow: auto; display: grid\">\n                        <div class=\"grid-header\">\n                            <div style=\"width: 20%;text-align: center\">Datum/Uhrzeit</div>\n                            <div style=\"width: 38%\">Dokument</div>\n                            <div style=\"width: 10%\">am</div>\n                            <div style=\"width: 10%\">Hinweis</div>\n                            <div style=\"width: 11%\">Vordruck</div>\n                            <div style=\"width: 11%\">User</div>\n                        </div>\n                        <div style=\"overflow: auto\">\n                            <div *ngFor=\"let item of sampleEakteItems;\"\n                                 style=\"display: flex; background: white; height: 30px; cursor: pointer; margin-top: 7px;\"\n                                 class=\"list-item\"\n                                 [style.background-image]=\"item.selected ? 'linear-gradient(0deg, #2b79a7 0%, #4ebbfb 50%, #2b79a7 100%)' : null\"\n                                 [style.color]=\"item.selected ? 'white' : 'black'\"\n                                 (click)=\"selectEakteRow(item)\">\n                                <div style=\"width: 20%; text-align: center; margin: auto 0\">{{item.date}}</div>\n                                <div style=\"width: 38%; margin: auto 0\">{{item.document}}</div>\n                                <div style=\"width: 10%; margin: auto 0\">{{item.am}}</div>\n                                <div style=\"width: 10%; margin: auto 0\">{{item.hinweis}}</div>\n                                <div style=\"width: 11%; margin: auto 0\">{{item.vordruck}}</div>\n                                <div style=\"width: 11%; margin: auto 0\">{{item.user}}</div>\n                            </div>\n                        </div>\n                    </div>\n                    <div style=\"width: 50%; height: 100%; padding: 15px 20px 0 30px;\">\n                        <iframe [src]=\"selectedEakteRowPDF\" width=\"100%\" height=\"100%\"\n                                class=\"pdf-container-style\"></iframe>\n                    </div>\n                </div>\n            </ng-container>\n        </div>\n    ",
+                styles: ["\n        .parent-layout {\n            display: grid;\n            grid-template-rows: auto 1fr;\n            height: 100%;\n        }\n\n        .icon-row {\n            padding-top: 10px;\n            padding-bottom: 10px;\n            background-image: linear-gradient(0deg, #2b79a7 0%, #4ebbfb 50%, #2b79a7 100%);\n            color: white;\n            display: grid;\n            grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));\n            text-align: center;\n        }\n\n        .header-label {\n            text-align: center;\n            margin-top: 5px;\n            letter-spacing: 1px;\n            -webkit-transform: scale(1, 1.5); /* chrome and safari */\n            -moz-transform: scale(1, 1.5); /* opera */\n        }\n\n        .grid-header {\n            width: calc(100% - 8px); /*excluding scroller width*/\n            display: flex;\n            color: #909090;\n            cursor: pointer;\n        }\n\n        .main-menu-icon-image {\n            filter: invert(87%) sepia(98%) saturate(1%) hue-rotate(268deg) brightness(109%) contrast(97%);\n            width: 50px;\n        }\n\n        .pdf-container-style {\n            box-shadow: 0 10px 6px -6px #777;\n        }\n\n        .list-item:hover {\n            box-shadow: 0 0 11px rgba(33, 33, 33, .2);\n        }\n\n        .setFocus {\n            filter: invert(87%) sepia(98%) saturate(1%) hue-rotate(268deg) brightness(109%) contrast(97%);\n        }\n\n        .sort {\n            width: 12px;\n            margin-bottom: -3px;\n            margin-left: 2px;\n            opacity: 0.5;\n        }\n\n        .form-container {\n            padding: 10px;\n            display: grid;\n            grid-template-columns: 1fr auto auto;\n            gap: 1rem;\n            background-color: white;\n            height: 100%;\n            box-shadow: 0 10px 6px -6px #777;\n        }\n\n        .form-fields-container {\n            display: grid;\n            grid-template-columns: 1fr 1fr;\n        }\n\n        .smaller-text-field {\n            font-size: 13px;\n            height: 20px;\n            width: 80%;\n        }\n\n        .push-to-bottom {\n            display: grid;\n            grid-template-rows: 1fr auto;\n            gap: 1rem;\n        }\n\n        .outlined-button {\n            width: 100%;\n            border: 2px solid #2678a9;\n            padding: 3px 6px;\n            color: #2678a9;\n            border-radius: 5px;\n        }\n\n        .outlined-button:hover {\n            background-color: #2678a9;\n            color: white;\n        }\n\n        .disabled-button {\n            width: 100%;\n            border: 2px solid #eeeeee;\n            padding: 3px 6px;\n            color: #ababab;\n            border-radius: 5px;\n            background-color: #eeeeee;\n            cursor: auto;\n        }\n\n        .filled-button {\n            width: 100%;\n            border: 2px solid #2678a9;\n            padding: 3px 6px;\n            color: white;\n            border-radius: 5px;\n            background-color: #2678a9;\n        }\n\n        .filled-button:hover {\n            background-color: white;\n            color: cornflowerblue;\n        }\n\n        .search-icon {\n            background: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iYmxhY2siIHdpZHRoPSIxOHB4IiBoZWlnaHQ9IjE4cHgiPjxwYXRoIGQ9Ik0wIDBoMjR2MjRIMHoiIGZpbGw9Im5vbmUiLz48cGF0aCBkPSJNMTUuNSAxNGgtLjc5bC0uMjgtLjI3QzE1LjQxIDEyLjU5IDE2IDExLjExIDE2IDkuNSAxNiA1LjkxIDEzLjA5IDMgOS41IDNTMyA1LjkxIDMgOS41IDUuOTEgMTYgOS41IDE2YzEuNjEgMCAzLjA5LS41OSA0LjIzLTEuNTdsLjI3LjI4di43OWw1IDQuOTlMMjAuNDkgMTlsLTQuOTktNXptLTYgMEM3LjAxIDE0IDUgMTEuOTkgNSA5LjVTNy4wMSA1IDkuNSA1IDE0IDcuMDEgMTQgOS41IDExLjk5IDE0IDkuNSAxNHoiLz48L3N2Zz4=\") no-repeat right;\n        }\n    "]
                 // changeDetection: ChangeDetectionStrategy.OnPush
             }),
             __metadata("design:paramtypes", [core_1.ChangeDetectorRef, forms_1.FormBuilder, platform_browser_1.DomSanitizer])
