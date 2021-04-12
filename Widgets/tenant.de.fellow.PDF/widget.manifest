@@ -4,7 +4,7 @@
 	"framework": "angular",
 	"aotVersion": "",
 	"name": "Infor IDM - Tenant",
-	"version": "1.0.4",
+	"version": "1.0.5",
 	"defaultSize": "3,2",
 	"category": "application",
 	"enablePublish": true,

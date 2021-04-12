@@ -186,7 +186,7 @@ interface VerticalListItem {
                         </div>
                     </div>
                     <div style="width: 50%; height: 100%; padding: 43px 20px 0 30px;">
-                        <iframe src="https://idm.eu1.inforcloudsuite.com/ca/api/resources/EMA_Returns-1-3-LATEST?$token=AZvINRzd0J7mkCbWzUXHe%2FMLW1%2F5I%2B6f1EfLNMZ0Akw1%2FIhM8P6Hu0TDKRw2EUF7n8nsoKTJe6CWAGGqqg3PV8mS%2B6YDkspbz2rW%2B1DtT9UEe%2FCL8tiUJQrg2vVu9YP%2FzQODyEXza6CZilj9KGk2OcrDi%2FkG3Ehfkq5uyrk8lQUfHnRhGvUaqaFz8FDTaR2CwAlqnG0HR%2BOG7ZjbptRN6zb91kPk3vVlmlWsLLBZMnIWu3NPeRN1ZW89YNzS3adYrcR3GqzAk6cNnL6ccTsYTT3Jdc%2BgNPrNCdA%2BTCwayMzFpnPxng3xH%2F%2Bq8kqZ2mWRrYvQFVj0P1dmyA1L4tS%2B7mYnEt6oI3Bbq12h%2Bo73KCFdXPJc2Jl00k%2FZI%2F41&$tenant=FELLOWCONSULTING_DEV" width="100%" height="100%"
+                        <iframe src="https://www.muhammadbinyusrat.com/devguide.pdf" width="100%" height="100%"
                                 class="pdf-container-style"></iframe>
                     </div>
                 </div>
@@ -205,10 +205,10 @@ interface VerticalListItem {
                     <div style="width: 50%; overflow: auto; display: grid">
                         <div class="grid-header">
                             <div style="width: 20%;text-align: center">Datum/Uhrzeit</div>
-                            <div style="width: 38%">Dokument</div>
+                            <div style="width: 39%">Dokument</div>
                             <div style="width: 10%">am</div>
                             <div style="width: 10%">Hinweis</div>
-                            <div style="width: 11%">Vordruck</div>
+                            <div style="width: 10%">Vordruck</div>
                             <div style="width: 11%">User</div>
                         </div>
                         <div style="overflow: auto">
@@ -219,10 +219,10 @@ interface VerticalListItem {
                                  [style.color]="item.selected ? 'white' : 'black'"
                                  (click)="selectEakteRow(item)">
                                 <div style="width: 20%; text-align: center; margin: auto 0">{{item.date}}</div>
-                                <div style="width: 38%; margin: auto 0">{{item.document}}</div>
+                                <div style="width: 39%; margin: auto 0">{{item.document}}</div>
                                 <div style="width: 10%; margin: auto 0">{{item.am}}</div>
                                 <div style="width: 10%; margin: auto 0">{{item.hinweis}}</div>
-                                <div style="width: 11%; margin: auto 0">{{item.vordruck}}</div>
+                                <div style="width: 10%; margin: auto 0">{{item.vordruck}}</div>
                                 <div style="width: 11%; margin: auto 0">{{item.user}}</div>
                             </div>
                         </div>
@@ -465,72 +465,128 @@ export class PDFComponent implements OnInit, IWidgetComponent {
     }
 
     private onKeyPress(event: KeyboardEvent) {
-        // On Down Arrow Press
+        /* ************************************************* KEYDOWN ************************************************/
         if (event.key === 'ArrowDown') {
-            if (!this.selectedRow) {
+            if (this.showEakte && !this.selectedEakteRow) { // you're on eakte page
+                this.sampleEakteItems[0].selected = true;
+                this.selectedEakteRow = JSON.parse(JSON.stringify(this.sampleEakteItems[0]));
+                return;
+            }
+            if (!this.showEakte && !this.selectedRow) { // you're on main page
                 this.sampleListItems[0].selected = true;
                 this.selectedRow = JSON.parse(JSON.stringify(this.sampleListItems[0]));
                 return;
             }
-            const indexOfSelectedRow = this.sampleListItems.findIndex((item: ListItem) => item.index === this.selectedRow.index);
-            // scroll only if selected row index is greater than five
-            if (this.sampleListItems[indexOfSelectedRow + 1]) {
-                this.sampleListItems[indexOfSelectedRow].selected = false
-                this.sampleListItems[indexOfSelectedRow + 1].selected = true
-                this.selectedRow = JSON.parse(JSON.stringify(this.sampleListItems[indexOfSelectedRow + 1]));
-            }
-            if (indexOfSelectedRow < 5) {
-                event.preventDefault();
-            }
-            return;
-        }
-        if (event.key === 'ArrowUp') {
-            if (!this.selectedRow) {
+            if (!this.showEakte) {
+                const indexOfSelectedRow = this.sampleListItems.findIndex((item: ListItem) => item.index === this.selectedRow.index);
+                if (this.sampleListItems[indexOfSelectedRow + 1]) {
+                    this.sampleListItems[indexOfSelectedRow].selected = false
+                    this.sampleListItems[indexOfSelectedRow + 1].selected = true
+                    this.selectedRow = JSON.parse(JSON.stringify(this.sampleListItems[indexOfSelectedRow + 1]));
+                }
+                // if form is displayed than start scrolling after 5 items
+                // if no form editing page is on screen, start scrolling after 10 items
+                if (this.showForm ? indexOfSelectedRow < 5 : indexOfSelectedRow < 10) {
+                    event.preventDefault();
+                }
                 return;
             }
-            const indexOfSelectedRow = this.sampleListItems.findIndex((item: ListItem) => item.index === this.selectedRow.index);
-            if (this.sampleListItems[indexOfSelectedRow - 1]) {
-                this.sampleListItems[indexOfSelectedRow].selected = false;
-                this.sampleListItems[indexOfSelectedRow - 1].selected = true;
-                this.selectedRow = JSON.parse(JSON.stringify(this.sampleListItems[indexOfSelectedRow - 1]));
+            if (this.showEakte) {
+                const indexOfSelectedRow = this.sampleEakteItems.findIndex((item: EakteListItem) => item.index === this.selectedEakteRow.index);
+                if (this.sampleEakteItems[indexOfSelectedRow + 1]) {
+                    this.sampleEakteItems[indexOfSelectedRow].selected = false
+                    this.sampleEakteItems[indexOfSelectedRow + 1].selected = true
+                    this.selectedEakteRow = JSON.parse(JSON.stringify(this.sampleEakteItems[indexOfSelectedRow + 1]));
+                }
+                // scroll only if selected row index is greater than five
+                if (indexOfSelectedRow < 10) {
+                    event.preventDefault();
+                }
+                return;
             }
-            if (indexOfSelectedRow > this.sampleListItems.length - 5) {
-                event.preventDefault();
-            }
-            return;
         }
-        if (event.ctrlKey && event.keyCode == 69) {
+        /* ************************************************* KEYUP ************************************************/
+        if (event.key === 'ArrowUp') {
+            if (!this.showEakte && !this.selectedRow) {
+                return;
+            }
+            if (this.showEakte && !this.selectedEakteRow) {
+                return;
+            }
+            if (!this.showEakte) {
+                const indexOfSelectedRow = this.sampleListItems.findIndex((item: ListItem) => item.index === this.selectedRow.index);
+                if (this.sampleListItems[indexOfSelectedRow - 1]) {
+                    this.sampleListItems[indexOfSelectedRow].selected = false;
+                    this.sampleListItems[indexOfSelectedRow - 1].selected = true;
+                    this.selectedRow = JSON.parse(JSON.stringify(this.sampleListItems[indexOfSelectedRow - 1]));
+                }
+                if (this.showForm ? indexOfSelectedRow > this.sampleListItems.length - 5 : indexOfSelectedRow > this.sampleListItems.length - 10) {
+                    event.preventDefault();
+                }
+                return;
+            }
+            if (this.showEakte) {
+                const indexOfSelectedRow = this.sampleEakteItems.findIndex((item: EakteListItem) => item.index === this.selectedEakteRow.index);
+                if (this.sampleEakteItems[indexOfSelectedRow - 1]) {
+                    this.sampleEakteItems[indexOfSelectedRow].selected = false;
+                    this.sampleEakteItems[indexOfSelectedRow - 1].selected = true;
+                    this.selectedEakteRow = JSON.parse(JSON.stringify(this.sampleEakteItems[indexOfSelectedRow - 1]));
+                }
+                if (indexOfSelectedRow > this.sampleEakteItems.length - 10) {
+                    event.preventDefault();
+                }
+                return;
+            }
+        }
+        /* ************************************************* CTRL + E ************************************************/
+        if (event.ctrlKey && event.keyCode == 69 && !this.showEakte) {
+            // open form editor
             if (this.selectedRow) {
                 this.showForm = true;
                 event.preventDefault(); // preventing default browser behavior on ctrl + E
             }
             return;
         }
-        if (event.ctrlKey && event.keyCode == 65) {
+        /* ************************************************* CTRL + A ************************************************/
+        if (event.ctrlKey && event.keyCode == 65 && !this.showEakte) {
+            // check the row
             if (this.selectedRow) {
                 this.sampleListItems.forEach(row => {
                     if (row.index === this.selectedRow.index) {
                         row.checked = true;
                     }
                 })
-                event.preventDefault(); // preventing default browser behavior on ctrl + A
             }
             return;
         }
-        if (event.ctrlKey && event.keyCode == 88) {
+        /* ************************************************* CTRL + X ************************************************/
+        if (event.ctrlKey && event.keyCode == 88 && !this.showEakte) {
+            // uncheck the row
             if (this.selectedRow) {
                 this.sampleListItems.forEach(row => {
                     if (row.index === this.selectedRow.index) {
                         row.checked = false;
                     }
                 })
-                event.preventDefault(); // preventing default browser behavior on ctrl + X
             }
             return;
         }
+        /* ************************************************* CTRL + K ************************************************/
+        if (event.ctrlKey && event.keyCode == 75) {
+            // open eakte form
+            if (!this.showEakte) {
+                this.showEakte = true;
+            }
+            event.preventDefault(); // ctrl + K shift focus on browser search bar
+            return;
+        }
+        /* ************************************************* ESC ************************************************/
         if (event.key === 'Escape') {
             if (this.showForm) {
                 this.showForm = false;
+            }
+            if (this.showEakte) {
+                this.showEakte = false;
             }
         }
     }
@@ -851,7 +907,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
             {
                 index: 0,
                 date: '13.09.2017 16:21:00',
-                document: 'EAKTE mode is an option in header',
+                document: 'MA - Mabaang',
                 am: '',
                 hinweis: '',
                 vordruck: '101',
@@ -862,7 +918,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
             {
                 index: 1,
                 date: '13.09.2017 16:21:00',
-                document: 'Let me give context',
+                document: 'ZV - Ancodanng Zelnsemg Beare',
                 am: '',
                 hinweis: '',
                 vordruck: '102',
@@ -873,7 +929,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
             {
                 index: 2,
                 date: '13.09.2017 16:21:00',
-                document: 'In default mode, when a widget is loaded',
+                document: 'ZV - Aameddang Ivenqrernceenaagreeciahere',
                 am: '',
                 hinweis: '',
                 vordruck: '103',
@@ -884,8 +940,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
             {
                 index: 3,
                 date: '13.09.2017 16:21:00',
-                document: 'the first in the list will be auto selected',
-
+                document: 'ZV - Ancodanng Zelnsemg Beare',
                 am: '',
                 hinweis: '',
                 vordruck: '104',
@@ -896,7 +951,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
             {
                 index: 4,
                 date: '13.09.2017 16:21:00',
-                document: 'If no row is selected then only make AKTUALISIEREN active',
+                document: 'PFA - Pitndang Fenncomt',
                 am: '',
                 hinweis: '',
                 vordruck: '105',
@@ -907,7 +962,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
             {
                 index: 5,
                 date: '13.09.2017 16:21:00',
-                document: 'and rest of all icons in header should be disabled',
+                document: 'MA - Mabaang',
                 am: '',
                 hinweis: '',
                 vordruck: '106',
@@ -918,7 +973,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
             {
                 index: 6,
                 date: '13.09.2017 16:21:00',
-                document: 'If a row is selected then all icons will be active',
+                document: 'MA. Malang',
                 am: '',
                 hinweis: '',
                 vordruck: '107',
@@ -929,7 +984,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
             {
                 index: 7,
                 date: '13.09.2017 16:21:00',
-                document: 'along EXCEPT for the last one HWS/CXS',
+                document: 'VGL. - Verpionh - Abichamag',
                 am: '',
                 hinweis: '',
                 vordruck: '108',
@@ -940,7 +995,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
             {
                 index: 8,
                 date: '13.09.2017 16:21:00',
-                document: 'So, in EAKTE mode',
+                document: 'S - Abseorenmert  Geuprichenans',
                 am: '',
                 hinweis: '',
                 vordruck: '109',
@@ -951,7 +1006,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
             {
                 index: 9,
                 date: '13.09.2017 16:21:00',
-                document: 'a new view will be visible',
+                document: 'SH - Losdhangsbeveliguag',
                 am: '',
                 hinweis: '',
                 vordruck: '110',
@@ -962,7 +1017,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
             {
                 index: 10,
                 date: '13.09.2017 16:21:00',
-                document: 'A 1/2-column grid , 2nd column is a preview',
+                document: 'SH - Losdhangsbeveliguag',
                 am: '',
                 hinweis: '',
                 vordruck: '111',
@@ -973,7 +1028,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
             {
                 index: 11,
                 date: '13.09.2017 16:21:00',
-                document: 'which will be available once the row is selected',
+                document: 'GV. Maatang an ZVG - bean Eeamand gegen Sctuale-Lcoctang',
                 am: '',
                 hinweis: '',
                 vordruck: '112',
@@ -984,7 +1039,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
             {
                 index: 12,
                 date: '13.09.2017 16:21:00',
-                document: 'a list (of course with dummy values) [Right]',
+                document: 'GV . Plaadungranfong - (AG Hiiechemn)',
                 am: '',
                 hinweis: '',
                 vordruck: '113',
@@ -995,7 +1050,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
             {
                 index: 13,
                 date: '13.09.2017 16:21:00',
-                document: 'I have listed column details below for this list',
+                document: 'B- Uabehanese Niederschiagung',
                 am: '',
                 hinweis: '',
                 vordruck: '114',
@@ -1006,7 +1061,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
             {
                 index: 14,
                 date: '13.09.2017 16:21:00',
-                document: 'an image / pdf viewer [Left]',
+                document: 'F. Peticchererce',
                 am: '',
                 hinweis: '',
                 vordruck: '115',
@@ -1017,7 +1072,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
             {
                 index: 15,
                 date: '13.09.2017 16:21:00',
-                document: 'Above the list as in image, show this text',
+                document: 'B- Cabeteuacte Niedcruchinguag',
                 am: '',
                 hinweis: '',
                 vordruck: '116',
@@ -1028,7 +1083,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
             {
                 index: 16,
                 date: '13.09.2017 16:21:00',
-                document: 'First Line: Inhaltsverzeichnis von: Testfall Hugo',
+                document: 'MA - Mahamg',
                 am: '',
                 hinweis: '',
                 vordruck: '117',
@@ -1039,7 +1094,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
             {
                 index: 17,
                 date: '13.09.2017 16:21:00',
-                document: '01/10/1752, Kajutenweg 5, 31134 HILLDESHEIM',
+                document: 'S- Adrewenhenr',
                 am: '',
                 hinweis: '',
                 vordruck: '118',
@@ -1050,7 +1105,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
             {
                 index: 18,
                 date: '13.09.2017 16:21:00',
-                document: '2nd Line : Kassenzeichen: this value is available in row',
+                document: 'MA. Maeung',
                 am: '',
                 hinweis: '',
                 vordruck: '119',
@@ -1061,7 +1116,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
             {
                 index: 19,
                 date: '13.09.2017 16:21:00',
-                document: 'display it here when switch to eAkte mode',
+                document: 'S- Adrementane',
                 am: '',
                 hinweis: '',
                 vordruck: '120',
@@ -1072,7 +1127,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
             {
                 index: 20,
                 date: '13.09.2017 16:21:00',
-                document: '3rd Line : Button with text (',
+                document: 'S - Aad Saciengenshee Mahaendes =u Kz 160000988315 me Rascaraiiong',
                 am: '',
                 hinweis: '',
                 vordruck: '121',
@@ -1094,7 +1149,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
             {
                 index: 22,
                 date: '13.09.2017 16:21:00',
-                document: 'Columns',
+                document: 'MA - Matmung - Rutencabfeng echt engeheben',
                 am: '',
                 hinweis: '',
                 vordruck: '123',
@@ -1105,7 +1160,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
             {
                 index: 23,
                 date: '13.09.2017 16:21:00',
-                document: 'The quick brown fox jumps over the lazy dog',
+                document: 'AVO - Anntiile Onereach',
                 am: '',
                 hinweis: '',
                 vordruck: '124',
@@ -1116,7 +1171,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
             {
                 index: 24,
                 date: '13.09.2017 16:21:00',
-                document: 'For now, fill it with 50 rows and show same',
+                document: 'TV',
                 am: '',
                 hinweis: '',
                 vordruck: '125',
@@ -1138,7 +1193,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
             {
                 index: 26,
                 date: '13.09.2017 16:21:00',
-                document: 'The quick brown fox jumps over the lazy dog',
+                document: 'SH - Loechangsbewiligng',
                 am: '',
                 hinweis: '',
                 vordruck: '127',
@@ -1149,7 +1204,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
             {
                 index: 27,
                 date: '13.09.2017 16:21:00',
-                document: 'The quick brown fox jumps over the lazy dog',
+                document: 'Veer WV- Tere sortichgratetie FFOBs',
                 am: '',
                 hinweis: '',
                 vordruck: '128',
@@ -1160,7 +1215,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
             {
                 index: 28,
                 date: '13.09.2017 16:21:00',
-                document: 'The quick brown fox jumps over the lazy dog',
+                document: 'PFA - Pitndang Fenncomt',
                 am: '',
                 hinweis: '',
                 vordruck: '129',
@@ -1171,7 +1226,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
             {
                 index: 29,
                 date: '13.09.2017 16:21:00',
-                document: 'The quick brown fox jumps over the lazy dog',
+                document: 'EV - Ancedeng Zotnammag Brae',
                 am: '',
                 hinweis: '',
                 vordruck: '130',
@@ -1182,7 +1237,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
             {
                 index: 30,
                 date: '13.09.2017 16:21:00',
-                document: 'The quick brown fox jumps over the lazy dog',
+                document: 'Rasescabheng cht engehahen',
                 am: '',
                 hinweis: '',
                 vordruck: '131',
@@ -1193,7 +1248,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
             {
                 index: 31,
                 date: '13.09.2017 16:21:00',
-                document: 'The quick brown fox jumps over the lazy dog',
+                document: 'S - Altowrenpart | Geepréctneste:',
                 am: '',
                 hinweis: '',
                 vordruck: '132',
@@ -1204,7 +1259,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
             {
                 index: 32,
                 date: '13.09.2017 16:21:00',
-                document: 'The quick brown fox jumps over the lazy dog',
+                document: 'DFA - Pandey',
                 am: '',
                 hinweis: '',
                 vordruck: '133',
@@ -1215,7 +1270,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
             {
                 index: 33,
                 date: '13.09.2017 16:21:00',
-                document: 'The quick brown fox jumps over the lazy dog',
+                document: 'ANO . Amtibalie Onceveech',
                 am: '',
                 hinweis: '',
                 vordruck: '134',
@@ -1226,7 +1281,7 @@ export class PDFComponent implements OnInit, IWidgetComponent {
             {
                 index: 34,
                 date: '13.09.2017 16:21:00',
-                document: 'The quick brown fox jumps over the lazy dog',
+                document: 'MA - Mabamng',
                 am: '',
                 hinweis: '',
                 vordruck: '135',
@@ -1237,177 +1292,12 @@ export class PDFComponent implements OnInit, IWidgetComponent {
             {
                 index: 35,
                 date: '13.09.2017 16:21:00',
-                document: 'The quick brown fox jumps over the lazy dog',
+                document: 'OT - Oilatah Tedbewag',
                 am: '',
                 hinweis: '',
                 vordruck: '136',
                 user: '4401mv13',
                 pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
-                selected: false
-            },
-            {
-                index: 36,
-                date: '13.09.2017 16:21:00',
-                document: 'The quick brown fox jumps over the lazy dog',
-                am: '',
-                hinweis: '',
-                vordruck: '137',
-                user: '4401mv13',
-                pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
-                selected: false
-            },
-            {
-                index: 37,
-                date: '13.09.2017 16:21:00',
-                document: 'The quick brown fox jumps over the lazy dog',
-                am: '',
-                hinweis: '',
-                vordruck: '138',
-                user: '4401mv13',
-                pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
-                selected: false
-            },
-            {
-                index: 38,
-                date: '13.09.2017 16:21:00',
-                document: 'The quick brown fox jumps over the lazy dog',
-                am: '',
-                hinweis: '',
-                vordruck: '139',
-                user: '4401mv13',
-                pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
-                selected: false
-            },
-            {
-                index: 39,
-                date: '13.09.2017 16:21:00',
-                document: 'The quick brown fox jumps over the lazy dog',
-                am: '',
-                hinweis: '',
-                vordruck: '140',
-                user: '4401mv13',
-                pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
-                selected: false
-            },
-            {
-                index: 40,
-                date: '13.09.2017 16:21:00',
-                document: 'The quick brown fox jumps over the lazy dog',
-                am: '',
-                hinweis: '',
-                vordruck: '141',
-                user: '4401mv13',
-                pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
-                selected: false
-            },
-            {
-                index: 41,
-                date: '13.09.2017 16:21:00',
-                document: 'The quick brown fox jumps over the lazy dog',
-                am: '',
-                hinweis: '',
-                vordruck: '142',
-                user: '4401mv13',
-                pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
-                selected: false
-            },
-            {
-                index: 42,
-                date: '13.09.2017 16:21:00',
-                document: 'The quick brown fox jumps over the lazy dog',
-                am: '',
-                hinweis: '',
-                vordruck: '143',
-                user: '4401mv13',
-                pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
-                selected: false
-            },
-            {
-                index: 43,
-                date: '13.09.2017 16:21:00',
-                document: 'The quick brown fox jumps over the lazy dog',
-                am: '',
-                hinweis: '',
-                vordruck: '144',
-                user: '4401mv13',
-                pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
-                selected: false
-            },
-            {
-                index: 44,
-                date: '13.09.2017 16:21:00',
-                document: 'The quick brown fox jumps over the lazy dog',
-                am: '',
-                hinweis: '',
-                vordruck: '145',
-                user: '4401mv13',
-                pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
-                selected: false
-            },
-            {
-                index: 45,
-                date: '13.09.2017 16:21:00',
-                document: 'The quick brown fox jumps over the lazy dog',
-                am: '',
-                hinweis: '',
-                vordruck: '146',
-                user: '4401mv13',
-                pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
-                selected: false
-            },
-            {
-                index: 46,
-                date: '13.09.2017 16:21:00',
-                document: 'The quick brown fox jumps over the lazy dog',
-                am: '',
-                hinweis: '',
-                vordruck: '147',
-                user: '4401mv13',
-                pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
-                selected: false
-            },
-            {
-                index: 47,
-                date: '13.09.2017 16:21:00',
-                document: 'The quick brown fox jumps over the lazy dog',
-                am: '',
-                hinweis: '',
-                vordruck: '148',
-                user: '4401mv13',
-                pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
-                selected: false
-            },
-            {
-                index: 48,
-                date: '13.09.2017 16:21:00',
-                document: 'The quick brown fox jumps over the lazy dog',
-                am: '',
-                hinweis: '',
-                vordruck: '149',
-                user: '4401mv13',
-                pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
-                selected: false
-            },
-            {
-                index: 49,
-                date: '13.09.2017 16:21:00',
-                document: 'The quick brown fox jumps over the lazy dog',
-                am: '',
-                hinweis: '',
-                vordruck: '150',
-                user: '4401mv13',
-                pdfLink: 'http://www.africau.edu/images/default/sample.pdf',
-                selected: false
-            },
-            {
-                index: 50,
-                date: '13.09.2017 16:21:00',
-                document: 'The quick brown fox jumps over the lazy dog',
-                am: '',
-                hinweis: '',
-                vordruck: '151',
-                user: '4401mv13',
-                pdfLink: 'https://www.muhammadbinyusrat.com/devguide.pdf',
                 selected: false
             }
         ]
