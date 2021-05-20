@@ -1,7 +1,7 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.assets = void 0;
+    exports.tasksAPIPayload = exports.assets = void 0;
     exports.assets = {
         aktualisieren: "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDI1LjAuMSwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkNhcGFfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiCgkgdmlld0JveD0iMCAwIDQ4OS43IDQ4OS43IiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA0ODkuNyA0ODkuNzsiIHhtbDpzcGFjZT0icHJlc2VydmUiPgo8c3R5bGUgdHlwZT0idGV4dC9jc3MiPgoJLnN0MHtmaWxsOm5vbmU7fQo8L3N0eWxlPgo8Zz4KCTxnPgoJCTxwYXRoIGQ9Ik00MC40LDMwMS43Yy00LjksMC05LjItMy4zLTEwLjMtOC4xYy0xOS03OC4yLDYuMy0xNjAuMyw2NS45LTIxNC4zYzQwLjMtMzYuNSw5Mi40LTU2LjcsMTQ2LjYtNTYuNwoJCQljMy44LDAsNy42LDAuMSwxMS4zLDAuM0MzMDEuMSwyNS4yLDM0NSw0MiwzODEuMSw3MS41bDQuOSw0bC0yLjMtNjEuNmMtMC4yLTYsNC4zLTEwLjgsMTAuMy0xMS4xYzAuMSwwLDAuMywwLDAuNCwwCgkJCWM1LjcsMCwxMC40LDQuNSwxMC42LDEwLjNsMy4zLDg4LjJ2MS41YzAsNS43LTQuNSwxMC40LTEwLjMsMTAuN2wtODkuMSwzLjNoLTAuNGMtNS43LDAtMTAuNC00LjUtMTAuNy0xMC4zCgkJCWMtMC4xLTIuOSwwLjktNS42LDIuOC03LjdjMS45LTIuMSw0LjYtMy4zLDcuNS0zLjRsNjUuNi0yLjVsLTUuOC00LjdDMzMyLjcsNTkuNywyODguNCw0NCwyNDIuOSw0NGMtNDkuMSwwLTk2LjIsMTguMS0xMzIuNiw1MQoJCQljLTUzLjgsNDguNi03Ni42LDEyMi44LTU5LjYsMTkzLjVjMS40LDUuNy0yLjEsMTEuNS03LjgsMTIuOUM0MiwzMDEuNiw0MS4zLDMwMS43LDQwLjQsMzAxLjd6Ii8+CgkJPHBhdGggZD0iTTk4LjgsNDg2LjljLTUuNSwwLTEwLjEtNC4zLTEwLjYtOS43bC04LTg4LjljLTAuNS01LjksMy44LTExLjEsOS42LTExLjZsODguOS04YzAuNCwwLDAuNywwLDEuMSwwCgkJCWM1LjUsMCwxMC4xLDQuMiwxMC42LDkuN2MwLjUsNS44LTMuOCwxMS4xLTkuNiwxMS42bC02NS42LDUuOWw1LjMsNC40YzM1LjMsMjkuNCw4MC4yLDQ1LjYsMTI2LjUsNDUuNmM0OS4xLDAsOTYuMi0xOC4xLDEzMi42LTUxCgkJCWM1My45LTQ4LjcsNzYuNy0xMjIuOCw1OS42LTE5My41Yy0xLjQtNS43LDIuMS0xMS40LDcuOC0xMi45YzAuOC0wLjIsMS43LTAuMywyLjUtMC4zYzQuOSwwLDkuMSwzLjQsMTAuMyw4LjEKCQkJYzE4LjksNzguMi02LjMsMTYwLjMtNjYsMjE0LjNjLTQwLjUsMzYuNS05Mi42LDU2LjctMTQ2LjgsNTYuN2MtMy43LDAtNy40LTAuMS0xMS4yLTAuM2MtNDYuOC0yLjQtOTAuNi0xOS4xLTEyNi43LTQ4LjNsLTUuMi00LjIKCQkJbDUuNCw2MC44YzAuNSw1LjktMy44LDExLjEtOS42LDExLjZsLTAuMiwwbC0wLjIsMC4xQzk5LjIsNDg2LjksOTguOSw0ODYuOSw5OC44LDQ4Ni45eiIvPgoJPC9nPgo8L2c+CjxyZWN0IHg9Ii03OTQ2IiB5PSI0MzEuNCIgY2xhc3M9InN0MCIgd2lkdGg9IjE2MzgzIiBoZWlnaHQ9IjUuNyIvPgo8L3N2Zz4K",
         weiterleiten: "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDI1LjAuMSwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkNhcGFfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiCgkgdmlld0JveD0iMCAwIDQ4OS43IDQ4OS43IiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA0ODkuNyA0ODkuNzsiIHhtbDpzcGFjZT0icHJlc2VydmUiPgo8c3R5bGUgdHlwZT0idGV4dC9jc3MiPgoJLnN0MHtmaWxsOm5vbmU7fQo8L3N0eWxlPgo8Zz4KCTxwYXRoIGQ9Ik0xMzEuMywzNzUuMmMtMjYuMSwwLTUyLjEsMC03OC4yLDBDMjYuMSwzNzUuMSw2LDM1Ny45LDIsMzMxLjJjLTAuNC0yLjUtMC40LTUuMi0wLjQtOHYtMC4yYzAtODkuNywwLTE3OS40LDAtMjY5CgkJYzAtMjYuOSwxNS44LTQ2LjIsNDIuMi01MS41YzAuOC0wLjIsMS40LTAuNCwxLjktMC43SDM3MmMwLjcsMC4yLDEuNCwwLjQsMiwwLjVjMiwwLjUsMy45LDEsNS43LDEuNmMyMC42LDYsMzUuNiwyNS43LDM1LjcsNDYuOAoJCWMwLjIsMzYuMSwwLjEsNzIuOSwwLjEsMTA4LjVsMCwyMy40YzAsNi4xLTMuOCwxMC4zLTkuNSwxMC4zYy01LjYsMC05LjUtNC4yLTkuNS0xMC4zYzAtMTguOSwwLTM4LjEsMC01Ni42bDAtMzMuOEgyMC43bDAsNzAuOAoJCWMwLDUzLjIsMCwxMDYuNCwwLDE1OS43YzAsMjAuNiwxMi44LDMzLjQsMzMuMywzMy40YzMxLjMsMCw2Mi43LDAsOTQsMGMzMC43LDAsNjEuMywwLDkyLDBjMi4xLDAsNC4yLDAsNiwwLjQKCQljNC45LDEsNy44LDUuMSw3LjQsMTAuM2MtMC40LDQuNS00LjEsOC04LjksOC4zYy0wLjcsMC0xLjUsMC0yLjMsMEMyNDIuMiwzNzUuMiwxNTAuMywzNzUuMiwxMzEuMywzNzUuMnogTTExMC40LDIwLjkKCQljLTE5LjIsMC0zOC40LDAtNTcuNiwwYy0xNy4yLDAtMzAuNiwxMS44LTMxLjksMjhjLTAuMyw0LjEtMC4yLDguMy0wLjIsMTIuM2MwLDEuOCwwLjEsMy43LDAuMSw1LjV2NS43aDM3NS43YzAsMCwwLTE1LjIsMC0xNy44CgkJYzAtMjEuMS0xMi43LTMzLjgtMzQtMzMuOEwxMTAuNCwyMC45eiIvPgoJPHBhdGggZD0iTTMwOS43LDQ3MC41Yy0zLjIsMC02LjItMS43LTcuNy00LjNjLTEtMS43LTEuNi0zLjUtMS42LTQuNmMwLTQuOCwwLTkuNi0wLjEtMTQuM2MtMC4yLTE1LjQtMC40LTMxLjQsMi40LTQ2LjcKCQljNC40LTI0LjgsMTcuNC00OSwzNi43LTY4YzE5LjMtMTkuMSw0My42LTMxLjgsNjguNS0zNS44YzUuMy0wLjksMTAuNi0xLjQsMTYuMy0xLjljMi43LTAuMywyNC4xLTEuMSwyNC4xLTEuMQoJCXMtMzcuMS0zMi4zLTQyLjgtMzcuN2MtMi41LTIuMy0zLjktNS0zLjktNy43Yy0wLjEtMi40LDAuOC00LjYsMi42LTYuNWMxLjgtMiw0LjEtMyw2LjYtM2MyLjYsMCw1LjIsMS4xLDcuNSwzLjMKCQljMjEsMTkuMSw0MC41LDM1LjcsNTksNTQuMmM2LjEsNi4xLDYuNiw4LjksMC4yLDE1LjJjLTE2LjcsMTYuNy0zOS45LDM2LjktNTcuOCw1My4xYy0yLjQsMi4yLTguNiw0LjYtOS4zLDQuNgoJCWMtMy4yLDAtNi4xLTItNy44LTUuMWMtMi4xLTQtMS4zLTguMywyLjEtMTEuNGM2LTUuNiw0Mi41LTM5LjcsNDIuNS0zOS43cy0xOC40LDAuOS0yMC4yLDAuOWMtNy44LDAtMTUuNywxLjItMjUsMy43CgkJYy00OSwxMy40LTgyLjIsNTctODIuOCwxMDguNWMtMC4xLDUuMywwLDEwLjcsMCwxNS45YzAsNi40LDAsMTMuMS0wLjEsMTkuNmMtMC4xLDQuMi0yLjgsNy41LTcuMSw4LjcKCQlDMzExLjIsNDcwLjQsMzEwLjQsNDcwLjUsMzA5LjcsNDcwLjV6Ii8+CjwvZz4KPHJlY3QgeD0iLTEwNDk0LjYiIHk9IjQzMS40IiBjbGFzcz0ic3QwIiB3aWR0aD0iMTYzODMiIGhlaWdodD0iNS43Ii8+Cjwvc3ZnPgo=",
@@ -22,5 +22,339 @@ define(["require", "exports"], function (require, exports) {
         table_view: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDI0IDI0IiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxnPjxyZWN0IGZpbGw9Im5vbmUiIGhlaWdodD0iMjQiIHdpZHRoPSIyNCIvPjxwYXRoIGQ9Ik0xOSw3SDlDNy45LDcsNyw3LjksNyw5djEwYzAsMS4xLDAuOSwyLDIsMmgxMGMxLjEsMCwyLTAuOSwyLTJWOUMyMSw3LjksMjAuMSw3LDE5LDd6IE0xOSw5djJIOVY5SDE5eiBNMTMsMTV2LTJoMnYySDEzeiBNMTUsMTd2MmgtMnYtMkgxNXogTTExLDE1SDl2LTJoMlYxNXogTTE3LDEzaDJ2MmgtMlYxM3ogTTksMTdoMnYySDlWMTd6IE0xNywxOXYtMmgydjJIMTd6IE02LDE3SDVjLTEuMSwwLTItMC45LTItMlY1IGMwLTEuMSwwLjktMiwyLTJoMTBjMS4xLDAsMiwwLjksMiwydjFoLTJWNUg1djEwaDFWMTd6Ii8+PC9nPjwvc3ZnPg==",
         pdfIcon: "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pg0KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE4LjAuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPg0KPCFET0NUWVBFIHN2ZyBQVUJMSUMgIi0vL1czQy8vRFREIFNWRyAxLjEvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkIj4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCINCgkgdmlld0JveD0iMCAwIDQ4Mi4xNCA0ODIuMTQiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDQ4Mi4xNCA0ODIuMTQ7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxnPg0KCTxwYXRoIGQ9Ik0xNDIuMDI0LDMxMC4xOTRjMC04LjAwNy01LjU1Ni0xMi43ODItMTUuMzU5LTEyLjc4MmMtNC4wMDMsMC02LjcxNCwwLjM5NS04LjEzMiwwLjc3M3YyNS42OQ0KCQljMS42NzksMC4zNzgsMy43NDMsMC41MDQsNi41ODgsMC41MDRDMTM1LjU3LDMyNC4zNzksMTQyLjAyNCwzMTkuMSwxNDIuMDI0LDMxMC4xOTR6Ii8+DQoJPHBhdGggZD0iTTIwMi43MDksMjk3LjY4MWMtNC4zOSwwLTcuMjI3LDAuMzc5LTguOTA1LDAuNzcydjU2Ljg5NmMxLjY3OSwwLjM5NCw0LjM5LDAuMzk0LDYuODQxLDAuMzk0DQoJCWMxNy44MDksMC4xMjYsMjkuNDI0LTkuNjc3LDI5LjQyNC0zMC40NDlDMjMwLjE5NSwzMDcuMjMxLDIxOS42MTEsMjk3LjY4MSwyMDIuNzA5LDI5Ny42ODF6Ii8+DQoJPHBhdGggZD0iTTMxNS40NTgsMEgxMjEuODExYy0yOC4yOSwwLTUxLjMxNSwyMy4wNDEtNTEuMzE1LDUxLjMxNXYxODkuNzU0aC01LjAxMmMtMTEuNDE4LDAtMjAuNjc4LDkuMjUxLTIwLjY3OCwyMC42Nzl2MTI1LjQwNA0KCQljMCwxMS40MjcsOS4yNTksMjAuNjc3LDIwLjY3OCwyMC42NzdoNS4wMTJ2MjIuOTk1YzAsMjguMzA1LDIzLjAyNSw1MS4zMTUsNTEuMzE1LDUxLjMxNWgyNjQuMjIzDQoJCWMyOC4yNzIsMCw1MS4zLTIzLjAxMSw1MS4zLTUxLjMxNVYxMjEuNDQ5TDMxNS40NTgsMHogTTk5LjA1MywyODQuMzc5YzYuMDYtMS4wMjQsMTQuNTc4LTEuNzk2LDI2LjU3OS0xLjc5Ng0KCQljMTIuMTI4LDAsMjAuNzcyLDIuMzE1LDI2LjU4LDYuOTY1YzUuNTQ4LDQuMzgyLDkuMjkyLDExLjYxNSw5LjI5MiwyMC4xMjdjMCw4LjUxLTIuODM3LDE1Ljc0NS03Ljk5OSwyMC42NDYNCgkJYy02LjcxNCw2LjMyLTE2LjY0Myw5LjE1Ny0yOC4yNTgsOS4xNTdjLTIuNTg1LDAtNC45MDItMC4xMjgtNi43MTQtMC4zNzl2MzEuMDk2SDk5LjA1M1YyODQuMzc5eiBNMzg2LjAzNCw0NTAuNzEzSDEyMS44MTENCgkJYy0xMC45NTQsMC0xOS44NzQtOC45Mi0xOS44NzQtMTkuODg5di0yMi45OTVoMjQ2LjMxYzExLjQyLDAsMjAuNjc5LTkuMjUsMjAuNjc5LTIwLjY3N1YyNjEuNzQ4DQoJCWMwLTExLjQyOC05LjI1OS0yMC42NzktMjAuNjc5LTIwLjY3OWgtMjQ2LjMxVjUxLjMxNWMwLTEwLjkzOCw4LjkyMS0xOS44NTgsMTkuODc0LTE5Ljg1OGwxODEuODktMC4xOXY2Ny4yMzMNCgkJYzAsMTkuNjM4LDE1LjkzNCwzNS41ODcsMzUuNTg3LDM1LjU4N2w2NS44NjItMC4xODlsMC43NDEsMjk2LjkyNUM0MDUuODkxLDQ0MS43OTMsMzk2Ljk4Nyw0NTAuNzEzLDM4Ni4wMzQsNDUwLjcxM3oNCgkJIE0xNzQuMDY1LDM2OS44MDF2LTg1LjQyMmM3LjIyNS0xLjE1LDE2LjY0Mi0xLjc5NiwyNi41OC0xLjc5NmMxNi41MTYsMCwyNy4yMjYsMi45NjMsMzUuNjE4LDkuMjgyDQoJCWM5LjAzMSw2LjcxNCwxNC43MDQsMTcuNDE2LDE0LjcwNCwzMi43ODFjMCwxNi42NDMtNi4wNiwyOC4xMzMtMTQuNDUzLDM1LjIyNGMtOS4xNTcsNy42MTItMjMuMDk2LDExLjIyMi00MC4xMjUsMTEuMjIyDQoJCUMxODYuMTkxLDM3MS4wOTIsMTc4Ljk2NiwzNzAuNDQ2LDE3NC4wNjUsMzY5LjgwMXogTTMxNC44OTIsMzE5LjIyNnYxNS45OTZoLTMxLjIzdjM0Ljk3M2gtMTkuNzR2LTg2Ljk2Nmg1My4xNnYxNi4xMjJoLTMzLjQyDQoJCXYxOS44NzVIMzE0Ljg5MnoiLz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjwvc3ZnPg0K",
     };
+    exports.tasksAPIPayload = {
+        "RefreshIdentifier": "string",
+        "FeedsToFetch": 100,
+        "SocialPostsOnly": false,
+        "ExcludeSocialObjectPosts": true,
+        "ActivityFeedRequestParameters": {},
+        "ActivityFeeds": true,
+        "Tasks": true,
+        "TaskRequestParameters": {},
+        "Alerts": false,
+        "AlertRequestParameters": {}
+    };
 });
+/*export const FormAttributesUpdatePayload = {
+    "item": {
+        "attrs": {
+            "attr": [
+                {
+                    "name": "string",
+                    "value": "string"
+                }
+            ]
+        },
+        "resrs": {
+            "res": [
+                {
+                    "filename": "string",
+                    "base64": "string"
+                }
+            ]
+        },
+        "acl": {
+            "name": "string"
+        },
+        "pid": "string"
+    }
+}*/
+/*
+const b = {
+    "creationDate": "2021-04-23T12:49:46.387Z",
+    "distributionUsers": [{
+        "personId": "de1828f7-231b-4b4d-8de9-b1620e1d1a1d",
+        "emailAddress": "danilopez0708@gmail.com",
+        "fullName": "Asset Test"
+    }, {
+        "personId": "4f242925-874d-4796-b597-c9e0f4b89d2b",
+        "emailAddress": "manuel.kanka@fellow-consulting.de",
+        "fullName": "Manuel Kanka"
+    }, {
+        "personId": "9f8c7796-b902-4010-837c-e3d58e295681",
+        "emailAddress": "Arjan.Hammink@infor.com",
+        "fullName": "Arjan Hammink"
+    }, {
+        "personId": "f0079814-5fa1-43c8-ba0f-82d6a9cd4f1f",
+        "emailAddress": "melanie.ruckdaeschel@fellow-consulting.de",
+        "fullName": "Melanie Ruckdaeschel"
+    }, {
+        "personId": "b19ccf75-4b3b-4c09-9fc2-7858c90d3ddc",
+        "emailAddress": "farooqk.work@gmail.com",
+        "fullName": "Farooq Ahmed"
+    }, {
+        "personId": "e322f3e8-caf0-41f0-80ec-4b4d95f649ea",
+        "emailAddress": "Infor.SytelineSaaSAdmin@infor.com",
+        "fullName": "Infor SytelineSaaSAdmin"
+    }, {
+        "personId": "a7c2e2b6-be25-4d01-bbc1-bc8937f00376",
+        "emailAddress": "fernanda.torres@fellow-consulting.de",
+        "fullName": "Fernanda Torres"
+    }, {
+        "personId": "99b04f74-7ab0-4684-82ad-1a253755da41",
+        "emailAddress": "daniel.kranz@fellow-consulting.de",
+        "fullName": "Daniel Kranz"
+    }, {
+        "personId": "477d7ea7-fdf0-42ae-944c-b67d2db16f3c",
+        "emailAddress": "thomas.dillinger@fellow-consulting.de",
+        "fullName": "Thomas Dillinger"
+    }, {
+        "personId": "87d4db79-8d4c-4bf7-9768-50c36f169b14",
+        "emailAddress": "amier.haider@fellow-consulting.de",
+        "fullName": "Amier Haider"
+    }, {
+        "personId": "58a0d59c-f802-450c-ae37-c850eab059e4",
+        "emailAddress": "ines.brando@alumni.esade.edu",
+        "fullName": "Inês Brandão"
+    }, {
+        "personId": "bc0e1fa1-1124-4843-a4c0-0e4b73d962fc",
+        "emailAddress": "junaid.usman@fellow-consulting.de",
+        "fullName": "Junaid Usman"
+    }, {
+        "personId": "e7c1797e-87d0-49e1-aee3-9a43a5f1145b",
+        "emailAddress": "Zachary.makris@infor.com",
+        "fullName": "Zachary Makris"
+    }, {
+        "personId": "ffdcb026-e7d8-4d6a-abc1-bebaa6c6eaa0",
+        "emailAddress": "mohammad.alhasan@fellow-consulting.de",
+        "fullName": "Mohammad Alhasan"
+    }, {
+        "personId": "a287a60f-1b62-4904-9c62-b6bb65acb57a",
+        "emailAddress": "manuel.depryk@fellow-consulting.de",
+        "fullName": "Manuel Depryk"
+    }, {
+        "personId": "c8f2d75f-1f99-4e38-b8b5-a57516cd36fd",
+        "emailAddress": "kerstin.mende@fellow-consulting.de",
+        "fullName": "Kerstin Mende"
+    }, {
+        "personId": "20e036ca-b26e-49b5-8d98-a5e8c0785e6f",
+        "emailAddress": "daniel.lopez@fellow-consulting.de",
+        "fullName": "Daniel Lopez"
+    }, {
+        "personId": "a46e21c9-fb5d-4c7d-92f8-113bb49ce761",
+        "emailAddress": "mohsin.mumtaz@fellow-consulting.de",
+        "fullName": "Mohsin Mumtaz"
+    }, {
+        "personId": "984cb862-239d-44de-9780-622f69dab50c",
+        "emailAddress": "stephanie.propstmeier@fellow-consulting.de",
+        "fullName": "Stephanie Propstmeier"
+    }, {
+        "personId": "912ac65b-cc84-44af-8d2c-3604606b58b2",
+        "emailAddress": "gary.kent@infor.com",
+        "fullName": "Gary Kent"
+    }, {
+        "personId": "f56880fc-5a3b-4922-9959-72ebf28cde47",
+        "emailAddress": "erik.obermeier@fellow-consulting.de",
+        "fullName": "Erik Obermeier"
+    }, {
+        "personId": "46b602a4-b158-4d63-9b2e-6b22dba0654c",
+        "emailAddress": "daniel.jordan@fellow-consulting.de",
+        "fullName": "daniel jordan"
+    }, {
+        "personId": "e238da81-cb8c-4650-8a76-c76a8cbf54d8",
+        "emailAddress": "infor.installer@infor.com",
+        "fullName": "Infor Installer"
+    }, {
+        "personId": "0410be08-e108-4bb2-b03c-d7c0e634ead7",
+        "emailAddress": "ines.brando@fellow-consulting.de",
+        "fullName": "Ines Brando"
+    }, {
+        "personId": "ec8a900b-08e3-4310-9370-9c2c0aa90ad5",
+        "emailAddress": "Roberroberto.metz@fellow-consulting.de",
+        "fullName": "Roberto Metz"
+    }, {
+        "personId": "1bbd8955-189b-4179-b048-465193b8b81f",
+        "emailAddress": "l.dimitrov@me.com",
+        "fullName": "Ludmil Dimitrov"
+    }, {
+        "personId": "e0d79a4c-a384-425a-8001-4dcf6d60701c",
+        "emailAddress": "stephan.bail@fellow-consulting.de",
+        "fullName": "Stephan Bail"
+    }, {
+        "personId": "21a65185-101b-44af-adcd-4b511c5b09df",
+        "emailAddress": "richard.chen@infor.com",
+        "fullName": "richard chen"
+    }, {
+        "personId": "dc70703b-4d3b-43c5-931f-86a89e7cb431",
+        "emailAddress": "julian.obermeier@fellow-consulting.de",
+        "fullName": "Julian Obermeier"
+    }, {
+        "personId": "423eb4e6-e5e7-41de-a88e-e42b8716ad1a",
+        "emailAddress": "marcel.zuefle@fellow-consulting.de",
+        "fullName": "Marcel Zufle"
+    }],
+    "taskId": 102,
+    "message": "Please approve this task 9 /EMA_Returns\\[@MDS_ID=\"345ee12a-36ba-4d91-a546-0cdcd0b8733c\"\\]",
+    "escalationLevel": 0,
+    "status": "NEW",
+    "priority": "HIGH",
+    "workflowStepId": 800,
+    "workflowId": 134,
+    "escalated": false,
+    "notes": [],
+    "parameters": [{
+        "name": "Kassenzeichen",
+        "parameterType": "datatype",
+        "label": "Kassenzeichen",
+        "readOnly": false,
+        "dataType": "STRING",
+        "serializedValue": "9"
+    }, {
+        "name": "Query",
+        "parameterType": "datatype",
+        "label": "Query",
+        "readOnly": true,
+        "dataType": "STRING",
+        "serializedValue": "/EMA_Returns[@MDS_ID=\"345ee12a-36ba-4d91-a546-0cdcd0b8733c\"]"
+    }, {
+        "name": "DocumentView",
+        "parameterType": "view",
+        "label": "Document View",
+        "properties": [{"name": "ViewId", "value": "CaptureDocumentView"}, {
+            "name": "AccountingEntity",
+            "value": ""
+        }, {"name": "Location", "value": ""}, {"name": "$pid", "value": ""}, {
+            "name": "LogicalId",
+            "value": "lid://infor.daf.daf"
+        }, {"name": "$query", "value": ""}]
+    }]
+}*/
+/*
+const a = {
+    "items": {
+        "searchXQuery": "/EMA_Returns[@MDS_ID = \"345ee12a-36ba-4d91-a546-0cdcd0b8733c\"]",
+        "searchCount": "1",
+        "item": [{
+            "createdBy": "87D4DB79-8D4C-4BF7-9768-50C36F169B14",
+            "createdByName": "Amier Haider",
+            "createdTS": "2021-04-23T12:49:30.898Z",
+            "lastChangedBy": "87D4DB79-8D4C-4BF7-9768-50C36F169B14",
+            "lastChangedByName": "Amier Haider",
+            "lastChangedTS": "2021-04-23T12:49:30.898Z",
+            "filename": "Rücklauf EMA - Anfrage Meldeamt 27383 - Sterbedatum.pdf",
+            "size": "240400",
+            "pid": "EMA_Returns-27-1-LATEST",
+            "pid2": "EMA_Returns-345ee12a-36ba-4d91-a546-0cdcd0b8733c",
+            "id": "27",
+            "version": "1",
+            "reprItem": "filename",
+            "displayName": "Rücklauf EMA - Anfrage Meldeamt 27383 - Sterbedatum.pdf",
+            "entityName": "EMA_Returns",
+            "attrs": {
+                "attr": [{
+                    "name": "MDS_ID",
+                    "type": "21",
+                    "qual": "MDS_ID",
+                    "value": "345ee12a-36ba-4d91-a546-0cdcd0b8733c"
+                }, {
+                    "name": "eVollstreckung",
+                    "type": "1",
+                    "qual": "eVollstreckung",
+                    "value": "1492900047052"
+                }, {"name": "Datum", "type": "1", "qual": "Datum", "value": "10.07.17"}, {
+                    "name": "Eingangsdatum",
+                    "type": "1",
+                    "qual": "Eingangsdatum",
+                    "value": "20.07.17"
+                }, {
+                    "name": "Absender",
+                    "type": "1",
+                    "qual": "Absender",
+                    "value": "Landesamt 6"
+                }, {
+                    "name": "F_hrendes_Kassenzeichen",
+                    "type": "1",
+                    "qual": "F_hrendes_Kassenzeichen"
+                },
+                {
+                "name": "Kassenzeichen",
+                "type": "1",
+                "qual": "Kassenzeichen",
+                "value": "9"
+                },
+                {
+                    "name": "RLC",
+                    "type": "1",
+                    "qual": "RLC"
+                }, {
+                    "name": "Nutzer_Kennung",
+                    "type": "1",
+                    "qual": "Nutzer_Kennung",
+                    "value": "695b"
+                }, {"name": "Schuldner_ID", "type": "1", "qual": "Schuldner_ID"}, {
+                    "name": "Schuldnername",
+                    "type": "1",
+                    "qual": "Schuldnername",
+                    "value": "Fischer"
+                }, {
+                    "name": "Schuldnervorname",
+                    "type": "1",
+                    "qual": "Schuldnervorname",
+                    "value": "Ursula Henrietta"
+                }, {
+                    "name": "Dokumentart_Bezeichnung",
+                    "type": "1",
+                    "qual": "Dokumentart_Bezeichnung",
+                    "value": "Rücklauf"
+                }, {
+                    "name": "Dokumentauspr_gung_R_cklauf",
+                    "type": "1",
+                    "qual": "Dokumentauspr_gung_R_cklauf"
+                }, {
+                    "name": "Dokumenten_Merkmal",
+                    "type": "1",
+                    "qual": "Dokumenten_Merkmal",
+                    "value": "Behördenauskunft"
+                }, {"name": "DR_Nummer", "type": "1", "qual": "DR_Nummer"}, {
+                    "name": "Bezeichung_GV",
+                    "type": "1",
+                    "qual": "Bezeichung_GV"
+                }, {"name": "Name_GV", "type": "1", "qual": "Name_GV"}, {
+                    "name": "Adresse_und_Telefonnummer_GV",
+                    "type": "1",
+                    "qual": "Adresse_und_Telefonnummer_GV"
+                }, {
+                    "name": "H_her_der_Kostenrechnung_EUR_",
+                    "type": "1",
+                    "qual": "H_her_der_Kostenrechnung_EUR_"
+                }, {"name": "Bemerkung", "type": "1", "qual": "Bemerkung"}, {
+                    "name": "Validiert_bool",
+                    "type": "20",
+                    "qual": "Validiert_bool",
+                    "value": "false"
+                }, {
+                    "name": "MDS_TemplateName",
+                    "type": "1",
+                    "qual": "MDS_TemplateName"
+                }, {"name": "MDS_TemplateDetails", "type": "1", "qual": "MDS_TemplateDetails"}]
+            },
+            "resrs": {
+                "res": [{
+                    "name": "",
+                    "size": "240400",
+                    "mimetype": "application/pdf",
+                    "filename": "Rücklauf EMA - Anfrage Meldeamt 27383 - Sterbedatum.pdf",
+                    "url": "https://idm.eu1.inforcloudsuite.com/ca/api/resources/EMA_Returns-27-1-LATEST?$token=AblOeiSAqUN1sfaek6hZhQGpmZbsvYj9JRmQYcbAAlec9luJWqPCAEfwlOQfgp8DRz0MT2Xe491jUAnFsiUnQLu2cPrOlmeKONLdphkrz7ZPuCanc%2F1GzD7dUyJ3L2ADQh90ECGs71wIeu%2Brgw6g7RGphVHW58LdCgC1kBCmDMP3nEEEXzYcYMG0USKGihtmPIWdyU7ZNLO%2B8oS3jmuje%2FvMGh5zS81MnARnlKuJlW74dBYW58qiV0Cu9tolIpJlNo%2FwS3vEIoacP2LIdatFwcNIxTOQ2Nxf9Hti1ta2EsdybBzWdk5UaC21%2F1pKe7DfiU0UsnB%2FMn3U%2FjbTXRHFUm1PYhgkWwS2rB7RgyyohLyf2IsCYXm0BwX1zb%2FD2Q%3D%3D&$tenant=FELLOWCONSULTING_DEV",
+                    "sha256": "9bd197f230989ecbdb456e399a0332f5fdf211467430326ac7685f020afffd06"
+                }, {
+                    "name": "Preview",
+                    "mimetype": "image/png",
+                    "filename": "EMA_Returns-27-1-LATEST_Preview.png",
+                    "url": "https://idm.eu1.inforcloudsuite.com/ca/api/resources/EMA_Returns-27-1-LATEST/Preview?$token=AV8p3EHxjQNM3RZ1f7xPZr5Z1O8JUwUNrg1odfeTZNZPwKH7l40OsdqZdh9OGWh7MqF6aZUU0Z2xwAHO0Xd6%2FvYr4L78xifJbTd8ghrQFovxK4VNT0FPFH5B97wOpd2pgBjlig6r18lP7OfEg8jL%2Bt8c7sqA82pEPTDSDcMt9eORcexEa5Bd2Lb8FUaFDxC3rxbktMsGz0DiDC18NyWX0BLefuuOVbJHVEclfzTAoRHnWvuDYEEOwWYTqSLaookO%2BMKmarlxnkHK%2F3cFQKCjilIMCq9dje4qvSVB0mhkwZ5HvC6E7mYXWrNZ044djeTwm5KRWfh8j1voDKc%2Bu9PPcsay0P33MVaXXTmQKUPys2X0peqh6B3rCE4zp6Xwfg%3D%3D&$tenant=FELLOWCONSULTING_DEV"
+                }, {
+                    "name": "SmallPreview",
+                    "mimetype": "image/png",
+                    "filename": "EMA_Returns-27-1-LATEST_SmallPreview.png",
+                    "url": "https://idm.eu1.inforcloudsuite.com/ca/api/resources/EMA_Returns-27-1-LATEST/SmallPreview?$token=AVFp1m3rEuYpyByxPTMD9SACZwExXfgNP1qT0J%2FDoRoXPjlJgDKAw1lalUv30Zur7EQh%2B%2BJl46pfyPO6l9LUpWeE7Xj0Y4QTxFDc4J9ulyEfwcVYJ6X9P%2BltJeZOPWgdG2S01F0n%2BGd2gFNamupDmezB23FIJ%2FukYTekjit9fJ%2BJTSOtR47W4EVoDofzuAkbrWn58PB98%2FAgu%2BLmfnVt%2FM1PZJ4GPNHKFSuZaTTQwqOayKqhcg%2BiIfamqquezpofcTuDsuwzbBT%2FQ8Yst%2FqE9ZyIgwiYOo8c6qtxeVpnR0WUY6jVgIZ%2FC1dy6IQrchHRLTFzNs8FMe%2FBWrqU56uLoxbomLRBNnhYfKd%2FBK1LJiOj7UMrf8U9l1AhRkux6Q%3D%3D&$tenant=FELLOWCONSULTING_DEV"
+                }, {
+                    "name": "Thumbnail",
+                    "mimetype": "image/png",
+                    "filename": "EMA_Returns-27-1-LATEST_Thumbnail.png",
+                    "url": "https://idm.eu1.inforcloudsuite.com/ca/api/resources/EMA_Returns-27-1-LATEST/Thumbnail?$token=ARymeWj36s6ho%2BOZgmCMHPK%2BdYhggs%2FSlGIvfk2c449CJTV4XBRbeJFkB0gtrMIiVm7p2yfAhjR4k7vQGau8Ld1SBgtjz2%2FD%2FpVrIGAseMsout0rBz5jSvy0vGo0K8R8vbh8TVIj%2BhKaA%2FTF7zv8GIdgz8vUw%2FrPEv0x3c1Vcv6vX7mfts9sOx8D7Q7s9mVLSuQnn8rjVl75sU0okY6qsHIovfPzatAx14IITDPVIBdOOBqYiCWpvOaG1ZSXa%2BaPxeaUp%2BHNjUmv6YvCestLUMxNoXdK3tbDfMqQt9rIsyyIR1SMNPUxx76DlTcN9yjBw23mOFvzEq43I77TXa%2Fw4Ob7Rq2Q9Vg8MtyfbD7%2BTeiKeN6IkLMhOXtzMm9FNg%3D%3D&$tenant=FELLOWCONSULTING_DEV"
+                }]
+            },
+            "acl": {"id": "1", "name": "Public"}
+        }]
+    }
+}*/
 //# sourceMappingURL=assets.js.map
